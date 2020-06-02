@@ -2,3 +2,4 @@
 *.DS_Store
 .idea
 list.txt
+config/config.php
