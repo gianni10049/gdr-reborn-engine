@@ -3,9 +3,10 @@
 
 class Config
 {
-    /***** DATABASE CONNECTION PARAMETER *****/
+    /***** DATABASE PARAMETERS *****/
     public $host = 'host';
     public $db = 'db';
     public $pass = 'psw';
     public $user = 'user';
+    public $charset = 'utf8mb4_unicode_ci';
 }

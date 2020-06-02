@@ -1,16 +1,11 @@
-<?php
+<?php /** @noinspection PhpUndefinedMethodInspection */
 
 require ('config/required.php');
-require(__DIR__.'/vendor/autoload.php');
+require(ROOT.'vendor/autoload.php');
+
+require (ROOT.'public/header/header.php');
 
 $router = new Router(new Request());
-$db= new DB();
-
-$data= $db->Select('personaggio','nome',"1");
-
-foreach ($data as $row){
-    var_dump($row['nome']);
-}
 
 $router->get('/', function($args) {
 
