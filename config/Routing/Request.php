@@ -74,32 +74,12 @@ class Request implements IRequest
 
         if ($this->requestMethod == "POST") {
 
-            $body = array();
+            $args = array();
             foreach ($_POST as $key => $value) {
-                $body[$key] = filter_input(INPUT_POST, $key, FILTER_SANITIZE_SPECIAL_CHARS);
+                $args[$key] = filter_input(INPUT_POST, $key, FILTER_SANITIZE_SPECIAL_CHARS);
             }
 
-            return $body;
-        }
-    }
-
-    public function Exec($method)
-    {
-
-        //Estraggo i dati
-        $data = explode('@', $method);
-        $controller = $data[0];
-        $metodo = $data[1];
-
-        //Instanzio la classe
-        $super = new $controller();
-
-        //Se il metodo non esiste
-        if (!method_exists($super, $metodo)) {
-            require_once $this->config->error . '/405.php';
-        } //Se esiste
-        else {
-            $super->$metodo();
+            return $args;
         }
     }
 }
