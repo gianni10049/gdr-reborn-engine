@@ -4,7 +4,6 @@ namespace Connection;
 
 
 use BaseSecurity\Security;
-use Core\Config;
 use PDO;
 use PDOException;
 use PDOStatement;
@@ -15,26 +14,31 @@ use PDOStatement;
 
 class DB
 {
-    private $host;
-    private $db;
-    private $pass;
-    private $user;
-    private $charset;
     private $pdo;
+    private $sec;
+    public static $_instance;
 
     /**
      * DB constructor.
      */
     public function __construct()
     {
+        $this->sec = Security::getInstance();
+    }
 
-        $data = new Config();
-
-        $this->db = $data->db;
-        $this->host = $data->host;
-        $this->pass = $data->pass;
-        $this->user = $data->user;
-        $this->charset = $data->charset;
+    /**
+     * Self Instance
+     * @return DB
+     */
+    public static function getInstance()
+    {
+        #If self-instance not defined
+        if (!(self::$_instance instanceof self)) {
+            #define it
+            self::$_instance = new self();
+        }
+        #return defined instance
+        return self::$_instance;
     }
 
     /**
@@ -42,10 +46,6 @@ class DB
      */
     public function __destruct()
     {
-        $this->host = NULL;
-        $this->db = NULL;
-        $this->pass = NULL;
-        $this->user = NULL;
         $this->pdo = NULL;
     }
 
@@ -53,14 +53,14 @@ class DB
      * CONNECT TO DB
      * @return void
      */
-    private function Connect()
+    public function Connect($data)
     {
         try {
             # Read settings from config file
-            $this->pdo = new PDO("mysql:host={$this->host};dbname={$this->db};charset={$this->charset}", $this->user, $this->pass);
+            $this->pdo = new PDO("mysql:host={$data['host']};dbname={$data['db']};charset={$data['charset']}", $data['user'], $data['pass']);
 
             #
-            $this->pdo->setAttribute(PDO::MYSQL_ATTR_INIT_COMMAND, "SET NAMES {$this->charset}");
+            $this->pdo->setAttribute(PDO::MYSQL_ATTR_INIT_COMMAND, "SET NAMES {$data['charset']}");
 
             # We can now log any exceptions on Fatal error.
             $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -82,9 +82,6 @@ class DB
      */
     private function Query($query, $params)
     {
-
-        $this->Connect();
-
         #Connect to db
         $db = $this->pdo;
 
@@ -121,16 +118,25 @@ class DB
      */
     public function Select($value, $table, $where, $params = [])
     {
-        $sec = new Security();
+        #Init Security class
+        $sec = $this->sec;
 
+        #Filtering all vars
         $table = $sec->Filter($table, 'Convert');
         $value = $sec->Filter($value, 'Convert');
         $where = $sec->Filter($where, 'Convert');
 
+        #If needed vars are not empty
         if (!empty($table) && !empty($value) && !empty($where)) {
+
+            #Compose query
             $text = "SELECT {$value} FROM {$table} WHERE {$where}";
+
+            #Return Query result
             return $this->Query($text, $params);
-        } else {
+        } #Else one of the vars is empty
+        else {
+            #Get error and stop script
             die('Campi vuoti');
         }
     }
@@ -144,16 +150,26 @@ class DB
      */
     public function Update($table, $set, $where, $params = [])
     {
-        $sec = new Security();
+        #Init Security class
+        $sec = $this->sec;
 
+        #Filtering all vars
         $table = $sec->Filter($table, 'Convert');
         $set = $sec->Filter($set, 'Convert');
         $where = $sec->Filter($where, 'Convert');
 
+        #If needed vars are not empty
         if (!empty($table) && !empty($set) && !empty($where)) {
+
+            #Compose query
             $text = "UPDATE {$table} SET {$set} WHERE {$where}";
+
+            #Execute Query
             $this->Query($text, $params);
-        } else {
+
+        } #Else one of the vars is empty
+        else {
+            #Get error and stop script
             die('Campi vuoti');
         }
     }
@@ -167,16 +183,26 @@ class DB
      */
     public function Insert($table, $rows, $values, $params = [])
     {
-        $sec = new Security();
+        #Init Security class
+        $sec = $this->sec;
 
+        #Filtering all vars
         $table = $sec->Filter($table, 'Convert');
         $rows = $sec->Filter($rows, 'Convert');
         $values = $sec->Filter($values, 'Convert');
 
+        #If needed vars are not empty
         if (!empty($table) && !empty($rows) && !empty($values)) {
+
+            #Compose query
             $text = "INSERT INTO {$table}({$rows}) VALUES({$values})";
+
+            #Execute Query
             $this->Query($text, $params);
-        } else {
+
+        } #Else one of the vars is empty
+        else {
+            #Get error and stop script
             die('Campi vuoti');
         }
     }
@@ -189,63 +215,89 @@ class DB
      */
     public function Delete($table, $where, $params = [])
     {
-        $sec = new Security();
+        #Init Security class
+        $sec = $this->sec;
 
+        #Filtering all vars
         $table = $sec->Filter($table, 'Convert');
         $where = $sec->Filter($where, 'Convert');
 
+        #If needed vars are not empty
         if (!empty($table) && !empty($where)) {
+
+            #Compose query
             $text = "DELETE FROM {$table} WHERE {$where}";
+
+            #Execute Query
             $this->Query($text, $params);
-        } else {
+        } #Else one of the vars is empty
+        else {
+            #Get error and stop script
             die('Campi vuoti');
         }
     }
 
     /**
      * Query type SUM
-     * @param string $table  
-     * @param string $cell  
-     * @param string $where  
+     * @param string $table
+     * @param string $cell
+     * @param string $where
      * @param array $params
      * @return int
      */
     public function Sum($table, $cell, $where, $params = [])
     {
-        $sec = new Security();
+        #Init Security class
+        $sec = $this->sec;
 
+        #Filtering all vars
         $table = $sec->Filter($table, 'Convert');
         $cell = $sec->Filter($cell, 'Convert');
         $where = $sec->Filter($where, 'Convert');
 
+        #If needed vars are not empty
         if (!empty($table) && !empty($cell) && !empty($where)) {
+
+            #Compose query
             $text = "SELECT SUM($cell) as Total FROM {$table} WHERE {$where}";
+
+            #Return sum of rows selected
             return $this->Query($text, $params)['Total'];
-        } else {
+        } #Else one of the vars is empty
+        else {
+            #Get error and stop script
             die('Campi vuoti');
         }
     }
 
     /**
      * Query type COUNT
-     * @param string $table  
-     * @param string $where  
+     * @param string $table
+     * @param string $where
      * @param array $params
      * @return int
      */
 
     public function Count($table, $where, $params = [])
     {
-        $sec = new Security();
+        #Init Security class
+        $sec = $this->sec;
 
+        #Filtering all vars
         $table = $sec->Filter($table, 'Convert');
         $where = $sec->Filter($where, 'Convert');
 
+        #If needed vars are not empty
         if (!empty($table) && !empty($where)) {
+
+            #Compose query
             $text = "SELECT * FROM {$table} WHERE {$where} ";
+
+            #Execute Query
             $data = $this->Query($text, $params);
-            $count = $data->rowCount();
-            return $count;
+
+            #Return number of rows selected
+            return $data->rowCount();
         } else {
             die('Campi vuoti');
         }
@@ -253,28 +305,37 @@ class DB
 
     /**
      * QUERY TYPE JOIN
-     * @param string $table  
-     * @param string $value  
-     * @param string $joinTable  
-     * @param string $joinCond  
-     * @param string $where  
+     * @param string $table
+     * @param string $value
+     * @param string $joinTable
+     * @param string $joinCond
+     * @param string $where
      * @param array $params
      * @return mixed
      */
     public function Join($table, $value, $joinTable, $joinCond, $where, $params = [])
     {
-        $sec = new Security();
+        #Init Security class
+        $sec = $this->sec;
 
+        #Filtering all vars
         $table = $sec->Filter($table, 'Convert');
         $value = $sec->Filter($value, 'Convert');
         $joinTable = $sec->Filter($joinTable, 'Convert');
         $joinCond = $sec->Filter($joinCond, 'Convert');
         $where = $sec->Filter($where, 'Convert');
 
+        #If needed vars are not empty
         if (!empty($table) && !empty($value) && !empty($joinTable) && !empty($joinCond) && !empty($where)) {
+
+            #Compose query
             $text = "SELECT {$value} FROM {$table} LEFT JOIN {$joinTable} ON {$joinCond} WHERE {$where}";
+
+            #Return Query result
             return $this->Query($text, $params);
-        } else {
+        } #Else one of the vars is empty
+        else {
+            #Get error and stop script
             die('Campi vuoti');
         }
     }
