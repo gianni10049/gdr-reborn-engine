@@ -9,19 +9,30 @@ class Security
 {
 
     /**
-     * @var DB (CLASS)
-     * @var Config (CLASS)
+     * @var Security
      */
-    protected $db;
-    protected $config;
+    public static $_instance;
 
     /**
      * Security constructor.
      */
     public function __construct()
     {
-        $this->db = new DB();
-        $this->config = new Config();
+    }
+
+    /**
+     * Self Instance
+     * @return Security
+     */
+    public static function getInstance()
+    {
+        #If self-instance not defined
+        if (!(self::$_instance instanceof self)) {
+            #define it
+            self::$_instance = new self();
+        }
+        #return defined instance
+        return self::$_instance;
     }
 
     /**
@@ -31,10 +42,13 @@ class Security
      */
     public function Hash($string)
     {
+        #If is string
         if (is_string($string)) {
+            #Return hashed string
             return password_hash($string, PASSWORD_BCRYPT);
-        }
-        else{
+        } #else
+        else {
+            #Return false
             return false;
         }
     }
@@ -47,26 +61,31 @@ class Security
      */
     public function Verify($string, $hashed)
     {
+        #If is string
         if (is_string($string)) {
+            #Compare password whit hashed string
             return password_verify($string, $hashed);
-        }
-        else{
+        } #Else
+        else {
+            #Return false
             return false;
         }
     }
 
     /**
      * Filter the data for indicated type. Default if wrong, not existent or not defined type: string.
-     * @example $sec->Filter('test','String');
-     * @example $sec->Filter(1,'Int');
      * @param mixed $data
      * @param string $type
      * @return mixed
+     * @example $sec->Filter(1,'Int');
+     * @example $sec->Filter('test','String');
      */
     public function Filter($data, $type = 'String')
     {
+        #Switch passed type
         switch ($type) {
 
+            #default type string ('test','test1')
             #Type string ('test','test1')
             default:
             case 'String':
@@ -136,6 +155,7 @@ class Security
      */
     public function HtmlFilter($string)
     {
+        #Array of not allowed html codes
         $notAllowed = array(
             "#(<script.*?>.*?(<\/script>)?)#is" => "Script non consentiti",
             "#(<iframe.*?\/?>.*?(<\/iframe>)?)#is" => "Frame non consentiti",
@@ -146,8 +166,8 @@ class Security
             "#(javascript:[^\s\"']+)#is" => ""
         );
 
+        #Return filtered html
         return $this->Filter(preg_replace(array_keys($notAllowed), array_values($notAllowed), $string), 'Convert');
-
     }
 
     /**
@@ -157,9 +177,17 @@ class Security
      */
     public function NoChace($file)
     {
-        $mtime = filemtime(ROOT . '/' . $file);
+
+        #Filter passed vars
+        $file= $this->Filter($file,'String');
+
+        #Get last update time
+        $mtime = filemtime(ROOT . $file);
+
+        #Compose url whit last update time
         $text = $file . '?time=' . $mtime;
 
+        #Return filtered and converted url
         return $this->Filter($text, 'String');
     }
 
@@ -171,7 +199,14 @@ class Security
      */
     public function Version($file, $version)
     {
+        #Filter passed vars
+        $file= $this->Filter($file,'String');
+        $version= $this->Filter($version,'String');
+
+        #Compose url whit the version
         $text = $file . '?v=' . $version;
+
+        #Return filtered and converted url
         return $this->Filter($text, 'String');
     }
 

@@ -1,14 +1,47 @@
 <?php
 
+namespace Core;
+
 include_once 'IRequest.php';
 
 class Request implements IRequest
 {
+
+    /**
+     * @var Request Self-Instance
+     * @var string $_SERVER ['REQUEST_METHOD']
+     * @var string $_SERVER ['REQUEST_URI']
+     * @var string $_SERVER ['SERVER_PROTOCOL']
+     */
+    public static $_instance;
+    public $requestMethod;
+    public $requestUri;
+    public $serverProtocol;
+
+    /**
+     * Request constructor.
+     * Auto generate array whit server  info
+     */
     function __construct()
     {
         $this->bootstrapSelf();
     }
 
+    /**
+     * Self instance
+     * @return Request Self-Instance
+     */
+    public static function getInstance()
+    {
+        if (!(self::$_instance instanceof self)) {
+            self::$_instance = new self();
+        }
+        return self::$_instance;
+    }
+
+    /**
+     * Auto generate server infos
+     */
     private function bootstrapSelf()
     {
         foreach ($_SERVER as $key => $value) {
@@ -16,6 +49,11 @@ class Request implements IRequest
         }
     }
 
+    /**
+     * Convert server info to CamelCase format
+     * @param string $string
+     * @return array
+     */
     private function toCamelCase($string)
     {
         $result = strtolower($string);
@@ -30,6 +68,10 @@ class Request implements IRequest
         return $result;
     }
 
+    /**
+     * Take parameters passed by get request
+     * @return array
+     */
     private function getArgs()
     {
         $url = $_SERVER['REQUEST_URI'];
@@ -61,25 +103,37 @@ class Request implements IRequest
 
             //Return array with parameters
             return $args;
+        } else {
+            return [];
         }
     }
 
+    /**
+     * Take parameters passed by post request
+     * @return array
+     */
+    private function postArgs()
+    {
+        $args = array();
+        foreach ($_POST as $key => $value) {
+            $args[$key] = filter_input(INPUT_POST, $key, FILTER_SANITIZE_SPECIAL_CHARS);
+        }
+
+        return $args;
+    }
+
+    /**
+     * Fetch types of request method for get right parameters
+     * @return array
+     */
     public function getBody()
     {
         if ($this->requestMethod === "GET") {
-            $args = $this->getArgs();
-            return $args;
-        }
-
-
-        if ($this->requestMethod == "POST") {
-
-            $args = array();
-            foreach ($_POST as $key => $value) {
-                $args[$key] = filter_input(INPUT_POST, $key, FILTER_SANITIZE_SPECIAL_CHARS);
-            }
-
-            return $args;
+            return $this->getArgs();
+        } else if ($this->requestMethod == "POST") {
+            return $this->postArgs();
+        } else {
+            die('Method not allowed.');
         }
     }
 }
