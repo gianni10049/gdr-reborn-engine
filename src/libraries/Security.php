@@ -1,40 +1,23 @@
 <?php
 
-namespace BaseSecurity;
-
-use Connection\DB;
-use Core\Config;
+namespace Libraries;
 
 class Security
 {
-
-    /**
-     * @var DB (CLASS)
-     * @var Config (CLASS)
-     */
-    protected $db;
-    protected $config;
-
-    /**
-     * Security constructor.
-     */
-    public function __construct()
-    {
-        $this->db = new DB();
-        $this->config = new Config();
-    }
 
     /**
      * Hashing of the data passed
      * @param string $string
      * @return bool|string
      */
-    public function Hash($string)
+    public function Hash(string $string = null)
     {
-        if (is_string($string)) {
+        if(isset($string)) 
+        {
             return password_hash($string, PASSWORD_BCRYPT);
         }
-        else{
+        else 
+        {
             return false;
         }
     }
@@ -45,12 +28,14 @@ class Security
      * @param string $hashed
      * @return bool
      */
-    public function Verify($string, $hashed)
+    public function Verify($hashed, string $string = null): bool
     {
-        if (is_string($string)) {
+        if(isset($string))
+        {
             return password_verify($string, $hashed);
         }
-        else{
+        else 
+        {
             return false;
         }
     }
@@ -69,6 +54,7 @@ class Security
 
             #Type string ('test','test1')
             default:
+
             case 'String':
                 $data = filter_var($data, FILTER_SANITIZE_STRING);
                 break;
@@ -126,7 +112,6 @@ class Security
 
         #Return filtered data
         return $data;
-
     }
 
     /**
@@ -175,5 +160,98 @@ class Security
         return $this->Filter($text, 'String');
     }
 
+    
+    /**
+     * @fn getEmail 
+     * 
+     * Ex.: $sec->getEmail($_POST['email']);
+     * 
+     * @param  string|null $email input
+     * @param  int|null    $min   min chars
+     * @param  int|null    $max   max chars
+     * @return bool
+     */
+    public function getEmail(string $email = null, int $min = null, int $max = null): bool
+    {
+        if(!filter_var($email, FILTER_VALIDATE_EMAIL)) return false;
 
+        // domains banned (da scegliere la dir)
+        $bannedEmails = json_decode(file_get_contents(__DIR__ . "/domains/domains.json"));
+
+        if(in_array(strtolower(explode('@', $email)[1]), $bannedEmails)) return false;
+
+        if((isset($min)) && (strlen($email) < $min)) return false;
+
+        if((isset($max)) && (strlen($email) > $max)) return false;
+
+        return true;
+    }
+
+    /**
+     * @fn setPassword 
+     * 
+     * @param  string|null $password input
+     * @param  int|integer $min      min len
+     * @param  int|integer $max      max len
+     * @return bool
+     */
+    public function setPassword(string $password = null, int $min = 8, int $max = 16): bool
+    {
+        // len
+        if(strlen($password) < $min || strlen($max) > 16) 
+        {
+            return false;
+        }
+
+        // digit
+        if (!preg_match("/\d/", $password)) 
+        {
+            return false;
+        }
+
+        // upper
+        if (!preg_match("/[A-Z]/", $password)) 
+        {
+            return false;
+        }
+
+        // lower
+        if (!preg_match("/[a-z]/", $password)) 
+        {
+            return false;
+        }
+
+        // special chars
+        if (!preg_match("/\W/", $password)) 
+        {
+            return false;
+        }
+
+        // no ws
+        if (preg_match("/\s/", $password)) 
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @fn matches 
+     * Ex.: $sec->matches($_POST['password'], $_POST['confirm_password']);
+     * 
+     * @param  string|null $string  input
+     * @param  string|null $confstr input
+     * @return bool
+     */
+    public function matches(string $string = null, string $confstr = null): bool
+    {
+        $string = preg_replace('/\s+/', '', $string);
+
+        if($string == null) return false;
+
+        if($string === $confstr) return true;
+
+        return false;
+    }
 }

@@ -1,10 +1,9 @@
 <?php
 
-namespace Connection;
+namespace Database;
 
-
-use BaseSecurity\Security;
-use Core\Config;
+use Libraries\Security;
+//use Core\Config;
 use PDO;
 use PDOException;
 use PDOStatement;
@@ -19,22 +18,40 @@ class DB
     private $db;
     private $pass;
     private $user;
-    private $charset;
+    //private $charset;
     private $pdo;
+    private $options = [];
 
     /**
      * DB constructor.
      */
-    public function __construct()
+    public function __construct(string $db = null, string $host = null, string $user = null, string $password = null, array $options = null)
     {
-
+        /*
         $data = new Config();
 
         $this->db = $data->db;
         $this->host = $data->host;
         $this->pass = $data->pass;
         $this->user = $data->user;
-        $this->charset = $data->charset;
+        $this->charset = $data->charset;*/
+
+        $this->db = (isset($db)) ? $db : "databasename";
+        $this->dsn = (isset($dsn)) ? $dsn : "localhost";
+        $this->user = (isset($user)) ? $user : 'username';
+        $this->password = (isset($password)) ? $password: 'passsword';
+        
+        //Default Opt.
+        $default_options = [
+            
+            PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+            PDO::ATTR_EMULATE_PREPARES   => false,
+            PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"
+        ];
+
+        $this->options = (!empty($options)) ? $options : $default_options;
+
     }
 
     /**
@@ -50,23 +67,25 @@ class DB
     }
 
     /**
+     * getDatabase
+     *
+     * @return string
+     */
+    public function getDatabase(): string
+    {
+        return $this->db;
+    }
+
+    /**
      * CONNECT TO DB
      * @return void
      */
     private function Connect()
     {
         try {
+
             # Read settings from config file
-            $this->pdo = new PDO("mysql:host={$this->host};dbname={$this->db};charset={$this->charset}", $this->user, $this->pass);
-
-            #
-            $this->pdo->setAttribute(PDO::MYSQL_ATTR_INIT_COMMAND, "SET NAMES {$this->charset}");
-
-            # We can now log any exceptions on Fatal error.
-            $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-            # Disable emulation of prepared statements, use REAL prepared statements instead.
-            $this->pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
+            $this->pdo = new PDO("mysql:host={$this->host};dbname={$this->db}", $this->user, $this->pass, $this->options);
 
         } catch (PDOException $e) {
             # Get error
@@ -80,7 +99,7 @@ class DB
      * @param array $params
      * @return mixed
      */
-    private function Query($query, $params)
+    private function Query(string $query, array $params = null)
     {
 
         $this->Connect();
@@ -246,6 +265,7 @@ class DB
             $data = $this->Query($text, $params);
             $count = $data->rowCount();
             return $count;
+
         } else {
             die('Campi vuoti');
         }
