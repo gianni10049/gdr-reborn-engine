@@ -28,16 +28,9 @@ class Security
      * @param string $hashed
      * @return bool
      */
-    public function Verify($hashed, string $string = null): bool
+    public function Verify(string $string, string $hashed): bool
     {
-        if(isset($string))
-        {
-            return password_verify($string, $hashed);
-        }
-        else 
-        {
-            return false;
-        }
+        return password_verify($string, $hashed);
     }
 
     /**

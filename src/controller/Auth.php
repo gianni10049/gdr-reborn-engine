@@ -6,16 +6,19 @@ use Libraries\Security;
 use Libraries\Request;
 use Libraries\Session;
 use Models\Login;
-use Models\User;
 
 class Auth
 {
+
+    private $security;
+    private $request;
+    private $login_model;
+
     public function __construct()
     {
         $this->security = new Security;
         $this->request = new Request;
         $this->login_model = new Login;
-        $this->model = new User;
     }
 
     /**
@@ -27,6 +30,12 @@ class Auth
      */
     public function authenticate(string $username = null, string $credential = null): bool
     {
+
+        if((!isset($username)) || (!isset($credential)))
+        {
+            return false;
+        }
+
         if($this->login_model->countAttempts($this->request->getIpAddress()) > 10)
         {
             return false;
@@ -34,18 +43,23 @@ class Auth
         }
 
         $username = $this->security->Filter($username);
-        
-        $user = $this->model->readByUsername($username);
+
+        if(trim($username) == null) return false;
+
+        //recupera, eventualmente, i dati dal db
+        $user = $this->model->readByName($username);
 
         if(!empty($user))
         {
-            if(password_verify($credential, $user['password']))
+            if($this->security->Verify($credential, $user['password']))
             {
+                //CREA LA SESSIONE
                 $session = new Session;
                 //inserire altre sessioni utili
                 //come i permessi
                 $session->id = $user['id'];
                 $session->username = $user['username'];
+                //per la sicurezza
                 $session->fingerprint = hash_hmac('sha256', $this->request->getUserAgent(), hash('sha256', $this->request->getIPAddress(), true));
                 $session->last_active = time();
 
@@ -70,7 +84,5 @@ class Auth
             return false;
 
         }
-    
     }
-}
 }

@@ -4,7 +4,7 @@ namespace Models;
 
 use Models\Wrapper;
 
-class Login
+class Login extends Wrapper
 {
      /**
      * @fn countAttempts
@@ -40,5 +40,20 @@ class Login
         $error = $this->db->Query("INSERT INTO invalidlogin (message, ip, timerror) VALUES (?, ?, ?)", [$message, $ip, date("Y-m-d H:i:s")]);
 
         return $error;
+    }
+
+    /**
+     * readByName
+     *
+     * @param string $username
+     * @return mixed
+     */
+    public function readByName(string $username = null)
+    {
+        //tb name users e campo isbanned?
+        //uso la query raw intanto
+        $arr = $this->db->Query("SELECT * FROM users WHERE username = ? AND isbanned = 0", [$username]);
+
+        return $arr;
     }
 }

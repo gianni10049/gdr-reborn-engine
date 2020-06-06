@@ -4,13 +4,10 @@ namespace Database;
 
 use Libraries\Security;
 //use Core\Config;
-use PDO;
-use PDOException;
-use PDOStatement;
-
+use \PDO;
+use \PDOException;
 
 #TODO White-List of the approachable tables
-
 
 class DB
 {
@@ -84,11 +81,10 @@ class DB
     {
         try {
 
-            # Read settings from config file
             $this->pdo = new PDO("mysql:host={$this->host};dbname={$this->db}", $this->user, $this->pass, $this->options);
 
-        } catch (PDOException $e) {
-            # Get error
+        } catch (PDOException $e) 
+        {
             die($e->getMessage());
         }
     }
