@@ -1,14 +1,16 @@
 <?php
 
+
 namespace Models;
+require_once ('Wrapper.php');
 
 use Models\Wrapper;
 
 class Login extends Wrapper
 {
-     /**
+    /**
      * @fn countAttempts
-     * @param  string $ip
+     * @param string $ip
      * @return int
      */
     public function countAttempts(string $ip): int
