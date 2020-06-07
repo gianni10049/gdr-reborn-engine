@@ -6,7 +6,6 @@ class Security
 {
 
     /**
-<<<<<<< HEAD:src/controller/Security.php
      * @var Security
      */
     public static $_instance;
@@ -34,30 +33,16 @@ class Security
     }
 
     /**
-=======
->>>>>>> 21450b5cc04fa59ab62acc53ca3c34c4f061aa72:src/libraries/Security.php
      * Hashing of the data passed
      * @param string $string
      * @return bool|string
      */
     public function Hash(string $string = null)
     {
-<<<<<<< HEAD:src/controller/Security.php
-        #If is string
-        if (is_string($string)) {
-            #Return hashed string
+        #Return false
+        if (isset($string)) {
             return password_hash($string, PASSWORD_BCRYPT);
-        } #else
-        else {
-            #Return false
-=======
-        if(isset($string)) 
-        {
-            return password_hash($string, PASSWORD_BCRYPT);
-        }
-        else 
-        {
->>>>>>> 21450b5cc04fa59ab62acc53ca3c34c4f061aa72:src/libraries/Security.php
+        } else {
             return false;
         }
     }
@@ -70,19 +55,7 @@ class Security
      */
     public function Verify(string $string, string $hashed): bool
     {
-<<<<<<< HEAD:src/controller/Security.php
-        #If is string
-        if (is_string($string)) {
-            #Compare password whit hashed string
-            return password_verify($string, $hashed);
-        } #Else
-        else {
-            #Return false
-            return false;
-        }
-=======
         return password_verify($string, $hashed);
->>>>>>> 21450b5cc04fa59ab62acc53ca3c34c4f061aa72:src/libraries/Security.php
     }
 
     /**
@@ -223,12 +196,9 @@ class Security
         return $this->Filter($text, 'String');
     }
 
-    
     /**
-     * @fn getEmail 
-     * 
+     * @fn getEmail
      * Ex.: $sec->getEmail($_POST['email']);
-     * 
      * @param  string|null $email input
      * @param  int|null    $min   min chars
      * @param  int|null    $max   max chars
@@ -251,8 +221,7 @@ class Security
     }
 
     /**
-     * @fn setPassword 
-     * 
+     * @fn setPassword
      * @param  string|null $password input
      * @param  int|integer $min      min len
      * @param  int|integer $max      max len
@@ -261,37 +230,37 @@ class Security
     public function setPassword(string $password = null, int $min = 8, int $max = 16): bool
     {
         // len
-        if(strlen($password) < $min || strlen($max) > 16) 
+        if(strlen($password) < $min || strlen($max) > 16)
         {
             return false;
         }
 
         // digit
-        if (!preg_match("/\d/", $password)) 
+        if (!preg_match("/\d/", $password))
         {
             return false;
         }
 
         // upper
-        if (!preg_match("/[A-Z]/", $password)) 
+        if (!preg_match("/[A-Z]/", $password))
         {
             return false;
         }
 
         // lower
-        if (!preg_match("/[a-z]/", $password)) 
+        if (!preg_match("/[a-z]/", $password))
         {
             return false;
         }
 
         // special chars
-        if (!preg_match("/\W/", $password)) 
+        if (!preg_match("/\W/", $password))
         {
             return false;
         }
 
         // no ws
-        if (preg_match("/\s/", $password)) 
+        if (preg_match("/\s/", $password))
         {
             return false;
         }
@@ -300,9 +269,8 @@ class Security
     }
 
     /**
-     * @fn matches 
+     * @fn matches
      * Ex.: $sec->matches($_POST['password'], $_POST['confirm_password']);
-     * 
      * @param  string|null $string  input
      * @param  string|null $confstr input
      * @return bool
