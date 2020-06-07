@@ -1,21 +1,14 @@
 <?php
 
 #Start Instance of Config
-use BaseSecurity\Security;
-use Connection\DB;
+use Libraries\Security;
+use Database\DB;
 use Core\Config;
 
 $config = Config::getInstance();
 
 #Init instance of DB
-$db = DB::getInstance();
-$db->Connect([
-    'host' => $config->host,
-    'db' => $config->db,
-    'charset' => $config->charset,
-    'user' => $config->user,
-    'pass' => $config->pass
-]);
+$db = DB::getInstance($config->host,$config->db,$config->user,$config->pass);
 
 #Init instance of Security
 $sec = Security::getInstance();

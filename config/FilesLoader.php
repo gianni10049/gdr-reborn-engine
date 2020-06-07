@@ -2,8 +2,10 @@
 
 # ARRAY OF ROOTS WHERE LOAD FILES
 $dirs = [
+    "src/libraries",
+    "src/models",
+    "src/database",
     "src/controller",
-    "src/model"
 ];
 
 #Foreach Root
