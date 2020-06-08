@@ -67,4 +67,25 @@ class Session
     {
         session_regenerate_id();
     }
+
+    /**
+     * setSession
+     *
+     * @param array $session
+     * @return void
+     */
+    public function setSession(array $session)
+    {
+        foreach($session as $key => $value)
+        {
+            if(is_string($value))
+            {
+                $_SESSION[$key] = $value;
+            }
+            else if(is_array($value))
+            {
+                $_SESSION[$key] = $value;
+            }
+        }
+    }
 }
