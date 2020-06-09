@@ -1,33 +1,43 @@
 <?php
 
 #Import namespace
-use Core\Request,
-    Core\Router;
+use Core\Router;
+use Libraries\Request;
 
 #Import required files
-require ('config/required.php');
+require('config/required.php');
 
 #Import composer autoloader
-require(ROOT.'vendor/autoload.php');
+require(ROOT . 'vendor/autoload.php');
 
 #Import site header
-require (ROOT.'public/header/header.php');
+require(ROOT . 'public/header/header.php');
 
 #Init Request and Router classes
-$request= Request::getInstance();
+$request = Request::getInstance();
 $router = Router::getInstance($request);
 
 #Routing
 
 #GET
-$router->get('/', function($args) {
+/**!
+ * ! All get parameter need to be passed by syntax : "/data?key=val&key=val&key=val";
+ * ! Root syntax for passing parameter is: "/?key=val&key=val&key=val";
+ * ! All parameter in $args var, in the callback, are associated like: ['key'=>'val','key'=>'val']
+ * !*/
 
+$router->get('/', function ($args) {
 });
 
 #POST
-$router->post('/data', function($args) {
+/**!
+ * ! All post parameter are passed only by forms
+ * ! All parameter in $args var, in the callback, are associated like: ['key'=>'val','key'=>'val']
+ * !*/
+
+$router->post('/data', function ($args) {
 
 });
 
 #Import site footer
-require (ROOT.'public/footer/footer.php');
+require(ROOT . 'public/footer/footer.php');

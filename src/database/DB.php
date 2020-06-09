@@ -1,21 +1,23 @@
 <?php
 
-namespace Connection;
 namespace Database;
 
-use Libraries\Security;
-use PDO;
-use PDOException;
-use PDOStatement;
-
-//use Core\Config;
+use Libraries\Security,
+    PDO,
+    PDOException,
+    Core\Config;
 
 #TODO White-List of the approachable tables
 
+/**
+ * @class DB
+ * @package Database
+ * @note Database Model for create query
+ */
 class DB
 {
     /**
-     * @var DB $_instance Self-Instance
+     * Init vars PRIVATE
      * @var Security $sec
      * @var string $host (Host Name)
      * @var string $db (Database Name)
@@ -24,40 +26,50 @@ class DB
      * @var PDO $pdo
      * @var array $options (Connection Options)
      */
-    public static $_instance;
-    private $sec;
-    private $host;
-    private $db;
-    private $pass;
-    private $user;
-    private $pdo;
-    private $options = [];
+    private
+        $sec,
+        $config,
+        $host,
+        $db,
+        $pass,
+        $user,
+        $charset,
+        $pdo,
+        $options = [];
 
     /**
-     * DB constructor.
-     * @param string|null $db
-     * @param string|null $host
-     * @param string|null $user
-     * @param string|null $password
-     * @param array|null $options
+     * Init Vars PUBLIC STATIC
+     * @var DB $_instance Self-Instance
      */
-    public function __construct(string $db = null, string $host = null, string $user = null, string $password = null, array $options = null)
+    public static
+        $_instance;
+
+    /**
+     * @fn __construct
+     * @note DB constructor.
+     * @param string|null $db
+     * @param array|null $options
+     * @return void
+     */
+    public function __construct(string $db = null, array $options = null)
     {
         #Init Security instance
         $this->sec = Security::getInstance();
+        $this->config = Config::getInstance();
 
         #Set base values for connection
-        $this->db = (isset($db)) ? $db : "databasename";
-        $this->host = (isset($host)) ? $host : "localhost";
-        $this->user = (isset($user)) ? $user : 'username';
-        $this->pass = (isset($password)) ? $password : 'passsword';
+        $this->db = (isset($db)) ? $db : $this->config->db;
+        $this->host = $this->config->host;
+        $this->user = $this->config->user;
+        $this->pass = $this->config->pass;
+        $this->charset = $this->config->charset;
 
         #Set default option for connection
         $default_options = [
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
             PDO::ATTR_EMULATE_PREPARES => false,
-            PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"
+            PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES {$this->charset}"
         ];
 
         #If options are not specified, get default options
@@ -65,27 +77,27 @@ class DB
     }
 
     /**
-     * Self Instance
+     * @fn getInstance
+     * @note Self Instance
      * @param string|null $db
-     * @param string|null $host
-     * @param string|null $user
-     * @param string|null $password
      * @param array|null $options
      * @return DB
      */
-    public static function getInstance(string $db = null, string $host = null, string $user = null, string $password = null, array $options = null)
+    public static function getInstance(string $db = null, array $options = null):DB
     {
         #If self-instance not defined
         if (!(self::$_instance instanceof self)) {
             #define it
-            self::$_instance = new self($db , $host , $user, $password , $options);
+            self::$_instance = new self($db,$options);
         }
         #return defined instance
         return self::$_instance;
     }
 
     /**
-     * DB decostruct
+     * @fn __destruct
+     * @note DB decostruct
+     * @return void
      */
     public function __destruct()
     {
@@ -94,16 +106,18 @@ class DB
     }
 
     /**
-     * Get Database name
+     * @fn getDatabase
+     * @note Get Database name
      * @return string
      */
-    public function getDatabase()
+    public function getDatabase():string
     {
         return $this->db;
     }
 
     /**
-     * Connect to db
+     * @fn Connect
+     * @note Connect to db
      * @return void
      */
     public function Connect()
@@ -117,7 +131,8 @@ class DB
     }
 
     /**
-     * Exec query
+     * @fn Query
+     * @note Exec passed query
      * @param string $query
      * @param array $params
      * @return mixed
@@ -151,14 +166,15 @@ class DB
 
 
     /**
-     * Query type SELECT
+     * @fn Select
+     * @note Query type SELECT
      * @param string $value
      * @param string $table
      * @param string $where
      * @param array $params
-     * @return bool|mixed|PDOStatement
+     * @return mixed
      */
-    public function Select($value, $table, $where, $params = [])
+    public function Select(string $value, string $table,string $where,array $params = [])
     {
         #Init Security class
         $sec = $this->sec;
@@ -184,13 +200,15 @@ class DB
     }
 
     /**
-     * Query type UPDATE
+     * @fn Update
+     * @note Query type UPDATE
      * @param string $table
      * @param string $set
      * @param string $where
      * @param array $params
+     * @return void
      */
-    public function Update($table, $set, $where, $params = [])
+    public function Update(string $table,string $set,string $where,array $params = [])
     {
         #Init Security class
         $sec = $this->sec;
@@ -217,13 +235,15 @@ class DB
     }
 
     /**
-     * Query type UPDATE
+     * @fn Insert
+     * @note Query type INSERT
      * @param string $table
      * @param string $rows
      * @param string $values
      * @param array $params
+     * @return void
      */
-    public function Insert($table, $rows, $values, $params = [])
+    public function Insert(string $table,string $rows,string $values,array $params = [])
     {
         #Init Security class
         $sec = $this->sec;
@@ -250,12 +270,14 @@ class DB
     }
 
     /**
-     * Query type DELETE
+     * @fn Delete
+     * @note Query type DELETE
      * @param string $table
      * @param string $where
      * @param array $params
+     * @return void
      */
-    public function Delete($table, $where, $params = [])
+    public function Delete(string $table,string $where,array $params = [])
     {
         #Init Security class
         $sec = $this->sec;
@@ -280,14 +302,15 @@ class DB
     }
 
     /**
-     * Query type SUM
+     * @fn Sum
+     * @note Query type SUM
      * @param string $table
      * @param string $cell
      * @param string $where
      * @param array $params
      * @return int
      */
-    public function Sum($table, $cell, $where, $params = [])
+    public function Sum(string $table,string $cell,string $where,array $params = []):int
     {
         #Init Security class
         $sec = $this->sec;
@@ -313,14 +336,15 @@ class DB
     }
 
     /**
-     * Query type COUNT
+     * @fn Count
+     * @note Query type COUNT
      * @param string $table
      * @param string $where
      * @param array $params
      * @return int
      */
 
-    public function Count($table, $where, $params = [])
+    public function Count(string $table,string $where,array $params = []):int
     {
         #Init Security class
         $sec = $this->sec;
@@ -346,7 +370,8 @@ class DB
     }
 
     /**
-     * QUERY TYPE JOIN
+     * @fn Join
+     * @note Query type JOIN
      * @param string $table
      * @param string $value
      * @param string $joinTable
@@ -355,7 +380,7 @@ class DB
      * @param array $params
      * @return mixed
      */
-    public function Join($table, $value, $joinTable, $joinCond, $where, $params = [])
+    public function Join(string $table,string $value,string $joinTable,string $joinCond,string $where,array $params = [])
     {
         #Init Security class
         $sec = $this->sec;
