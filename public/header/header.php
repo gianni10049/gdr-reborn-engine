@@ -1,10 +1,11 @@
 <?php
 
 #Start Instance of Config
-use Libraries\Security;
-use Database\DB;
-use Core\Config;
+use Libraries\Security,
+    Database\DB,
+    Core\Config;
 
+#Init instance of Config
 $config = Config::getInstance();
 
 #Init instance of DB

@@ -3,7 +3,7 @@
 
 namespace Controllers;
 
-use Core\Config,
+use Models\ConfigModel,
     Libraries\Request,
     Libraries\Security,
     Libraries\Session;
@@ -21,7 +21,7 @@ class CheckSession
      * @var Session $session
      * @var Request $request
      * @var Security $sec
-     * @var Config $config
+     * @var ConfigModel $config
      */
     private
         $session,
@@ -39,7 +39,7 @@ class CheckSession
         $this->session = Session::getInstance();
         $this->request = Request::getInstance();
         $this->sec = Security::getInstance();
-        $this->config = Config::getInstance();
+        $this->config = ConfigModel::getInstance();
     }
 
     /**
