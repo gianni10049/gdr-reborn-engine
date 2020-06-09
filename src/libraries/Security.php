@@ -2,7 +2,7 @@
 
 namespace Libraries;
 
-use Core\Config;
+use Models\ConfigModel;
 
 /**
  * @class Security
@@ -21,7 +21,7 @@ class Security
 
     /**
      * Init vars PUBLIC
-     * @var Config
+     * @var ConfigModel
      */
     public
         $config;
@@ -29,10 +29,10 @@ class Security
     /**
      * @fn __constructor
      * @note Security constructor.
+     * @return void
      */
-    public function __construct()
+    private function __construct()
     {
-        $this->config = Config::getInstance();
     }
 
     /**
@@ -243,15 +243,14 @@ class Security
      * @fn getEmail
      * @example $sec->getEmail($_POST['email']);
      * @param string|null $email input
-     * @param int|null $min min chars
-     * @param int|null $max max chars
      * @return bool
      */
     public function getEmail(string $email = null): bool
     {
+        $config= ConfigModel::getInstance();
 
-        $max= $this->config->EmailMax;
-        $min= $this->config->EmailMin;
+        $max= $config->email_max;
+        $min= $config->email_min;
 
         #If is an email
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)){ return false; }
@@ -282,8 +281,10 @@ class Security
     public function setPassword(string $password = null): bool
     {
 
-        $min= $this->config->PassMin;
-        $max= $this->config->PassMax;
+        $config= ConfigModel::getInstance();
+
+        $min= $config->password_min;
+        $max= $config->password_max;
 
         #If password not have right length
         if (

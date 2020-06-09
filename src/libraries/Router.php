@@ -2,7 +2,8 @@
 
 namespace Core;
 
-use Libraries\Request;
+use Libraries\Request,
+    Models\ConfigModel;
 
 /**
  * @class Router
@@ -41,15 +42,17 @@ class Router
         return self::$_instance;
     }
 
+    #TODO cambiare da Config a ConfigModel
     /**
      * @fn __construct
      * @note Router constructor.
      * @param Request $request
      * @return void
      */
-    public function __construct(Request $request)
+    private function __construct(Request $request)
     {
-        $this->supportedHttpMethods = Config::getInstance()->AllowedMethods;
+
+        $this->supportedHttpMethods = ConfigModel::getInstance()->request_allowed_methods;
         $this->request = $request;
     }
 

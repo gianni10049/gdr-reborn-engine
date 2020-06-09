@@ -2,7 +2,7 @@
 
 namespace Libraries;
 
-use Core\Config;
+use Models\ConfigModel;
 
 /**
  * @class Cookie
@@ -17,7 +17,7 @@ class Cookie
 
     /**
      * Init vars PRIVATE
-     * @var Config $config
+     * @var ConfigModel $config
      */
     private
         $config;
@@ -53,14 +53,14 @@ class Cookie
     public function __construct()
     {
         #Init Config class
-        $this->config= Config::getInstance();
+        $this->config= ConfigModel::getInstance();
 
         #Set config values
-        $this->expire = $this->config->cookiExpire;
-        $this->path = $this->config->cookiePath;
-        $this->domain = $this->config->cookieDomain;
-        $this->secure = $this->config->cookieSecure;
-        $this->httpOnly = $this->config->cookieHttpOnly;
+        $this->expire = $this->config->cookie_expire;
+        $this->path = $this->config->cookie_path;
+        $this->domain = $this->config->cookie_domain;
+        $this->secure = $this->config->cookie_secure;
+        $this->httpOnly = $this->config->cookie_httponly;
     }
 
 

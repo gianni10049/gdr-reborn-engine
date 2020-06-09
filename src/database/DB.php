@@ -51,7 +51,7 @@ class DB
      * @param array|null $options
      * @return void
      */
-    public function __construct(string $db = null, array $options = null)
+    private function __construct(string $db = null, array $options = null)
     {
         #Init Security instance
         $this->sec = Security::getInstance();

@@ -22,26 +22,6 @@ class Config
         $db = 'db',
         $pass = 'pass',
         $user = 'user',
-        $charset = 'utf8mb4_unicode_ci',
+        $charset = 'utf8mb4_unicode_ci';
 
-        /***** ******/
-        $AllowedMethods = ['GET', 'POST'],
-
-        /***** SESSION *****/
-        $session_params = ['cookie_httponly' => 1, 'cookie_lifetime' => 0],
-        $session_timeout = 360,
-
-        /**** LOGIN ****/
-        $LoginMaxAttempt = 10,
-
-        /**** COOKIES ****/
-        $cookiExpire = (86400 * 30),
-        $cookiePath = '/',
-        $cookieDomain = '',
-        $cookieSecure = false,
-        $cookieHttpOnly = true,
-
-        /**** EMAIL ****/
-        $PassMin= 8,
-        $PassMax= 16;
 }

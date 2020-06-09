@@ -2,11 +2,11 @@
 
 namespace Controllers;
 
-use Core\Config,
-    Libraries\Request,
+use Libraries\Request,
     Libraries\Security,
     Libraries\Session,
-    Models\Login;
+    Models\Login,
+    Models\ConfigModel;
 
 /**
  * @class Auth
@@ -17,7 +17,7 @@ class Auth
 {
     /**
      * Init vars PRIVATE
-     * @var Config $config
+     * @var ConfigModel $config
      * @var Security $security
      * @var Request $request
      * @var Login $login_model
@@ -46,7 +46,7 @@ class Auth
         $this->security = Security::getInstance();
         $this->request = Request::getInstance();
         $this->login_model = Login::getInstance();
-        $this->config = Config::getInstance();
+        $this->config = ConfigModel::getInstance();
     }
 
 
@@ -84,7 +84,7 @@ class Auth
         if ((!isset($username) || empty($username)) || (!isset($credential) || empty($credential))) {
             return false;
         } #Else if the user have reached the max attempts for login
-        else if ($this->login_model->countAttempts($this->request->getIpAddress()) > $this->config->LoginMaxAttempt) {
+        else if ($this->login_model->countAttempts($this->request->getIpAddress()) > $this->config->login_max_attempts) {
             die('Massimo numero di tentativi raggiunto');
         }
 

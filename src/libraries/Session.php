@@ -2,7 +2,7 @@
 
 namespace Libraries;
 
-use Core\Config;
+use Models\ConfigModel;
 
 /**
  * @class Session
@@ -37,7 +37,7 @@ class Session
 
     /**
      * Init vars PRIVATE
-     * @var Config $config
+     * @var ConfigModel $config
      * @var Security $sec
      */
     private
@@ -72,10 +72,14 @@ class Session
         $this->sec = Security::getInstance();
 
         #Init config for extract session params
-        $this->config= Config::getInstance();
+        $this->config= ConfigModel::getInstance();
 
         #Extract and set session params
-        $this->session_params= $this->config->session_params;
+        $this->session_params=
+            [
+                'cookie_httponly' => $this->config->cookie_httponly,
+                'cookie_lifetime' => $this->config->cookie_lifetime
+            ];
 
         #If session is empty
         if(session_status() == PHP_SESSION_NONE) 
