@@ -129,7 +129,7 @@ class Session
 
     /**
      * @fn __call
-     * @note Call magic method for create session vars
+     * @note Call magic method for create session vars dynamically
      * @param string $name
      * @param mixed $value
      * @return Session
@@ -178,6 +178,29 @@ class Session
 
         #Restart keys array
         $this->array = [];
+    }
+
+
+    /**
+     * @fn setSession
+     * @note Set a session var
+     * @param array $session
+     * @return void
+     */
+    public function setSession(array $session)
+    {
+        #Foreach session value passed
+        foreach($session as $key => $value)
+        {
+            #If is string, array or integer
+            (is_string($value) || is_array($value) || is_int($value))
+
+                #Set session var
+                ? ($_SESSION[$key] = $value)
+
+                #Else not set anything
+                : false;
+        }
     }
    
     /**
