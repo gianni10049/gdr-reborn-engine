@@ -4,12 +4,30 @@ namespace Models;
 
 use Database\Db;
 
+/**
+ * @class Wrapper
+ * @package Models
+ * @note Wrapper model for login
+ */
 class Wrapper
 {
+    /**
+     * Init vars PROTECTED
+     * @var DB $db
+     */
+    protected $db;
 
-    public function __construct(string $db = null, string $host = null, string $user = null, string $password = null, array $options = null)
+    /**
+     * @fn Wrapper constructor.
+     * @note Create DB connection for login
+     * @param string|null $db
+     * @param array|null $options
+     * @return void
+     */
+    public function __construct(string $db = null, array $options = null)
     {
-        $this->db = new Db($db, $host, $user, $password, $options);
+        #Get DB instance
+        $this->db = DB::getInstance($db,$options);
     }
 
 }

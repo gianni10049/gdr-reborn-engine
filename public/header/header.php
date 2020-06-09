@@ -8,7 +8,8 @@ use Core\Config;
 $config = Config::getInstance();
 
 #Init instance of DB
-$db = DB::getInstance($config->host,$config->db,$config->user,$config->pass);
+$db = DB::getInstance($config->db);
+$db->Connect();
 
 #Init instance of Security
 $sec = Security::getInstance();

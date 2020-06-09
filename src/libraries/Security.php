@@ -2,26 +2,45 @@
 
 namespace Libraries;
 
+use Core\Config;
+
+/**
+ * @class Security
+ * @package Libraries
+ * @note Class for manage security of the website
+ */
 class Security
 {
 
     /**
+     * Init vars PUBLIC STATIC
      * @var Security
      */
-    public static $_instance;
+    public static
+        $_instance;
 
     /**
-     * Security constructor.
+     * Init vars PUBLIC
+     * @var Config
+     */
+    public
+        $config;
+
+    /**
+     * @fn __constructor
+     * @note Security constructor.
      */
     public function __construct()
     {
+        $this->config = Config::getInstance();
     }
 
     /**
-     * Self Instance
+     * @fn getInstance
+     * @note Self Instance
      * @return Security
      */
-    public static function getInstance()
+    public static function getInstance(): Security
     {
         #If self-instance not defined
         if (!(self::$_instance instanceof self)) {
@@ -33,22 +52,19 @@ class Security
     }
 
     /**
-     * Hashing of the data passed
+     * @fn Hash
+     * @note Hashing of the data passed
      * @param string $string
      * @return bool|string
      */
     public function Hash(string $string = null)
     {
-        #Return false
-        if (isset($string)) {
-            return password_hash($string, PASSWORD_BCRYPT);
-        } else {
-            return false;
-        }
+        return (isset($string)) ? password_hash($string, PASSWORD_BCRYPT) : false;
     }
 
     /**
-     * Verify hashed data
+     * @fn Verify
+     * @note Verify hashed data
      * @param string $string
      * @param string $hashed
      * @return bool
@@ -59,14 +75,14 @@ class Security
     }
 
     /**
-     * Filter the data for indicated type. Default if wrong, not existent or not defined type: string.
+     * @fn Filter
+     * @note Filter the data for indicated type. Default if wrong, not existent or not defined type: string.
+     * @example $sec->Filter(1,'Int');
      * @param mixed $data
      * @param string $type
      * @return mixed
-     * @example $sec->Filter(1,'Int');
-     * @example $sec->Filter('test','String');
      */
-    public function Filter($data, $type = 'String')
+    public function Filter($data, string $type = 'String')
     {
         #Switch passed type
         switch ($type) {
@@ -76,7 +92,7 @@ class Security
             default:
 
             case 'String':
-                $data = filter_var($data, FILTER_SANITIZE_STRING);
+                $data = trim(filter_var($data, FILTER_SANITIZE_STRING));
                 break;
 
             #Type Int (1,2,3)
@@ -128,6 +144,12 @@ class Security
             case 'QueryNull':
                 $data = (!empty($data)) ? "'{$this->Filter($data,'Slash')}'" : 'NULL';
                 break;
+
+            #Validate Input post
+            case 'Post':
+                $data = filter_input(INPUT_POST, $data, FILTER_SANITIZE_SPECIAL_CHARS);
+                break;
+
         }
 
         #Return filtered data
@@ -135,11 +157,12 @@ class Security
     }
 
     /**
-     * HTML filter
+     * @fn HtmlFilter
+     * @note HTML filter
      * @param string $string
      * @return string
      */
-    public function HtmlFilter($string)
+    public function HtmlFilter(string $string):string
     {
         #Array of not allowed html codes
         $notAllowed = array(
@@ -157,15 +180,16 @@ class Security
     }
 
     /**
-     * Reload Files Cache only when modified.
+     * @fn NoChace
+     * @note Reload Files Cache only when modified.
      * @param string $file
-     * @return mixed|string
+     * @return string
      */
-    public function NoChace($file)
+    public function NoChace(string $file):string
     {
 
         #Filter passed vars
-        $file= $this->Filter($file,'String');
+        $file = $this->Filter($file, 'String');
 
         #Get last update time
         $mtime = filemtime(ROOT . $file);
@@ -178,16 +202,17 @@ class Security
     }
 
     /**
-     * Reload Files Cache when change version
+     * @fn Version
+     * @note Reload Files Cache when change version
      * @param string $file
      * @param string $version
      * @return string
      */
-    public function Version($file, $version)
+    public function Version(string $file, string $version):string
     {
         #Filter passed vars
-        $file= $this->Filter($file,'String');
-        $version= $this->Filter($version,'String');
+        $file = $this->Filter($file, 'String');
+        $version = $this->Filter($version, 'String');
 
         #Compose url whit the version
         $text = $file . '?v=' . $version;
@@ -197,71 +222,99 @@ class Security
     }
 
     /**
-     * @fn getEmail
-     * Ex.: $sec->getEmail($_POST['email']);
-     * @param  string|null $email input
-     * @param  int|null    $min   min chars
-     * @param  int|null    $max   max chars
-     * @return bool
+     * @fn GenerateFingerprint
+     * @note Generate fingerprint for session control
+     * @return string
      */
-    public function getEmail(string $email = null, int $min = null, int $max = null): bool
+    public function GenerateFingerprint():string
     {
-        if(!filter_var($email, FILTER_VALIDATE_EMAIL)) return false;
 
-        // domains banned (da scegliere la dir)
-        $bannedEmails = json_decode(file_get_contents(__DIR__ . "/domains/domains.json"));
+        #Get Request instance
+        $request = Request::getInstance();
 
-        if(in_array(strtolower(explode('@', $email)[1]), $bannedEmails)) return false;
+        #Create fingerprint
+        $fingerprint = hash_hmac('sha256', $request->getUserAgent(), hash('sha256', $request->getIPAddress(), true));
 
-        if((isset($min)) && (strlen($email) < $min)) return false;
-
-        if((isset($max)) && (strlen($email) > $max)) return false;
-
-        return true;
+        #Return fingerprint
+        return $this->Filter($fingerprint, 'String');
     }
 
     /**
-     * @fn setPassword
-     * @param  string|null $password input
-     * @param  int|integer $min      min len
-     * @param  int|integer $max      max len
+     * @fn getEmail
+     * @example $sec->getEmail($_POST['email']);
+     * @param string|null $email input
+     * @param int|null $min min chars
+     * @param int|null $max max chars
      * @return bool
      */
-    public function setPassword(string $password = null, int $min = 8, int $max = 16): bool
+    public function getEmail(string $email = null): bool
     {
-        // len
-        if(strlen($password) < $min || strlen($max) > 16)
-        {
+
+        $max= $this->config->EmailMax;
+        $min= $this->config->EmailMin;
+
+        #If is an email
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)){ return false; }
+
+        #Get list of banned domains
+        $bannedEmails = json_decode(file_get_contents(LIBRARIES . "/domains/domains.json"));
+
+        #If the domain is not banned
+        if (in_array(strtolower(explode('@', $email)[1]), $bannedEmails)){ return false; }
+
+        #If the mail have the right length
+        if (
+            (isset($min)) && (strlen($email) < $min) ||
+            (isset($max)) && (strlen($email) > $max)
+        ){ return false; }
+
+        #Is a valid email
+        return true;
+    }
+
+
+    #TODO Controllare i vari filtri regex
+    /**
+     * @fn setPassword
+     * @param string|null $password input
+     * @return bool
+     */
+    public function setPassword(string $password = null): bool
+    {
+
+        $min= $this->config->PassMin;
+        $max= $this->config->PassMax;
+
+        #If password not have right length
+        if (
+            (strlen($password) < $min) ||
+            (strlen($password) > $max)
+        ){
             return false;
         }
 
         // digit
-        if (!preg_match("/\d/", $password))
-        {
+        if (!preg_match("/\d/", $password)) {
             return false;
         }
 
-        // upper
-        if (!preg_match("/[A-Z]/", $password))
-        {
+        #If not have uppercase values
+        if (!preg_match("/[A-Z]/", $password)) {
             return false;
         }
 
-        // lower
-        if (!preg_match("/[a-z]/", $password))
-        {
+        #If not have lowercase values
+        if (!preg_match("/[a-z]/", $password)) {
             return false;
         }
 
-        // special chars
-        if (!preg_match("/\W/", $password))
-        {
+        #If have special chars
+        if (!preg_match("/\W/", $password)) {
             return false;
         }
 
-        // no ws
-        if (preg_match("/\s/", $password))
-        {
+        #If have space
+        if (preg_match("/\s/", $password)) {
             return false;
         }
 
@@ -270,19 +323,26 @@ class Security
 
     /**
      * @fn matches
-     * Ex.: $sec->matches($_POST['password'], $_POST['confirm_password']);
-     * @param  string|null $string  input
-     * @param  string|null $confstr input
+     * @example $sec->matches($_POST['password'], $_POST['confirm_password']);
+     * @param string|null $string input
+     * @param string|null $confstr input
      * @return bool
      */
     public function matches(string $string = null, string $confstr = null): bool
     {
+        #Leave spaces from passed data
         $string = preg_replace('/\s+/', '', $string);
 
-        if($string == null) return false;
+        #If string is not null
+        if ($string == null){ return false; }
 
-        if($string === $confstr) return true;
-
-        return false;
+        #If is the same
+        return ($string === $confstr) ? true : false;
     }
+
+
+
+
+
+
 }
