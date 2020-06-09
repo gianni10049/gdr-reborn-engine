@@ -1,0 +1,160 @@
+<?php
+
+namespace Core;
+
+use Libraries\Request;
+
+/**
+ * @class Router
+ * @package Core
+ * @note Router class for manage routing of the web page
+ */
+class Router
+{
+    /**
+     * Init vars PRIVATE
+     * @var Request class
+     * @var array Supported methods
+     */
+    private
+        $request,
+        $supportedHttpMethods;
+
+    /**
+     * Init vars PUBLIC STATIC
+     * @var Router $_instance;
+     */
+    public static
+        $_instance;
+
+    /**
+     * @fn getInstance
+     * @note Self Instance
+     * @param Request $request
+     * @return Router class
+     */
+    public static function getInstance(Request $request):Router
+    {
+        if (!(self::$_instance instanceof self)) {
+            self::$_instance = new self($request);
+        }
+        return self::$_instance;
+    }
+
+    /**
+     * @fn __construct
+     * @note Router constructor.
+     * @param Request $request
+     * @return void
+     */
+    public function __construct(Request $request)
+    {
+        $this->supportedHttpMethods = Config::getInstance()->AllowedMethods;
+        $this->request = $request;
+    }
+
+    /**
+     * @fn __call
+     * @note Magic Method for not allowed methods and request
+     * @param string $name
+     * @param array $args
+     * @return void
+     */
+    public function __call(string $name, array $args)
+    {
+        #Create an array whit methods
+        list($route, $method) = $args;
+
+        #If method not allowed
+        if (!in_array(strtoupper($name), $this->supportedHttpMethods)) {
+
+            #Get invalid method error and stop script (405)
+            $this->invalidMethodHandler();
+        }
+
+        #Set method association whit route
+        $this->{strtolower($name)}[$this->formatRoute($route)] = $method;
+
+    }
+
+    /**
+     * @fn formatRoute
+     * @note Exclude extra data from url
+     * @param string $route
+     * @return string
+     */
+    private function formatRoute(string $route):string
+    {
+        #Trim slash from route
+        $result = rtrim($route, '/');
+
+        #If position is root
+        if ($result === '')
+        {
+            #Return root
+            return '/';
+        } #Else not is root
+        else {
+
+            #Slice route from passed data
+            $exp = explode('?', $result);
+
+            #Return sliced route
+            return $exp[0];
+        }
+    }
+
+    /**
+     * @fn invalidMethodHandler
+     * @note Handler for invalid method of request
+     * @return void
+     */
+    private function invalidMethodHandler()
+    {
+        die("{$this->request->serverProtocol} 405 Method Not Allowed");
+    }
+
+    /**
+     * @fn defaultRequestHandler
+     * @note Handler for not existent route
+     * @return void
+     */
+    private function defaultRequestHandler()
+    {
+        die("{$this->request->serverProtocol} 404 Not Found");
+    }
+
+    /**
+     * @fn resolve
+     * @note Resolve routing of the url and return callback whit parameters
+     * @return mixed
+     */
+    function resolve()
+    {
+        #Call needed vars
+        $methodDictionary = $this->{strtolower($this->request->requestMethod)};
+        $formatedRoute = $this->formatRoute($this->request->requestUri);
+        $method = $methodDictionary[$formatedRoute];
+
+        #If route not exist in router
+        if (is_null($method)) {
+
+            #Get not existent page error (404)
+            $this->defaultRequestHandler();
+        }
+
+        #Return callback whit passed args
+        return call_user_func($method, array($this->request->getBody()));
+    }
+
+    /**
+     * @fn __destruct
+     * @note Get route and passed data
+     * @return void
+     */
+    function __destruct()
+    {
+        $this->resolve();
+    }
+
+}

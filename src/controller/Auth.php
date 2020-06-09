@@ -2,87 +2,133 @@
 
 namespace Controllers;
 
-use Libraries\Security;
-use Libraries\Request;
-use Libraries\Session;
-use Models\Login;
+use Core\Config,
+    Libraries\Request,
+    Libraries\Security,
+    Libraries\Session,
+    Models\Login;
 
+/**
+ * @class Auth
+ * @package Controllers
+ * @note Controller for manage authentication controls
+ */
 class Auth
 {
+    /**
+     * Init vars PRIVATE
+     * @var Config $config
+     * @var Security $security
+     * @var Request $request
+     * @var Login $login_model
+     */
+    private
+        $config,
+        $security,
+        $request,
+        $login_model;
 
-    private $security;
-    private $request;
-    private $login_model;
+    /**
+     * Init vars PUBLIC STATIC
+     * @var Auth $_instance
+     */
+    public static
+        $_instance;
 
+    /**
+     * @fn __constructor
+     * @note Init needed classes
+     * @return void
+     */
     public function __construct()
     {
-        $this->security = new Security;
-        $this->request = new Request;
-        $this->login_model = new Login;
+        #Call instances of the needed classes
+        $this->security = Security::getInstance();
+        $this->request = Request::getInstance();
+        $this->login_model = Login::getInstance();
+        $this->config = Config::getInstance();
+    }
+
+
+    /**
+     * @fn getInstance
+     * @note Self Instance
+     * @return Auth
+     */
+    public static function getInstance(): Auth
+    {
+        #If self-instance not defined
+        if (!(self::$_instance instanceof self)) {
+            #define it
+            self::$_instance = new self();
+        }
+        #return defined instance
+        return self::$_instance;
     }
 
     /**
-     * authenticate
-     * 
-     * @param  string|null $username
-     * @param  string|null $credential
+     * @fn authenticate
+     * @note Authenticate user credentials for Login
+     * @param string $username
+     * @param string $credential
      * @return bool
      */
-    public function authenticate(string $username = null, string $credential = null): bool
+    public function authenticate(string $username, string $credential): bool
     {
 
-        if((!isset($username)) || (!isset($credential)))
-        {
+        #Filter entered data
+        $username = $this->security->Filter($username, 'String');
+        $credential = $this->security->Filter($credential, 'String');
+
+        #If one of the field are empty or not isset
+        if ((!isset($username) || empty($username)) || (!isset($credential) || empty($credential))) {
             return false;
+        } #Else if the user have reached the max attempts for login
+        else if ($this->login_model->countAttempts($this->request->getIpAddress()) > $this->config->LoginMaxAttempt) {
+            die('Massimo numero di tentativi raggiunto');
         }
 
-        if($this->login_model->countAttempts($this->request->getIpAddress()) > 10)
-        {
-            return false;
-            exit();
-        }
+        #Read data of the user from the DB
+        $user = $this->login_model->readByName($username);
 
-        $username = $this->security->Filter($username);
+        #If user exist in database
+        if (!empty($user)) {
+            #Compare credentials for authentication
+            if ($this->security->Verify($credential, $user['password'])) {
+                #Init new Session
+                $session = Session::getInstance();
 
-        if(trim($username) == null) return false;
-
-        //recupera, eventualmente, i dati dal db
-        $user = $this->model->readByName($username);
-
-        if(!empty($user))
-        {
-            if($this->security->Verify($credential, $user['password']))
-            {
-                //CREA LA SESSIONE
-                $session = new Session;
-                //inserire altre sessioni utili
-                //come i permessi
+                #Insert needed parameters for login
                 $session->id = $user['id'];
                 $session->username = $user['username'];
-                //per la sicurezza
-                $session->fingerprint = hash_hmac('sha256', $this->request->getUserAgent(), hash('sha256', $this->request->getIPAddress(), true));
+
+                #Security values
+                $session->fingerprint = $this->security->GenerateFingerprint();
                 $session->last_active = time();
 
                 return true;
 
-            }
-            else
-            {   //scrive l'errore in db
-                $error = "Password Error";
+            } #Else the user credentials are wrong
+            else {
+                #Create text for log the error in db
+                $error = "Authentication Error [Password]";
 
+                #Log the error in the db
                 $this->login_model->insertError($error, $this->request->getIPAddress());
 
-                return false;
+                #Die whit error
+                die($error);
             }
-        }
-        else
-        {   //scrive l'errore in db
+        } #Else the user not exist
+        else {
+            #Create text for log the error in db
             $error = "Username error";
 
+            #Log the error in the db
             $this->login_model->insertError($error, $this->request->getIPAddress());
 
-            return false;
-
+            #Die whit error
+            die($error);
         }
     }
 }

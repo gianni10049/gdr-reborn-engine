@@ -1,13 +1,15 @@
 <?php
 
 # ARRAY OF ROOTS WHERE LOAD FILES
-$dirs= [
+$dirs = [
+    "src/libraries",
+    "src/models",
+    "src/database",
     "src/controller",
-    "src/model"
 ];
 
 #Foreach Root
-foreach ($dirs as $dir){
+foreach ($dirs as $dir) {
     #If Exist Root
     if (is_dir($dir)) {
         #Open Dir
@@ -16,7 +18,7 @@ foreach ($dirs as $dir){
             while (($file = readdir($dh)) !== false) {
                 if (($file != '.') && ($file != '..')) {
                     #Include the file
-                    include_once $dir.'/' . $file;
+                    include_once $dir . '/' . $file;
                 }
             }
             #Close dir
@@ -24,5 +26,3 @@ foreach ($dirs as $dir){
         }
     }
 }
-
-
