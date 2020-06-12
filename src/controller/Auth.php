@@ -6,7 +6,8 @@ use Libraries\Request,
     Libraries\Security,
     Libraries\Session,
     Models\Login,
-    Models\ConfigModel;
+    Models\ConfigModel,
+    Models\Account;
 
 /**
  * @class Auth
@@ -21,12 +22,14 @@ class Auth
      * @var Security $security
      * @var Request $request
      * @var Login $login_model
+     * @var Account $account
      */
     private
         $config,
         $security,
         $request,
-        $login_model;
+        $login_model,
+        $account;
 
     /**
      * Init vars PUBLIC STATIC
@@ -47,6 +50,7 @@ class Auth
         $this->request = Request::getInstance();
         $this->login_model = Login::getInstance();
         $this->config = ConfigModel::getInstance();
+        $this->account = CheckAccount::getInstance();
     }
 
 
@@ -100,12 +104,12 @@ class Auth
 
                 #Insert needed parameters for login
                 $session->id = $user['id'];
-                $session->username = $user['username'];
 
-                #Security values
-                $session->fingerprint = $this->security->GenerateFingerprint();
-                $session->last_active = time();
+                #Generate fingerprint and update the account last activity
+                $this->account->RegenerateFingerprint();
+                $this->account->CreateLastActive();
 
+                #Return true
                 return true;
 
             } #Else the user credentials are wrong

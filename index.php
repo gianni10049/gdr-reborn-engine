@@ -1,8 +1,8 @@
 <?php
 
 #Import namespace
-use Core\Router;
-use Libraries\Request;
+use Core\Router,
+    Libraries\Request;
 
 #Import required files
 require('config/required.php');

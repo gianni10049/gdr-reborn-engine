@@ -70,6 +70,37 @@ class Account
     }
 
     /**
+     * @fn __get
+     * @note extract account data from $datas var
+     * @param string $name
+     * @return mixed
+     */
+    public function __get(string $name)
+    {
+        #Filter entered value
+        $name = $this->sec->Filter($name, 'String');
+
+        #If data is not extracted
+        if (empty($this->datas)) {
+
+            #Extract data
+            $this->RetrieveData();
+        }
+
+        #If session param exist
+        if (isset($this->datas[$name])) {
+
+            #Return session param
+            return $this->datas[$name];
+        } #Else not exist
+        else {
+
+            #Return false
+            return false;
+        }
+    }
+
+    /**
      * @fn RetrieveData
      * @note Extract data of the account and save in object $datas
      * @return void
@@ -97,31 +128,168 @@ class Account
     }
 
     /**
-     * @fn __get
-     * @note extract account data from $datas var
-     * @param string $name
-     * @return mixed
+     * @fn CountById
+     * @note Count account row whit passed where
+     * @param int $account
+     * @return int
      */
-    public function __get(string $name)
+    public function ExistenceControl( int $account):int
     {
-        #Filter entered value
-        $name = $this->sec->Filter($name, 'String');
+        #If account exist return true, else return false
+        return ($this->db->Count("account", "id='{$account}'") === 1) ? true : false;
+    }
 
-        #If data is not extracted
-        if (empty($this->datas)) {
+    /**
+     * @fn UpdateFingerprint
+     * @note Update fingerprint in account row
+     * @param int $id
+     * @return void
+     */
+    public function UpdateFingerprint(int $id){
 
-            #Extract data
-            $this->RetrieveData();
-        }
+        #Get and filter passed id
+        $id= $this->sec->Filter($id,'Int');
 
-        #If session param exist
-        if (isset($this->datas[$name])) {
-            #Return session param
-            return $this->datas[$name];
-        } #Else not exist
-        else {
+        #Generate new fingerprint
+        $fingerprint= $this->sec->GenerateFingerprint();
+
+        #Update fingerprint in db
+        $this->db->Update('account',"fingerprint='{$fingerprint}'","id='{$id}'");
+    }
+
+    /**
+     * @fn UpdateLastActive
+     * @note Update last_active account in db
+     * @param int $id
+     * @return void
+     */
+    public function UpdateLastActive(int $id){
+
+        #Get and filter passed id
+        $id= $this->sec->Filter($id,'Int');
+
+        #Update last active
+        $this->db->Update('account','last_active=NOW()',"id='{$id}'");
+    }
+
+    /**
+     * @fn EmailExist
+     * @note Control if the email exist
+     * @param string $email
+     * @return bool
+     */
+    public function EmailExist(string $email):bool
+    {
+        #Crypt email for extract data
+        $crypted= $this->sec->Hash($email);
+
+        #Extract data, if not exist return true, else return false
+        return ($this->db->Count("account", "email='{$crypted}'") === 0) ? true : false;
+
+    }
+
+    /**
+     * @fn UsernameExist
+     * @note Control if username exist
+     * @param string $username
+     * @return bool
+     */
+    public function UsernameExist(string $username):bool
+    {
+        #If not exist return true, else false
+        return ($this->db->Count("account", "username='{$username}'") === 0) ? true : false;
+    }
+
+    /**
+     * @fn NewAccount
+     * @note Subscribe a new account previously controlled
+     * @param string $user
+     * @param string $email
+     * @param string $pass
+     * @return void
+     */
+    public function NewAccount(string $user,string $email,string $pass)
+    {
+        #Convert Username
+        $user= $this->sec->Filter($user,'Convert');
+
+        #Hash email and password
+        $email= $this->sec->hash($email);
+        $pass= $this->sec->hash($pass);
+
+        #Create account in db
+        $this->db->Insert('account','username,email,password',"'{$user}','{$email}','{$pass}'");
+    }
+
+    /**
+     * @fn DataMatch
+     * @note Control if pass and email is correct for the passed user
+     * @param string $user
+     * @param string $pass
+     * @param string $email
+     * @return bool
+     */
+    public function DataMatch(string $user,string $pass,string $email):bool
+    {
+        #Filter inserted data
+        $user= $this->sec->Filter($user,'Convert');
+        $pass = $this->sec->Filter($pass);
+        $email = $this->sec->Filter($email);
+
+        #Extract user data
+        $data= $this->db->Select('id,email,password','account',"username='{$user}' LIMIT 1");
+
+        #If password and email exist and user exist
+        if(!is_null($data['password']) && !is_null($data['email'])) {
+
+            #Filter extracted data
+            $dbPass = $this->sec->Filter($data['password']);
+            $dbEmail = $this->sec->Filter($data['email']);
+
+            #If password and email are verified, return true, else return false
+            return ($this->sec->Verify($pass, $dbPass) && $this->sec->Verify($email, $dbEmail)) ? true : false;
+
+        } #Else account don't exist
+        else{
+
             #Return false
             return false;
         }
+    }
+
+    /**
+     * @fn SetPassword
+     * @param string $user
+     * @param string $pass
+     * @return void
+     */
+    public function SetPassword(string $user, string $pass)
+    {
+        #Filter username
+        $user= $this->sec->Filter($user,'Convert');
+
+        #Hash password
+        $pass= $this->sec->Hash($pass);
+
+        #Update password of the account
+        $this->db->Update('account',"password='{$pass}'","username='{$user}'");
+    }
+
+    /**
+     * @fn SetEmail
+     * @param string $user
+     * @param string $email
+     * @return void
+     */
+    public function SetEmail(string $user, string $email)
+    {
+        #Filter username
+        $user= $this->sec->Filter($user,'Convert');
+
+        #Hash password
+        $email= $this->sec->Hash($email);
+
+        #Update password of the account
+        $this->db->Update('account',"email='{$email}'","username='{$user}'");
     }
 }

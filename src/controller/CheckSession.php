@@ -3,10 +3,11 @@
 
 namespace Controllers;
 
-use Models\ConfigModel,
-    Libraries\Request,
+use Libraries\Request,
     Libraries\Security,
-    Libraries\Session;
+    Libraries\Session,
+    Models\Account,
+    Models\ConfigModel;
 
 /**
  * @class CheckSession
@@ -27,7 +28,8 @@ class CheckSession
         $session,
         $request,
         $sec,
-        $config;
+        $config,
+        $account;
 
     /**
      * Init vars PUBLIC STATIC
@@ -70,7 +72,7 @@ class CheckSession
      * @note Control if exist session
      * @return bool
      */
-    public function SessionExist():bool
+    public function SessionExist(): bool
     {
         #If session exist return true, else false
         return (isset($_SESSION)) ? true : false;
@@ -109,13 +111,17 @@ class CheckSession
      * @note Check if session are timed out
      * @return bool
      */
-    public function CheckTimeout():bool
+    public function CheckTimeout(): bool
     {
+
+        #Get Account instance
+        $account = Account::getInstance();
+
         #Get timeout of the session
         $timeout = $this->config->session_timeout;
 
         #Control if session is timed out
-        return (time() < ($this->session->last_active + $timeout)) ? true : false;
+        return (time() < ($account->last_active + $timeout)) ? true : false;
     }
 
     /**
@@ -123,13 +129,17 @@ class CheckSession
      * @note Check if session fingerprint is the same than stored
      * @return bool
      */
-    public function CheckFingerprint():bool
+    public function CheckFingerprint(): bool
     {
+
+        #Get Account instance
+        $account = Account::getInstance();
+
         #Generate Fingerprint for this session
         $fingerprint = $this->sec->GenerateFingerprint();
 
         #Control if fingerprint of the session is the same than stored
-        return ($this->session->fingerprint == $fingerprint) ? true : false; //ip and ua
+        return ($account->fingerprint == $fingerprint) ? true : false;
     }
 
 

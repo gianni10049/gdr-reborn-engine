@@ -155,8 +155,21 @@ class DB
             # Execute query
             $rows->execute($params);
 
-            # Fetch extracted data
-            $data = $rows->fetchAll(PDO::FETCH_UNIQUE);
+            # Count number of rows called
+            $resNum= $rows->rowCount();
+
+            # If rows called is more than one
+            if($resNum > 1) {
+
+                # Fetch all extracted data
+                $data = $rows->fetchAll(PDO::FETCH_UNIQUE);
+
+            } #Else called rows are only one
+            else{
+
+                #Fetch them classically
+                $data = $rows->fetch();
+            }
 
             #Close connection
             $this->pdo = NULL;
@@ -347,10 +360,10 @@ class DB
      * @param string $table
      * @param string $where
      * @param array $params
-     * @return mixed
+     * @return int
      */
 
-    public function Count(string $table, string $where, array $params = [])
+    public function Count(string $table, string $where, array $params = []):int
     {
         #Init Security class
         $sec = $this->sec;
@@ -363,13 +376,13 @@ class DB
         if (!empty($table) && !empty($where)) {
 
             #Compose query
-            $text = "SELECT count(id) as NUM FROM {$table} WHERE {$where} ";
+            $text = "SELECT count(id) as NUM FROM {$table} WHERE 1 ";
 
             #Execute Query
             $data = $this->Query($text, $params);
 
             #Return number of rows selected
-            return array_key_first($data);
+            return $data['NUM'];
         } else {
             die('Campi vuoti');
         }
