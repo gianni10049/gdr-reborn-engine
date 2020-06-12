@@ -40,7 +40,7 @@ class Auth
      * @note Init needed classes
      * @return void
      */
-    public function __construct()
+    private function __construct()
     {
         #Call instances of the needed classes
         $this->security = Security::getInstance();

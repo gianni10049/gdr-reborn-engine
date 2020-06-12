@@ -42,7 +42,6 @@ class Router
         return self::$_instance;
     }
 
-    #TODO cambiare da Config a ConfigModel
     /**
      * @fn __construct
      * @note Router constructor.
