@@ -214,8 +214,8 @@ class Account
         $user= $this->sec->Filter($user,'Convert');
 
         #Hash email and password
-        $email= $this->sec->hash($email);
-        $pass= $this->sec->hash($pass);
+        $email= $this->sec->Hash($email);
+        $pass= $this->sec->PasswordHash($pass);
 
         #Create account in db
         $this->db->Insert('account','username,email,password',"'{$user}','{$email}','{$pass}'");
@@ -247,7 +247,7 @@ class Account
             $dbEmail = $this->sec->Filter($data['email']);
 
             #If password and email are verified, return true, else return false
-            return ($this->sec->Verify($pass, $dbPass) && $this->sec->Verify($email, $dbEmail)) ? true : false;
+            return ($this->sec->VerifyPassword($pass, $dbPass) && $this->sec->VerifyHash($email, $dbEmail)) ? true : false;
 
         } #Else account don't exist
         else{
@@ -269,7 +269,7 @@ class Account
         $user= $this->sec->Filter($user,'Convert');
 
         #Hash password
-        $pass= $this->sec->Hash($pass);
+        $pass= $this->sec->PasswordHash($pass);
 
         #Update password of the account
         $this->db->Update('account',"password='{$pass}'","username='{$user}'");

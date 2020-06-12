@@ -52,6 +52,17 @@ class Security
     }
 
     /**
+     * @fn PasswordHash
+     * @note Hashing of the password passed
+     * @param string $string
+     * @return bool|string
+     */
+    public function PasswordHash(string $string = null)
+    {
+        return (isset($string)) ? password_hash($string, PASSWORD_BCRYPT) : false;
+    }
+
+    /**
      * @fn Hash
      * @note Hashing of the data passed
      * @param string $string
@@ -59,7 +70,7 @@ class Security
      */
     public function Hash(string $string = null)
     {
-        return (isset($string)) ? password_hash($string, PASSWORD_BCRYPT) : false;
+        return (isset($string)) ? hash('sha512', $string) : false;
     }
 
     /**
@@ -69,9 +80,23 @@ class Security
      * @param string $hashed
      * @return bool
      */
-    public function Verify(string $string, string $hashed): bool
+    public function VerifyPassword(string $string, string $hashed): bool
     {
         return password_verify($string, $hashed);
+    }
+
+    /**
+     * @fn VerifyHash
+     * @note Verify hashed string
+     * @param string $string
+     * @param string $hashed
+     * @return bool
+     */
+    public function VerifyHash(string $string, string $hashed): bool
+    {
+        $crypted= $this->Hash($string);
+
+        return ($crypted === $hashed);
     }
 
     /**
