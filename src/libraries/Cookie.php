@@ -50,7 +50,7 @@ class Cookie
      * @note Cookie constructor.
      * @return void
      */
-    public function __construct()
+    private function __construct()
     {
         #Init Config class
         $this->config= ConfigModel::getInstance();

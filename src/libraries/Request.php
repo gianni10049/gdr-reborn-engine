@@ -42,7 +42,7 @@ class Request
      * @note Request constructor.
      * @return void
      */
-    function __construct()
+    private function __construct()
     {
         #Init needed classes
         $this->sec= Security::getInstance();

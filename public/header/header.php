@@ -3,7 +3,9 @@
 #Start Instance of Config
 use Libraries\Security,
     Database\DB,
-    Core\Config;
+    Core\Config,
+    Models\Account,
+    Libraries\Session;
 
 #Init instance of Config
 $config = Config::getInstance();
@@ -14,6 +16,12 @@ $db->Connect();
 
 #Init instance of Security
 $sec = Security::getInstance();
+
+#Init instance of Session
+$session= Session::getInstance();
+
+#Init instance of Account
+$account= Account::getInstance();
 
 #Import sub-header files
 require('header_css.php');

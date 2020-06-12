@@ -30,6 +30,13 @@ class CheckSession
         $config;
 
     /**
+     * Init vars PUBLIC STATIC
+     * @var CheckSession $_instance
+     */
+    public static
+        $_instance;
+
+    /**
      * @fn __construct
      * @note CheckSession constructor.
      * @return void
@@ -43,16 +50,39 @@ class CheckSession
     }
 
     /**
+     * @fn getInstance
+     * @note Self Instance
+     * @return CheckSession
+     */
+    public static function getInstance(): CheckSession
+    {
+        #If self-instance not defined
+        if (!(self::$_instance instanceof self)) {
+            #define it
+            self::$_instance = new self();
+        }
+        #return defined instance
+        return self::$_instance;
+    }
+
+    /**
+     * @fn SessionExist
+     * @note Control if exist session
+     * @return bool
+     */
+    public function SessionExist():bool
+    {
+        #If session exist return true, else false
+        return (isset($_SESSION)) ? true : false;
+    }
+
+    /**
      * @fn Check
      * @note Check if session is valid
      * @return boolean
      */
     public function Check(): bool
     {
-
-        #Set init value to return
-        $return = true;
-
         #Set array whit controls
         $controls = [
             $this->CheckTimeout(),
@@ -65,16 +95,13 @@ class CheckSession
             #If one control is false
             if ($control == false) {
 
-                #Set failed the control
-                $return = false;
-
-                #Stop foreach
-                break;
+                #Failed the control
+                return false;
             }
         }
 
-        #Return control response
-        return $return;
+        #Return true response if not failed
+        return true;
     }
 
     /**
@@ -104,4 +131,6 @@ class CheckSession
         #Control if fingerprint of the session is the same than stored
         return ($this->session->fingerprint == $fingerprint) ? true : false; //ip and ua
     }
+
+
 }

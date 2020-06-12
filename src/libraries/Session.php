@@ -20,18 +20,10 @@ class Session
 
     /**
      * Init vars PUBLIC
-     * @var int $id
-     * @var string $username
-     * @var string $fingerprint
-     * @var string $last_active
      * @var array $session_params
      * @var array $session_array
      */
     public
-        $id,
-        $username,
-        $fingerprint,
-        $last_active,
         $session_params,
         $session_array;
 
@@ -43,7 +35,6 @@ class Session
     private
         $config,
         $sec;
-
 
     /**
      * @fn getInstance
@@ -66,7 +57,7 @@ class Session
      * @note Session constructor.
      * @return void
      */
-    public function __construct() 
+    private function __construct()
     {
         #Init security class
         $this->sec = Security::getInstance();
@@ -105,7 +96,6 @@ class Session
         #Set session value
         $_SESSION[$name] = $value;
     }
-
 
     /**
      * @fn __get
@@ -183,7 +173,6 @@ class Session
         #Restart keys array
         $this->array = [];
     }
-
 
     /**
      * @fn setSession

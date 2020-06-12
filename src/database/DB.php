@@ -2,10 +2,10 @@
 
 namespace Database;
 
-use Libraries\Security,
+use Core\Config,
+    Libraries\Security,
     PDO,
-    PDOException,
-    Core\Config;
+    PDOException;
 
 #TODO White-List of the approachable tables
 
@@ -83,12 +83,12 @@ class DB
      * @param array|null $options
      * @return DB
      */
-    public static function getInstance(string $db = null, array $options = null):DB
+    public static function getInstance(string $db = null, array $options = null): DB
     {
         #If self-instance not defined
         if (!(self::$_instance instanceof self)) {
             #define it
-            self::$_instance = new self($db,$options);
+            self::$_instance = new self($db, $options);
         }
         #return defined instance
         return self::$_instance;
@@ -110,7 +110,7 @@ class DB
      * @note Get Database name
      * @return string
      */
-    public function getDatabase():string
+    public function getDatabase(): string
     {
         return $this->db;
     }
@@ -124,8 +124,7 @@ class DB
     {
         try {
             $this->pdo = new PDO("mysql:host={$this->host};dbname={$this->db}", $this->user, $this->pass, $this->options);
-        } catch (PDOException $e) 
-        {
+        } catch (PDOException $e) {
             die($e->getMessage());
         }
     }
@@ -139,7 +138,14 @@ class DB
      */
     public function Query(string $query, array $params = null)
     {
-        #Connect to db
+        #If db is  not connected
+        if (empty($this->pdo)) {
+
+            #Connect db
+            $this->Connect();
+        }
+
+        #Get connection
         $db = $this->pdo;
 
         try {
@@ -174,7 +180,7 @@ class DB
      * @param array $params
      * @return mixed
      */
-    public function Select(string $value, string $table,string $where,array $params = [])
+    public function Select(string $value, string $table, string $where, array $params = [])
     {
         #Init Security class
         $sec = $this->sec;
@@ -208,7 +214,7 @@ class DB
      * @param array $params
      * @return void
      */
-    public function Update(string $table,string $set,string $where,array $params = [])
+    public function Update(string $table, string $set, string $where, array $params = [])
     {
         #Init Security class
         $sec = $this->sec;
@@ -243,7 +249,7 @@ class DB
      * @param array $params
      * @return void
      */
-    public function Insert(string $table,string $rows,string $values,array $params = [])
+    public function Insert(string $table, string $rows, string $values, array $params = [])
     {
         #Init Security class
         $sec = $this->sec;
@@ -277,7 +283,7 @@ class DB
      * @param array $params
      * @return void
      */
-    public function Delete(string $table,string $where,array $params = [])
+    public function Delete(string $table, string $where, array $params = [])
     {
         #Init Security class
         $sec = $this->sec;
@@ -310,7 +316,7 @@ class DB
      * @param array $params
      * @return int
      */
-    public function Sum(string $table,string $cell,string $where,array $params = []):int
+    public function Sum(string $table, string $cell, string $where, array $params = []): int
     {
         #Init Security class
         $sec = $this->sec;
@@ -341,10 +347,10 @@ class DB
      * @param string $table
      * @param string $where
      * @param array $params
-     * @return int
+     * @return mixed
      */
 
-    public function Count(string $table,string $where,array $params = []):int
+    public function Count(string $table, string $where, array $params = [])
     {
         #Init Security class
         $sec = $this->sec;
@@ -357,13 +363,13 @@ class DB
         if (!empty($table) && !empty($where)) {
 
             #Compose query
-            $text = "SELECT * FROM {$table} WHERE {$where} ";
+            $text = "SELECT count(id) as NUM FROM {$table} WHERE {$where} ";
 
             #Execute Query
             $data = $this->Query($text, $params);
 
             #Return number of rows selected
-            return $data->rowCount();
+            return array_key_first($data);
         } else {
             die('Campi vuoti');
         }
@@ -380,7 +386,7 @@ class DB
      * @param array $params
      * @return mixed
      */
-    public function Join(string $table,string $value,string $joinTable,string $joinCond,string $where,array $params = [])
+    public function Join(string $table, string $value, string $joinTable, string $joinCond, string $where, array $params = [])
     {
         #Init Security class
         $sec = $this->sec;
