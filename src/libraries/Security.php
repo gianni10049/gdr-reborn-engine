@@ -90,7 +90,6 @@ class Security
             #default type string ('test','test1')
             #Type string ('test','test1')
             default:
-
             case 'String':
                 $data = trim(filter_var($data, FILTER_SANITIZE_STRING));
                 break;
@@ -274,11 +273,11 @@ class Security
 
     #TODO Controllare i vari filtri regex
     /**
-     * @fn setPassword
+     * @fn PasswordControl
      * @param string|null $password input
      * @return bool
      */
-    public function setPassword(string $password = null): bool
+    public function PasswordControl(string $password = null): bool
     {
 
         $config= ConfigModel::getInstance();
@@ -323,27 +322,18 @@ class Security
     }
 
     /**
-     * @fn matches
+     * @fn PasswordMatch
      * @example $sec->matches($_POST['password'], $_POST['confirm_password']);
      * @param string|null $string input
      * @param string|null $confstr input
      * @return bool
      */
-    public function matches(string $string = null, string $confstr = null): bool
+    public function PasswordMatch(string $string = null, string $confstr = null): bool
     {
         #Leave spaces from passed data
         $string = preg_replace('/\s+/', '', $string);
 
-        #If string is not null
-        if ($string == null){ return false; }
-
-        #If is the same
-        return ($string === $confstr) ? true : false;
+        #If is the same and not is null return true, else return false
+        return ( ($string === $confstr) && (!is_null($string)) ) ? true : false;
     }
-
-
-
-
-
-
 }
