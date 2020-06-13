@@ -309,4 +309,18 @@ class Account
         #Update password of the account
         $this->db->Update('account',"email='{$email}'","username='{$user}'");
     }
+
+    /**
+     * getAllEmails function
+     *
+     * @return void
+     */
+    public function getAllEmails(): array
+    {
+        $emails = [];
+
+        $emails = $this->db->Query("SELECT email FROM account");
+
+        return $emails;
+    }
 }
