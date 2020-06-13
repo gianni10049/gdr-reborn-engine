@@ -5,6 +5,20 @@ namespace Controller;
 use Libraries\Security,
     Models\Account;
 
+
+/**
+ * Class Mailer
+ * 
+ * usage:
+ * 
+ * $mail = Mailer::getInstance();
+ * 
+ * $mail->setTo('mail@mail.com')
+ *      ->setFrom('webmaster@mail.com)
+ *      ->setSubject('Info')
+ *      ->setMessage('Hello')
+ *      ->send();
+ */
 class Mailer
 {
 
