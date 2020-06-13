@@ -309,4 +309,28 @@ class Account
         #Update password of the account
         $this->db->Update('account',"email='{$email}'","username='{$user}'");
     }
+
+    /**
+     * @fn getAllEmails
+     * @note get all accounts email
+     * @return array
+     */
+    public function AccountEmails(): array
+    {
+        #Init empty emails container
+        $emails = [];
+
+        #Extract all encrypted emails stored on server
+        $data = $this->db->Query("SELECT email FROM account");
+
+        #Foreach encrypted email
+        foreach ($data as $email){
+
+            #Decrypt email and add to the emails array
+            $emails[] = $this->sec->Decrypt($email);
+        }
+
+        #Return container full of decrypted emails
+        return $emails;
+    }
 }
