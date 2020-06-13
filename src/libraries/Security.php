@@ -52,37 +52,63 @@ class Security
     }
 
     /**
-     * @fn PasswordHash
-     * @note Hashing of the password passed
-     * @param string $string
-     * @return bool|string
-     */
-    public function PasswordHash(string $string = null)
-    {
-        return (isset($string)) ? password_hash($string, PASSWORD_BCRYPT) : false;
-    }
-
-    /**
      * @fn Hash
      * @note Hashing of the data passed
-     * @param string $string
-     * @return bool|string
+     * @param string $data
+     * @return string
      */
-    public function Hash(string $string = null)
+    public function Hash(string $data):string
     {
-        return (isset($string)) ? hash('sha512', $string) : false;
+        #Init config class
+        $config = ConfigModel::getInstance();
+
+        #Get key and tag for encrypt
+        $key = base64_decode($config->cryptography_key);
+
+        #Calc vector lenght for that method
+        $iv_lenght = openssl_cipher_iv_length($config->cryptography_method);
+
+        #Generate random vector
+        $iv = openssl_random_pseudo_bytes($iv_lenght);
+
+        #Encrypt data
+        $encryptedMessage = openssl_encrypt($data, $config->cryptography_method, $key, OPENSSL_RAW_DATA, $iv,$tag);
+
+        #Return binary response for db compatibility
+        return base64_encode($iv .'_'.$encryptedMessage.'_'.$tag);
     }
 
     /**
-     * @fn Verify
-     * @note Verify hashed data
+     * @fn Decrypt
+     * @note Decrypt previously encrypted data
      * @param string $string
-     * @param string $hashed
-     * @return bool
+     * @return string
      */
-    public function VerifyPassword(string $string, string $hashed): bool
+    public function Decrypt(string $string):string
     {
-        return password_verify($string, $hashed);
+        #Init config class
+        $config = ConfigModel::getInstance();
+
+        #Get key and tag for decrypt
+        $key = base64_decode($config->cryptography_key);
+
+        #Convert db data from binary to not binary
+        $raw = base64_decode($string);
+
+        #Explode encrypted string
+        $data= explode('_',$raw);
+
+        #Extract vector from string
+        $iv = $data[0];
+
+        #Extract encrypted data from string
+        $string = $data[1];
+
+        #Extract tag from string
+        $tag= $data[2];
+
+        #Return decrypted data
+        return openssl_decrypt($string, $config->cryptography_method, $key, OPENSSL_RAW_DATA, $iv,$tag);
     }
 
     /**
@@ -94,9 +120,14 @@ class Security
      */
     public function VerifyHash(string $string, string $hashed): bool
     {
-        $crypted= $this->Hash($string);
+        #Filter string passed
+        $string = $this->Filter($string,'String');
 
-        return ($crypted === $hashed);
+        #Decrypt hashed data
+        $decrypted = $this->Decrypt($hashed);
+
+        #If is equal return true, else return false
+        return ($string === $decrypted);
     }
 
     /**
@@ -186,7 +217,7 @@ class Security
      * @param string $string
      * @return string
      */
-    public function HtmlFilter(string $string):string
+    public function HtmlFilter(string $string): string
     {
         #Array of not allowed html codes
         $notAllowed = array(
@@ -209,7 +240,7 @@ class Security
      * @param string $file
      * @return string
      */
-    public function NoChace(string $file):string
+    public function NoChace(string $file): string
     {
 
         #Filter passed vars
@@ -232,7 +263,7 @@ class Security
      * @param string $version
      * @return string
      */
-    public function Version(string $file, string $version):string
+    public function Version(string $file, string $version): string
     {
         #Filter passed vars
         $file = $this->Filter($file, 'String');
@@ -250,7 +281,7 @@ class Security
      * @note Generate fingerprint for session control
      * @return string
      */
-    public function GenerateFingerprint():string
+    public function GenerateFingerprint(): string
     {
 
         #Get Request instance
@@ -271,25 +302,37 @@ class Security
      */
     public function getEmail(string $email = null): bool
     {
-        $config= ConfigModel::getInstance();
+        $config = ConfigModel::getInstance();
 
-        $max= $config->email_max;
-        $min= $config->email_min;
+        $max = $config->email_max;
+        $min = $config->email_min;
 
         #If is an email
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)){ return false; }
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+
+            #Return false
+            return false;
+        }
 
         #Get list of banned domains
         $bannedEmails = json_decode(file_get_contents(LIBRARIES . "/domains/domains.json"));
 
         #If the domain is not banned
-        if (in_array(strtolower(explode('@', $email)[1]), $bannedEmails)){ return false; }
+        if (in_array(strtolower(explode('@', $email)[1]), $bannedEmails)) {
+
+            #Return false
+            return false;
+        }
 
         #If the mail have the right length
         if (
             (isset($min)) && (strlen($email) < $min) ||
             (isset($max)) && (strlen($email) > $max)
-        ){ return false; }
+        ) {
+
+            #Return false
+            return false;
+        }
 
         #Is a valid email
         return true;
@@ -305,16 +348,16 @@ class Security
     public function PasswordControl(string $password = null): bool
     {
 
-        $config= ConfigModel::getInstance();
+        $config = ConfigModel::getInstance();
 
-        $min= $config->password_min;
-        $max= $config->password_max;
+        $min = $config->password_min;
+        $max = $config->password_max;
 
         #If password not have right length
         if (
             (strlen($password) < $min) ||
             (strlen($password) > $max)
-        ){
+        ) {
             return false;
         }
 
@@ -359,6 +402,6 @@ class Security
         $string = preg_replace('/\s+/', '', $string);
 
         #If is the same and not is null return true, else return false
-        return ( ($string === $confstr) && (!is_null($string)) ) ? true : false;
+        return (($string === $confstr) && (!is_null($string))) ? true : false;
     }
 }

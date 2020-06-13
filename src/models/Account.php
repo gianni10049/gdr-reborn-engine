@@ -181,11 +181,28 @@ class Account
     public function EmailExist(string $email):bool
     {
         #Crypt email for extract data
-        $crypted= $this->sec->Hash($email);
+        $email= $this->sec->Filter($email,'Email');
 
-        #Extract data, if not exist return true, else return false
-        return ($this->db->Count("account", "email='{$crypted}'") === 0) ? true : false;
+        #Extract all emails
+        $accounts= $this->db->Select('id,email','account','1');
 
+        #Foreach account
+        foreach ($accounts as $account){
+
+            #Extract email saved in db
+            $dbEmail= $this->sec->Filter($account['email'],'String');
+
+            #If decrypted is equal to given email
+            if($this->sec->VerifyHash($email,$dbEmail)){
+
+                #Return false
+                return false;
+            }
+
+        }
+
+        #If email not exist return true
+        return true;
     }
 
     /**
@@ -215,7 +232,7 @@ class Account
 
         #Hash email and password
         $email= $this->sec->Hash($email);
-        $pass= $this->sec->PasswordHash($pass);
+        $pass= $this->sec->Hash($pass);
 
         #Create account in db
         $this->db->Insert('account','username,email,password',"'{$user}','{$email}','{$pass}'");
@@ -247,7 +264,7 @@ class Account
             $dbEmail = $this->sec->Filter($data['email']);
 
             #If password and email are verified, return true, else return false
-            return ($this->sec->VerifyPassword($pass, $dbPass) && $this->sec->VerifyHash($email, $dbEmail)) ? true : false;
+            return ($this->sec->VerifyHash($pass, $dbPass) && $this->sec->VerifyHash($email, $dbEmail)) ? true : false;
 
         } #Else account don't exist
         else{
@@ -269,7 +286,7 @@ class Account
         $user= $this->sec->Filter($user,'Convert');
 
         #Hash password
-        $pass= $this->sec->PasswordHash($pass);
+        $pass= $this->sec->Hash($pass);
 
         #Update password of the account
         $this->db->Update('account',"password='{$pass}'","username='{$user}'");
