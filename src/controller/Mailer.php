@@ -29,7 +29,8 @@ class Mailer
      * @var array $headers
      * @var string $header
      */
-    protected $to = [],
+    protected
+        $to = [],
         $subject,
         $message,
         $headers = [],
@@ -109,9 +110,15 @@ class Mailer
      */
     public function setTo(array $emails = []): Mailer
     {
-        #Set the recipient of the email
+        #Foreach email
         foreach ($emails as $email) {
-            $this->to[] = ($this->security->EmailControl($email)) ? $email : false;
+
+            #If is a valid email
+            if($this->security->EmailControl($email)) {
+
+                #Add recipient
+                $this->to[] = $email;
+            }
         }
 
         #Return Mailer class
@@ -126,8 +133,12 @@ class Mailer
      */
     public function setFrom(string $email): Mailer
     {
-        #If Email is correct set From value, else set false
-        $this->headers[] = ($this->security->EmailControl($email) == true) ? 'From: ' . $email : false;
+        #If Email is correct
+        if($this->security->EmailControl($email)) {
+
+            #set From value
+            $this->headers[] = $email;
+        }
 
         #Return Mailer class
         return $this;

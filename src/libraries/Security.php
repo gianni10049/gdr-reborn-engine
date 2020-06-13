@@ -309,8 +309,7 @@ class Security
         $min = $config->email_min;
 
         #If is an email
-        if ($this->Filter($email,'Email')) {
-
+        if (!$this->Filter($email,'Email')) {
             #Return false
             return false;
         }
@@ -318,8 +317,14 @@ class Security
         #Get list of banned domains
         $bannedEmails = json_decode(file_get_contents(PACKAGES . "/domains/domains.json"));
 
+        #SplitMail
+        $expl= explode('@', $email);
+
+        #Get mail domain
+        $domain = $expl[1];
+
         #If the domain is not banned
-        if (in_array(strtolower(explode('@', $email)[1]), $bannedEmails)) {
+        if (in_array(strtolower($domain), $bannedEmails) || is_null($domain)) {
 
             #Return false
             return false;
