@@ -35,3 +35,7 @@ mb_http_output('UTF-8');
 
 #Set utf-8 the html default language
 header('Content-Type:text/html; charset=UTF-8');
+
+?>
+
+<title> Reborn v0.1</title>

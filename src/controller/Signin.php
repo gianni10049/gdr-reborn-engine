@@ -11,10 +11,12 @@ class Signin
      * Init vars PRIVATE
      * @var Security $security
      * @var Account $account
+     * @var CheckAccount $checkaccount
      */
     private
         $security,
-        $account;
+        $account,
+        $checkaccount;
 
     /**
      * @fn __constructor
@@ -25,34 +27,62 @@ class Signin
     {
         #Call instances of the needed classes
         $this->security = Security::getInstance();
-        $this->account = CheckAccount::getInstance();
+        $this->checkaccount = CheckAccount::getInstance();
+        $this->account = Account::getInstance();
     }
 
+
     /**
-     * @fn signin
-     *
-     * @param string $username
-     * @param string $email
-     * @param string $password
-     * @param string $conf_pass
-     * @return bool
+     * @fn AccountRegistration
+     * @note Sign in new accounts
+     * @param array $post (Input)
+     * @return int
      */
-    public function signin(string $username =  null, string $email = null, string $password = null, string $conf_pass = null): bool
+    public function AccountRegistration(array $post): int
     {
-        #username filter string
-        $username = $this->security->Filter($username);
-        #is set username || if exist
-        if(($username == null) || ($this->account->UsernameExist($username) == false)) return false;
-        #verify email field || if exist
-        if(($this->security->setEmail($email) == false) || ($this->account->EmailExist($email) == false)) return false;
-        #password security
-        if($this->security->PasswordControl($password) == false) return false;
-        #password match
-        if($this->security->PasswordMatch($password, $conf_pass) == false) return false;
+        #Validate post input
+        $post = $this->security->Filter($post, 'Post');
 
-        #new account meth. 
-        if($this->account->NewAccount($username, $email, $password)) return true;
+        #Filter passed data
+        $user = $this->security->Filter($post['username'], 'Convert');
+        $email = $this->security->Filter($post['Email'], 'Email');
+        $pass = $this->security->Filter($post['password'], 'Convert');
+        $passVerification = $this->security->Filter($post['password_verification'], 'Convert');
 
-        return false;
+        #If password is correct
+        if ( $this->security->PasswordMatch($pass, $passVerification) && $this->security->PasswordControl($pass) ) {
+
+            #If username non exist
+            if ($this->account->UsernameExist($user)) {
+
+                #If email not exist
+                if ($this->account->EmailExist($email) && $this->security->EmailControl($email)) {
+
+                    #Insert new account
+                    $this->account->NewAccount($user, $email, $pass);
+
+                    #Return success response
+                    return REGISTRATION_SUCCESS;
+
+                } #Else email exist
+                else {
+
+                    #Return email error
+                    return REGISTRATION_EMAIL_ERROR;
+                }
+
+            } #Else username exist
+            else {
+
+                #Return username error
+                return REGISTRATION_USER_ERROR;
+            }
+
+        } #Else password is not correct
+        else {
+
+            #Return password error
+            return REGISTRATION_PASS_ERROR;
+        }
     }
 }
