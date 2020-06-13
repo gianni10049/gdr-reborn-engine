@@ -300,7 +300,7 @@ class Security
      * @param string|null $email input
      * @return bool
      */
-    public function getEmail(string $email = null): bool
+    public function setEmail(string $email = null): bool
     {
         $config = ConfigModel::getInstance();
 
