@@ -11,11 +11,11 @@ use Database\DB,
  * @package Controllers
  * @note Controller for account security
  */
-class CheckAccount
+class AccountController
 {
     /**
      * Init vars PUBLIC STATIC
-     * @var CheckAccount $_instance
+     * @var AccountController $_instance
      */
     public static
         $_instance;
@@ -33,9 +33,9 @@ class CheckAccount
     /**
      * @fn getInstance
      * @note Self Instance
-     * @return CheckAccount
+     * @return AccountController
      */
-    public static function getInstance(): CheckAccount
+    public static function getInstance(): AccountController
     {
         #If self-instance not defined
         if (!(self::$_instance instanceof self)) {

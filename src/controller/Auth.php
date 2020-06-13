@@ -50,7 +50,7 @@ class Auth
         $this->request = Request::getInstance();
         $this->login_model = Login::getInstance();
         $this->config = ConfigModel::getInstance();
-        $this->account = CheckAccount::getInstance();
+        $this->account = AccountController::getInstance();
     }
 
 

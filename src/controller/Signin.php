@@ -5,13 +5,18 @@ namespace Controllers;
 use Libraries\Security,
     Models\Account;
 
+/**
+ * @class Sigin
+ * @note Controller for register accounts and characters
+ * @package Controllers
+ */
 class Signin
 {
     /**
      * Init vars PRIVATE
      * @var Security $security
      * @var Account $account
-     * @var CheckAccount $checkaccount
+     * @var AccountController $checkaccount
      */
     private
         $security,
@@ -27,7 +32,7 @@ class Signin
     {
         #Call instances of the needed classes
         $this->security = Security::getInstance();
-        $this->checkaccount = CheckAccount::getInstance();
+        $this->checkaccount = AccountController::getInstance();
         $this->account = Account::getInstance();
     }
 
