@@ -3,7 +3,7 @@
 namespace Core;
 
 use Libraries\Request,
-    Models\ConfigModel;
+    Models\Config;
 
 /**
  * @class Router
@@ -51,7 +51,7 @@ class Router
     private function __construct(Request $request)
     {
 
-        $this->supportedHttpMethods = ConfigModel::getInstance()->request_allowed_methods;
+        $this->supportedHttpMethods = Config::getInstance()->request_allowed_methods;
         $this->request = $request;
     }
 

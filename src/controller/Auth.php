@@ -6,7 +6,7 @@ use Libraries\Request,
     Libraries\Security,
     Libraries\Session,
     Models\Login,
-    Models\ConfigModel,
+    Models\Config,
     Models\Account;
 
 /**
@@ -18,7 +18,7 @@ class Auth
 {
     /**
      * Init vars PRIVATE
-     * @var ConfigModel $config
+     * @var Config $config
      * @var Security $security
      * @var Request $request
      * @var Login $login_model
@@ -49,7 +49,7 @@ class Auth
         $this->security = Security::getInstance();
         $this->request = Request::getInstance();
         $this->login_model = Login::getInstance();
-        $this->config = ConfigModel::getInstance();
+        $this->config = Config::getInstance();
         $this->account = AccountController::getInstance();
     }
 

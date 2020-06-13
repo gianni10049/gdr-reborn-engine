@@ -7,7 +7,7 @@ use Libraries\Request,
     Libraries\Security,
     Libraries\Session,
     Models\Account,
-    Models\ConfigModel;
+    Models\Config;
 
 /**
  * @class CheckSession
@@ -22,7 +22,7 @@ class CheckSession
      * @var Session $session
      * @var Request $request
      * @var Security $sec
-     * @var ConfigModel $config
+     * @var Config $config
      */
     private
         $session,
@@ -48,7 +48,7 @@ class CheckSession
         $this->session = Session::getInstance();
         $this->request = Request::getInstance();
         $this->sec = Security::getInstance();
-        $this->config = ConfigModel::getInstance();
+        $this->config = Config::getInstance();
     }
 
     /**

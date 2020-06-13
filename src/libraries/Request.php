@@ -31,10 +31,10 @@ class Request
         $requestUri;
 
     /**
-     * Init vars public
+     * Init vars PRIVATE
      * @var Security $sec
      */
-    public
+    private
         $sec;
 
     /**

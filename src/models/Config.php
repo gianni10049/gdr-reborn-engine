@@ -6,16 +6,16 @@ use Database\DB;
 use Libraries\Security;
 
 /**
- * @class ConfigModel
+ * @class Config
  * @package Models
  * @note Config Model for get data from DB
  */
-class ConfigModel
+class Config
 {
 
     /**
      * Init Vars PUBLIC STATIC
-     * @var ConfigModel $_instance Self-Instance
+     * @var Config $_instance Self-Instance
      */
     public static
         $_instance;
@@ -32,9 +32,9 @@ class ConfigModel
     /**
      * @fn getInstance
      * @note Self Instance
-     * @return ConfigModel
+     * @return Config
      */
-    public static function getInstance(): ConfigModel
+    public static function getInstance(): Config
     {
         #If self-instance not defined
         if (!(self::$_instance instanceof self)) {
@@ -47,7 +47,7 @@ class ConfigModel
 
     /**
      * @fn __construct
-     * @note ConfigModel constructor.
+     * @note Config constructor.
      * @return void
      */
     private function __construct()
