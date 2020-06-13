@@ -2,215 +2,242 @@
 
 namespace Controller;
 
-use Libraries\Security,
-    Models\Account;
+use Libraries\Security;
+use Models\Account;
 
 
 /**
- * Class Mailer
- * 
- * usage:
- * 
- * $mail = Mailer::getInstance();
- * 
- * $mail->setTo('mail@mail.com')
- *      ->setFrom('webmaster@mail.com)
- *      ->setSubject('Info')
- *      ->setMessage('Hello')
- *      ->send();
+ * @class Mailer
+ * @package Controller
+ * @note Class used for send email
  */
 class Mailer
 {
 
     /**
+     * Init vars PUBLIC STATIC
+     * @var Mailer $_instance
+     */
+    public static
+        $_instance;
+
+    /**
+     * Init vars PROTECTED
      * @var array $to
-     */
-    protected $to = [];
-
-    /**
      * @var string $subject
-     */
-    protected $subject;
-
-    /**
      * @var string $message
-     */
-    protected $message;
-
-    /**
      * @var array $headers
+     * @var string $header
      */
-    protected $headers = [];
+    protected $to = [],
+        $subject,
+        $message,
+        $headers = [],
+        $header;
 
     /**
+     * Init vars PRIVATE
      * @var Security $security
      */
-    private $security;
+    private
+        $security;
 
     /**
-     * Named constructor.
-     *
-     * @return static
+     * @fn getInstance()
+     * @note Self-instance
+     * @return Mailer
      */
-    public static function getInstance()
+    public static function getInstance(): Mailer
     {
-        return new Mailer();
+        #If self-instance not defined
+        if (!(self::$_instance instanceof self)) {
+            #define it
+            self::$_instance = new self();
+        }
+        #return defined instance
+        return self::$_instance;
     }
 
     /**
-     * __construct
-     *
-     * Resets the class properties.
+     * @fn __construct
+     * @note Mailer constructor.
+     * @return void
      */
     public function __construct()
     {
+        #Init security class
         $this->security = Security::getInstance();
-        
+
+        #Resets the class properties.
         $this->reset();
     }
 
     /**
-     * reset
-     *
-     * Resets all properties to initial state.
-     *
-     * @return self
+     * @fn reset
+     * @note Resets all properties to initial state.
+     * @return Mailer
      */
-    public function reset()
+    public function reset(): Mailer
     {
+        #Reset all vars to empty
         $this->to = array();
         $this->headers = array();
         $this->subject = null;
         $this->message = null;
 
+        #Return new email object
         return $this;
     }
 
-    /**
-     * setTo
-     *
-     * @param string $email The email address to send to.
-     *
-     * @return self
-     */
-    public function setTo(string $email = null)
+
+    public function SendEmail(string $to, string $from, string $subject, string $message, array $headers = [])
     {
-        $this->to[] = ($this->security->setEmail($email) == true) ? $email : false;
-        
-        return $this;
+        $this->setTo($to)
+            ->setFrom($from)
+            ->setSubject($subject)
+            ->setMessage($message)
+            ->addGenericHeaders($headers)
+            ->getheadersToSend()
+            ->send();
     }
 
     /**
-     * setFrom
-     *
-     * @param string $email The email to send as from.
-     *
-     * @return self
+     * @fn setTo
+     * @note Set "to" value of the email
+     * @param array $emails (The email address to send to)
+     * @return Mailer
      */
-    public function setFrom(string $email)
+    public function setTo(array $emails = []): Mailer
     {
-        $address = ($this->security->setEmail($email) == true) ? $email : false;
-        
-        $this->headers[] = 'From: ' . $address;
-
-        return $this;
-    }
-
-    /**
-     * setSubject
-     *
-     * @param string $subject The email subject
-     *
-     * @return self
-     */
-    public function setSubject(string $subject)
-    {
-        $this->subject = $this->security->Filter($subject);
-        
-        return $this;
-    }
-
-    /**
-     * setMessage
-     * 
-     *
-     * @param string $message The message to send.
-     *
-     * @return self
-     */
-    public function setMessage(string $message, $html = false)
-    {
-        if(!$html)
-        {
-            #vd. https://www.php.net/manual/en/function.mail.php
-            $this->message = str_replace("\n.", "\n..", $this->security->Filter($message));
-        
-            return $this;
+        #Set the recipient of the email
+        foreach ($emails as $email) {
+            $this->to[] = ($this->security->EmailControl($email)) ? $email : false;
         }
-        
-        #html
-        $this->message = $this->security->HtmlFilter($message);
-        #vd. https://www.php.net/manual/en/function.mail.php
-        $this->message = str_replace("\n.", "\n..", $this->message);
 
+        #Return Mailer class
         return $this;
     }
 
     /**
-     * addGenericHeader
-     *
-     * @param string $header The generic header to add.
-     * @param mixed  $value  The value of the header.
-     * 
-     * Ex.: $this->addGenericHeader(
-     *      'Content-Type', 'text/html; charset="utf-8"'
-     *  );
-     *
-     * @return self
+     * @fn setFrom
+     * @note Set "From" value of the email
+     * @param string $email (The email to send as from)
+     * @return Mailer
      */
-    public function addGenericHeader(string $header, string $value)
+    public function setFrom(string $email): Mailer
     {
-        $this->headers[] = sprintf('%s: %s', $header, $value);
+        #If Email is correct set From value, else set false
+        $this->headers[] = ($this->security->EmailControl($email) == true) ? 'From: ' . $email : false;
 
+        #Return Mailer class
         return $this;
     }
 
     /**
-     * Undocumented function
-     *
-     * @return void
+     * @fn setSubject
+     * @note Set "Subject" value of the email
+     * @param string $subject (The email subject)
+     * @return Mailer
      */
-    public function getheadersToSend()
+    public function setSubject(string $subject): Mailer
     {
+        #Filter and set subject of the email
+        $this->subject = $this->security->Filter($subject, 'String');
+
+        #Return Mailer class
+        return $this;
+    }
+
+    /**
+     * @fn setMessage
+     * @note Set message to send in email
+     * @param string $message (The message to send)
+     * @param bool $html
+     * @return Mailer
+     */
+    public function setMessage(string $message, bool $html = false): Mailer
+    {
+        #If is html
+        if ($html) {
+
+            #Filter in html filter
+            $message = $this->security->HtmlFilter($message);
+        }
+
+        #Replace wrap in the message
+        $this->message = str_replace("\n.", "\n..", $this->security->Filter($message, 'Convert'));
+
+        #Return Mailer class
+        return $this;
+    }
+
+    /**
+     * @fn addGenericHeader
+     * @note Add generic headers to the email
+     * @param array $headers
+     * @return Mailer
+     */
+    public function addGenericHeaders(array $headers): Mailer
+    {
+
+        #Foreach header in array
+        foreach ($headers as $header => $value) {
+
+            #Add header to the email
+            $this->headers[] = sprintf('%s: %s', $header, $value);
+        }
+
+        #Return Mailer class
+        return $this;
+    }
+
+    /**
+     * @fn getheadersToSend
+     * @note Return compressed headers array
+     * @return Mailer
+     */
+    public function getheadersToSend(): Mailer
+    {
+        #Implode header array
         $this->header = implode('"\r\n"', $this->headers);
 
+        #Return Mailer class
         return $this;
     }
 
     /**
-     * send
+     * @fn send
+     * @note send the composed email
+     * @return void
      */
     public function send()
     {
-        for($i = 0; $i < count($this->to); $i++)
-        {
-            mail($this->to[$i], $this->subject, $this->message, $this->header);
+
+        #Foreach recipient
+        foreach ($this->to as $email){
+
+            #Send email
+            mail($email, $this->subject, $this->message, $this->header);
         }
     }
 
     /**
-     * sendAll
-     *
+     * @fn SendAllAccount
+     * @note Send an email to all accounts
      * @return void
      */
-    public function sendAll()
+    public function SendAllAccount()
     {
+        #Start Account instance
         $accounts = Account::getInstance();
 
+        #Get all account emails
         $emails = $accounts->getAllEmails();
 
-        foreach($emails as $email)
-        {
+        #Foreach email
+        foreach ($emails as $email) {
+
+            #Add the recipient to array
             $this->to[] = $email;
         }
     }

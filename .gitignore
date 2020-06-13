@@ -4,3 +4,4 @@
 list.txt
 config/config.php
 doxygen/
+.env

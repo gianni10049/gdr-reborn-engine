@@ -295,12 +295,12 @@ class Security
     }
 
     /**
-     * @fn getEmail
-     * @example $sec->getEmail($_POST['email']);
+     * @fn EmailControl
+     * @example $sec->EmailControl($_POST['email']);
      * @param string|null $email input
      * @return bool
      */
-    public function getEmail(string $email = null): bool
+    public function EmailControl(string $email = null): bool
     {
         $config = ConfigModel::getInstance();
 
