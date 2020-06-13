@@ -311,16 +311,26 @@ class Account
     }
 
     /**
-     * getAllEmails function
-     *
-     * @return void
+     * @fn getAllEmails
+     * @note get all accounts email
+     * @return array
      */
-    public function getAllEmails(): array
+    public function AccountEmails(): array
     {
+        #Init empty emails container
         $emails = [];
 
-        $emails = $this->db->Query("SELECT email FROM account");
+        #Extract all encrypted emails stored on server
+        $data = $this->db->Query("SELECT email FROM account");
 
+        #Foreach encrypted email
+        foreach ($data as $email){
+
+            #Decrypt email and add to the emails array
+            $emails[] = $this->sec->Decrypt($email);
+        }
+
+        #Return container full of decrypted emails
         return $emails;
     }
 }

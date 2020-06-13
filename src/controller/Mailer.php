@@ -232,7 +232,7 @@ class Mailer
         $accounts = Account::getInstance();
 
         #Get all account emails
-        $emails = $accounts->getAllEmails();
+        $emails = $accounts->AccountEmails();
 
         #Foreach email
         foreach ($emails as $email) {
