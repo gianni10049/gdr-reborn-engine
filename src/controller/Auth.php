@@ -106,7 +106,7 @@ class Auth
                 $session->id = $user['id'];
 
                 #Generate fingerprint and update the account last activity
-                $this->account->RegenerateFingerprint();
+                $this->account->RegenerateFingerprint($session->id);
                 $this->account->CreateLastActive();
 
                 #Return true

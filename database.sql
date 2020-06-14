@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Giu 13, 2020 alle 04:07
+-- Generation Time: Giu 14, 2020 alle 16:25
 -- Versione del server: 5.6.33-log
 -- PHP Version: 5.3.10
 
@@ -32,10 +32,12 @@ CREATE TABLE IF NOT EXISTS `account` (
   `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `fingerprint` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `fingerprint_ip` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `fingerprint_lang` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `last_active` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `active` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=9 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=11 ;
 
 -- --------------------------------------------------------
 
@@ -67,14 +69,26 @@ INSERT INTO `config` (`id`, `type`, `name`, `default`, `value`, `description`, `
 (5, 'String', 'cookie_domain', ' ', NULL, NULL, 1, 1),
 (6, 'Bool', 'cookie_secure', '0', NULL, NULL, 1, 1),
 (7, 'Bool', 'cookie_httponly', '1', NULL, NULL, 1, 1),
-(8, 'Int', 'password_min', '8', NULL, NULL, 1, 1),
+(8, 'Int', 'password_min', '5', NULL, NULL, 1, 1),
 (9, 'Int', 'password_max', '16', NULL, NULL, 1, 1),
 (10, 'Int', 'email_min', '8', NULL, NULL, 1, 1),
-(11, 'Int', 'email_max', '16', NULL, NULL, 1, 1),
+(11, 'Int', 'email_max', '30', NULL, NULL, 1, 1),
 (12, 'Int', 'cookie_lifetime', '0', NULL, NULL, 1, 1),
-(13, 'Array', 'request_allowed_methods', 'GET,POST', NULL, NULL, 1, 1),
-(14, 'String', 'cryptography_key', 'V6/qcAev/bcu0nkrsgA9M/TpR/+Pxz1CdNK/U/8f77s=', NULL, NULL, 1, 1),
-(15, 'String', 'cryptography_method', 'aes-128-gcm', NULL, NULL, 1, 1);
+(13, 'Array', 'request_allowed_methods', 'GET,POST', NULL, NULL, 1, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `login_invalid`
+--
+
+CREATE TABLE IF NOT EXISTS `login_invalid` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `message` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `ip` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `timerror` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=23 ;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

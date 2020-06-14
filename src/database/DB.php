@@ -376,7 +376,7 @@ class DB
         if (!empty($table) && !empty($where)) {
 
             #Compose query
-            $text = "SELECT count(id) as NUM FROM {$table} WHERE 1 ";
+            $text = "SELECT count(id) as NUM FROM {$table} WHERE {$where} ";
 
             #Execute Query
             $data = $this->Query($text, $params);
