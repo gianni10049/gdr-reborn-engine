@@ -1,9 +1,6 @@
 {
   "require": {
     "monolog/monolog": "1.0.*",
-    "ext-mbstring": "^7.3",
-    "ext-PDO": "^7.3",
-    "ext-apache": "*",
-    "ext-openssl": "*"
+    "vlucas/phpdotenv": "^5.0"
   }
 }

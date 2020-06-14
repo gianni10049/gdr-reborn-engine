@@ -2,8 +2,8 @@
 
 namespace Database;
 
-use Core\Config,
-    Libraries\Security,
+use Libraries\Security,
+    Libraries\Enviroment,
     PDO,
     PDOException;
 
@@ -23,12 +23,12 @@ class DB
      * @var string $db (Database Name)
      * @var string $pass (Host Password)
      * @var string $user (Host Username)
+     * @var string $charset (Host Charset)
      * @var PDO $pdo
      * @var array $options (Connection Options)
      */
     private
         $sec,
-        $config,
         $host,
         $db,
         $pass,
@@ -55,14 +55,14 @@ class DB
     {
         #Init Security instance
         $this->sec = Security::getInstance();
-        $this->config = Config::getInstance();
+        $env= Enviroment::getInstance();
 
         #Set base values for connection
-        $this->db = (isset($db)) ? $db : $this->config->db;
-        $this->host = $this->config->host;
-        $this->user = $this->config->user;
-        $this->pass = $this->config->pass;
-        $this->charset = $this->config->charset;
+        $this->db = (isset($db)) ? $db : $env->DB_NAME;
+        $this->host = $env->DB_HOST;
+        $this->user = $env->DB_USER;
+        $this->pass = $env->DB_PASS;
+        $this->charset = $env->DB_CHARSET;
 
         #Set default option for connection
         $default_options = [

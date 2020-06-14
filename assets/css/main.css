@@ -1,4 +1,39 @@
+html{
+    padding: 0;
+    margin: 0;
+}
+
 body{
     background:black;
     color:white;
+    padding: 0;
+    margin: 0;
+}
+
+.container_page{
+    width: 100vw;
+    height: 100vh;
+}
+
+#Homepage .Title{
+    text-align: center;
+    padding-top: 10px;
+    clear: both;
+}
+
+#Homepage .homepage_login_container{
+    width: 400px;
+    height: 350px;
+    border:1px solid #531919;
+    margin:10px auto;
+}
+
+
+#Homepage .homepage_login_container form{
+    text-align: center;
+}
+
+
+#Homepage .homepage_login_container input{
+    margin: 5px 0;
 }

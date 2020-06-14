@@ -6,7 +6,7 @@ use Libraries\Request,
     Libraries\Security,
     Libraries\Session,
     Models\Login,
-    Models\ConfigModel,
+    Models\Config,
     Models\Account;
 
 /**
@@ -18,7 +18,7 @@ class Auth
 {
     /**
      * Init vars PRIVATE
-     * @var ConfigModel $config
+     * @var Config $config
      * @var Security $security
      * @var Request $request
      * @var Login $login_model
@@ -49,8 +49,8 @@ class Auth
         $this->security = Security::getInstance();
         $this->request = Request::getInstance();
         $this->login_model = Login::getInstance();
-        $this->config = ConfigModel::getInstance();
-        $this->account = CheckAccount::getInstance();
+        $this->config = Config::getInstance();
+        $this->account = AccountController::getInstance();
     }
 
 
@@ -75,9 +75,9 @@ class Auth
      * @note Authenticate user credentials for Login
      * @param string $username
      * @param string $credential
-     * @return bool
+     * @return int
      */
-    public function authenticate(string $username, string $credential): bool
+    public function authenticate(string $username, string $credential): int
     {
 
         #Filter entered data
@@ -86,10 +86,10 @@ class Auth
 
         #If one of the field are empty or not isset
         if ((!isset($username) || empty($username)) || (!isset($credential) || empty($credential))) {
-            return false;
+            return LOGIN_EMPTY_VALUES;
         } #Else if the user have reached the max attempts for login
         else if ($this->login_model->countAttempts($this->request->getIpAddress()) > $this->config->login_max_attempts) {
-            die('Massimo numero di tentativi raggiunto');
+            return LOGIN_MAX_ATTEMPTS;
         }
 
         #Read data of the user from the DB
@@ -98,7 +98,7 @@ class Auth
         #If user exist in database
         if (!empty($user)) {
             #Compare credentials for authentication
-            if ($this->security->Verify($credential, $user['password'])) {
+            if ($this->security->VerifyHash($credential, $user['password'])) {
                 #Init new Session
                 $session = Session::getInstance();
 
@@ -110,7 +110,7 @@ class Auth
                 $this->account->CreateLastActive();
 
                 #Return true
-                return true;
+                return LOGIN_SUCCESS;
 
             } #Else the user credentials are wrong
             else {
@@ -121,18 +121,55 @@ class Auth
                 $this->login_model->insertError($error, $this->request->getIPAddress());
 
                 #Die whit error
-                die($error);
+                return LOGIN_PASSWORD_ERROR;
             }
         } #Else the user not exist
         else {
             #Create text for log the error in db
-            $error = "Username error";
+            $error = "Authentication Error [Username]";
 
             #Log the error in the db
             $this->login_model->insertError($error, $this->request->getIPAddress());
 
             #Die whit error
-            die($error);
+            return LOGIN_USERNAME_ERROR;
         }
+    }
+
+    /**
+     * @fn ManageError
+     * @note Methods for manage authentication errors
+     * @param int $response
+     */
+    public function ManageError(int $response)
+    {
+
+        #Switch passed response
+        switch ($response) {
+
+            #Case username error
+            case (int)LOGIN_USERNAME_ERROR:
+                echo 'Account inesistente.';
+                break;
+
+            #Case password error
+            case (int)LOGIN_PASSWORD_ERROR:
+                echo 'Password errata.';
+                break;
+
+            #Case max attempts
+            case (int)LOGIN_MAX_ATTEMPTS:
+                echo 'Raggiunto numero massimo di tentativi.';
+                break;
+
+            #Case empty values
+            case (int)LOGIN_EMPTY_VALUES:
+                echo 'Assicurati di aver compilato tutti i campi correttamente.';
+                break;
+        }
+
+        #Echo meta tag and refresh after 5 sec
+        echo '<meta http-equiv="refresh" content="5;url=/"> ';
+
     }
 }

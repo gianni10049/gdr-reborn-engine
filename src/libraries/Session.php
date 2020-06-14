@@ -2,7 +2,7 @@
 
 namespace Libraries;
 
-use Models\ConfigModel;
+use Models\Config;
 
 /**
  * @class Session
@@ -29,7 +29,7 @@ class Session
 
     /**
      * Init vars PRIVATE
-     * @var ConfigModel $config
+     * @var Config $config
      * @var Security $sec
      */
     private
@@ -63,7 +63,7 @@ class Session
         $this->sec = Security::getInstance();
 
         #Init config for extract session params
-        $this->config= ConfigModel::getInstance();
+        $this->config= Config::getInstance();
 
         #Extract and set session params
         $this->session_params=

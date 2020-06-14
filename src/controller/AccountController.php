@@ -2,20 +2,20 @@
 
 namespace Controllers;
 
-use Database\DB;
-use Libraries\Security;
-use Models\Account;
+use Database\DB,
+    Libraries\Security,
+    Models\Account;
 
 /**
  * @class CheckAccount
  * @package Controllers
  * @note Controller for account security
  */
-class CheckAccount
+class AccountController
 {
     /**
      * Init vars PUBLIC STATIC
-     * @var CheckAccount $_instance
+     * @var AccountController $_instance
      */
     public static
         $_instance;
@@ -33,9 +33,9 @@ class CheckAccount
     /**
      * @fn getInstance
      * @note Self Instance
-     * @return CheckAccount
+     * @return AccountController
      */
-    public static function getInstance(): CheckAccount
+    public static function getInstance(): AccountController
     {
         #If self-instance not defined
         if (!(self::$_instance instanceof self)) {
@@ -135,74 +135,6 @@ class CheckAccount
             $this->account->UpdateLastActive($account);
         }
     }
-
-    /**
-     * @fn AccountControls
-     * @note Control data for new account insert
-     * @param array $post
-     * @return int
-     */
-    public function AccountControls(array $post): int
-    {
-        #Validate post input
-        $post = $this->sec->Filter($post, 'Post');
-
-        #Filter passed data
-        $user = $this->sec->Filter($post['username'], 'Convert');
-        $email = $this->sec->Filter($post['Email'], 'Email');
-        $pass = $this->sec->Filter($post['password'], 'Convert');
-        $passVerification = $this->sec->Filter($post['password_verification'], 'Convert');
-
-        #If password is correct
-        if ($this->PasswordCheck($pass, $passVerification)) {
-
-            #If username non exist
-            if ($this->account->UsernameExist($user)) {
-
-                #If email not exist
-                if ($this->account->EmailExist($email)) {
-
-                    #Insert new account
-                    $this->account->NewAccount($user, $email, $pass);
-
-                    #Return success response
-                    return REGISTRATION_SUCCESS;
-
-                } #Else email exist
-                else {
-
-                    #Return email error
-                    return REGISTRATION_EMAIL_ERROR;
-                }
-
-            } #Else username exist
-            else {
-
-                #Return username error
-                return REGISTRATION_USER_ERROR;
-            }
-
-        } #Else password is not correct
-        else {
-
-            #Return password error
-            return REGISTRATION_PASS_ERROR;
-        }
-    }
-
-    /**
-     * @fn PasswordCheck
-     * @note Control if password is correct
-     * @param string $pass
-     * @param string $verification
-     * @return bool
-     */
-    private function PasswordCheck(string $pass, string $verification): bool
-    {
-        #If password match and is correct return true, else false
-        return (($this->sec->PasswordMatch($pass, $verification)) && ($this->sec->PasswordControl($pass))) ? true : false;
-    }
-
 
     /**
      * @fn PasswordUpdate

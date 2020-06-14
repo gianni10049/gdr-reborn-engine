@@ -2,7 +2,8 @@
 
 namespace Libraries;
 
-use Models\ConfigModel;
+use Dotenv\Dotenv,
+    Models\Config;
 
 /**
  * @class Security
@@ -21,7 +22,7 @@ class Security
 
     /**
      * Init vars PUBLIC
-     * @var ConfigModel
+     * @var Config
      */
     public
         $config;
@@ -60,19 +61,19 @@ class Security
     public function Hash(string $data):string
     {
         #Init config class
-        $config = ConfigModel::getInstance();
+        $env = Enviroment::getInstance();
 
         #Get key and tag for encrypt
-        $key = base64_decode($config->cryptography_key);
+        $key = base64_decode($env->CRYPTOGRAPHY_KEY);
 
         #Calc vector lenght for that method
-        $iv_lenght = openssl_cipher_iv_length($config->cryptography_method);
+        $iv_lenght = openssl_cipher_iv_length($env->CRYPTOGRAPHY_METHOD);
 
         #Generate random vector
         $iv = openssl_random_pseudo_bytes($iv_lenght);
 
         #Encrypt data
-        $encryptedMessage = openssl_encrypt($data, $config->cryptography_method, $key, OPENSSL_RAW_DATA, $iv,$tag);
+        $encryptedMessage = openssl_encrypt($data, $env->CRYPTOGRAPHY_METHOD, $key, OPENSSL_RAW_DATA, $iv,$tag);
 
         #Return binary response for db compatibility
         return base64_encode($iv .'_'.$encryptedMessage.'_'.$tag);
@@ -87,10 +88,10 @@ class Security
     public function Decrypt(string $string):string
     {
         #Init config class
-        $config = ConfigModel::getInstance();
+        $env = Enviroment::getInstance();
 
         #Get key and tag for decrypt
-        $key = base64_decode($config->cryptography_key);
+        $key = base64_decode($env->CRYPTOGRAPHY_KEY);
 
         #Convert db data from binary to not binary
         $raw = base64_decode($string);
@@ -108,7 +109,7 @@ class Security
         $tag= $data[2];
 
         #Return decrypted data
-        return openssl_decrypt($string, $config->cryptography_method, $key, OPENSSL_RAW_DATA, $iv,$tag);
+        return openssl_decrypt($string, $env->CRYPTOGRAPHY_METHOD, $key, OPENSSL_RAW_DATA, $iv,$tag);
     }
 
     /**
@@ -302,23 +303,28 @@ class Security
      */
     public function EmailControl(string $email = null): bool
     {
-        $config = ConfigModel::getInstance();
+        $config = Config::getInstance();
 
         $max = $config->email_max;
         $min = $config->email_min;
 
         #If is an email
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-
+        if (!$this->Filter($email,'Email')) {
             #Return false
             return false;
         }
 
         #Get list of banned domains
-        $bannedEmails = json_decode(file_get_contents(LIBRARIES . "/domains/domains.json"));
+        $bannedEmails = json_decode(file_get_contents(PACKAGES . "/domains/domains.json"));
+
+        #SplitMail
+        $expl= explode('@', $email);
+
+        #Get mail domain
+        $domain = $expl[1];
 
         #If the domain is not banned
-        if (in_array(strtolower(explode('@', $email)[1]), $bannedEmails)) {
+        if (in_array(strtolower($domain), $bannedEmails) || is_null($domain)) {
 
             #Return false
             return false;
@@ -348,7 +354,7 @@ class Security
     public function PasswordControl(string $password = null): bool
     {
 
-        $config = ConfigModel::getInstance();
+        $config = Config::getInstance();
 
         $min = $config->password_min;
         $max = $config->password_max;

@@ -45,7 +45,7 @@ class Login extends Wrapper
     {
         #Control if the use have reached the maximum attempts
         $error = $this->db->Query(
-            "SELECT count(*) AS error FROM InvalidLogin WHERE ip = ? AND DATE_ADD(timerror, INTERVAL 10 MINUTE) > NOW()",
+            "SELECT count(*) AS error FROM login_invalid WHERE ip = ? AND DATE_ADD(timerror, INTERVAL 10 MINUTE) > NOW()",
             [$ip]
         );
 
@@ -64,8 +64,8 @@ class Login extends Wrapper
     {
         #Insert error in db
         $this->db->Query(
-            "INSERT INTO invalidlogin (message, ip, timerror) VALUES (?, ?, ?)",
-            [$message, $ip, date("Y-m-d H:i:s")]
+            "INSERT INTO login_invalid (message, ip) VALUES (?, ?)",
+            [$message, $ip]
         );
     }
 
@@ -79,7 +79,7 @@ class Login extends Wrapper
     {
         #Return user data by his name
         return $this->db->Query(
-            "SELECT * FROM users WHERE username = ? AND isbanned = 0",
+            "SELECT * FROM account WHERE username = ? AND active = 1",
             [$username]
         );
     }
