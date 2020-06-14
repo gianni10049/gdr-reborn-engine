@@ -138,13 +138,11 @@ class CheckSession
         #Generate Fingerprint for this session
         $fingerprint = $this->sec->GenerateFingerprint();
 
-        #Control if fingerprint of the session is the same than stored
-        if(($account->fingerprint[0] == $fingerprint[0]) or ($account->fingerprint[1] == $fingerprint[1]))
-        {
-            return true;
-        }
+        #Control if fingerprint are the same, for the same type
+        $contr=  (($account->fingerprint_ip == $fingerprint['ip']) || ($account->fingerprint_lang == $fingerprint['lang']));
 
-        return false;
+        #Control if fingerprint of the session is the same than stored
+        return ($contr) ? true : false;
     }
 
 }

@@ -92,7 +92,7 @@ class Mailer
 
     /**
      * @fn SendMail
-     *
+     * @note Send an email whit the indicated data
      * @param array $to
      * @param string $from
      * @param string $subject

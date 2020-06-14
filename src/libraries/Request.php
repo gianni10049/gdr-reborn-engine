@@ -149,6 +149,17 @@ class Request
     }
 
     /**
+     * @fn getLang
+     * @note Get http accepted languages
+     * @return string
+     */
+    public function getLang(): string
+    {
+        #Return filtered HTTP_ACCEPT_LANGUAGE
+        return $this->sec->Filter(strtolower($this->httpAcceptLanguage),'String');
+    }
+
+    /**
      * @fn bootstrapSelf
      * @note Auto generate server infos
      * @return void
@@ -266,15 +277,4 @@ class Request
             die('Method not allowed.');
         }
     }
-
-    /**
-     * @fn getLang
-     *
-     * @return string
-     */
-    public function getLang(): string
-    {
-        return $this->sec->Filter(strtolower($this->httpAcceptLanguage),'String');
-    }
-
 }

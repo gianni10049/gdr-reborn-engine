@@ -153,8 +153,12 @@ class Account
         #Generate new fingerprint
         $fingerprint= $this->sec->GenerateFingerprint();
 
+        #Get Fingerprints
+        $ip = $this->sec->Filter($fingerprint['ip'],'String');
+        $lang = $this->sec->Filter($fingerprint['lang'],'String');
+
         #Update fingerprint in db
-        $this->db->Update('account',"fingerprint='{$fingerprint}'","id='{$id}'");
+        $this->db->Update('account',"fingerprint_ip='{$ip}',fingerprint_lang='{$lang}'","id='{$id}'");
     }
 
     /**
