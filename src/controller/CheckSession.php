@@ -139,8 +139,12 @@ class CheckSession
         $fingerprint = $this->sec->GenerateFingerprint();
 
         #Control if fingerprint of the session is the same than stored
-        return ($account->fingerprint == $fingerprint) ? true : false;
-    }
+        if(($account->fingerprint[0] == $fingerprint[0]) or ($account->fingerprint[1] == $fingerprint[1]))
+        {
+            return true;
+        }
 
+        return false;
+    }
 
 }
