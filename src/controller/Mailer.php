@@ -91,7 +91,7 @@ class Mailer
     }
 
     /**
-     * SendMail
+     * @fn SendMail
      *
      * @param array $to
      * @param string $from
