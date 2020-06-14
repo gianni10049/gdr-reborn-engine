@@ -146,7 +146,7 @@ class Router
         }
 
         #Return callback whit passed args
-        return call_user_func($method, array($this->request->getBody()));
+        return call_user_func($method, $this->request->getBody());
     }
 
     /**

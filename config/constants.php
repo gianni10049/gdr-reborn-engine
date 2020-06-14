@@ -11,17 +11,25 @@ define('LIBRARIES', __DIR__ . '/../src/libraries/');
 define('DATABASE', __DIR__ . '/../src/database/');
 define('VIEWS', __DIR__ . '/../src/views/');
 
+
+/* LOGIN RESPONSE */
+define('LOGIN_SUCCESS',1);
+define('LOGIN_USERNAME_ERROR',2);
+define('LOGIN_PASSWORD_ERROR',3);
+define('LOGIN_EMPTY_VALUES',4);
+define('LOGIN_MAX_ATTEMPTS',5);
+
 /* REGISTARTION RESPONSE */
-define('REGISTRATION_PASS_ERROR', 1);
+define('REGISTRATION_SUCCESS', 1);
 define('REGISTRATION_USER_ERROR', 2);
 define('REGISTRATION_EMAIL_ERROR', 3);
-define('REGISTRATION_SUCCESS', 4);
+define('REGISTRATION_PASS_ERROR', 4);
 
 /* PASSWORD UPDATE RESPONSE */
-define('PASS_UPDATE_MATCH_ERROR', 1);
+define('PASS_UPDATE_SUCCESS', 1);
+define('PASS_UPDATE_MATCH_ERROR', 3);
 define('PASS_UPDATE_CONTROL_ERROR', 2);
-define('PASS_UPDATE_SUCCESS', 3);
 
 /* EMAIL UPDATE RESPONSE */
-define('EMAIL_UPDATE_MATCH_ERROR', 1);
-define('EMAIL_UPDATE_SUCCESS', 2);
+define('EMAIL_UPDATE_SUCCESS', 1);
+define('EMAIL_UPDATE_MATCH_ERROR', 2);

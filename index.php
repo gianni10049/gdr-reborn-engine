@@ -2,7 +2,8 @@
 
 #Import namespace
 use Core\Router,
-    Libraries\Request;
+    Libraries\Request,
+    Controllers\Template;
 
 #Import required files
 require('config/required.php');
@@ -26,7 +27,25 @@ $router = Router::getInstance($request);
  * ! All parameter in $args var, in the callback, are associated like: ['key'=>'val','key'=>'val']
  * !*/
 
+#Root switch
 $router->get('/', function ($args) {
+
+    #Init Account and Template class
+    $account = \Controllers\AccountController::getInstance();
+    $tpl = new Template();
+
+    #If connected
+    if ($account->AccountConnected()) {
+
+        #Render the Lobby
+        echo $tpl->Render('Lobby', $args);
+    } #Else is not connected
+    else {
+
+        #Render the homepage
+        echo $tpl->Render('Homepage', []);
+    }
+
 });
 
 #POST
@@ -35,7 +54,18 @@ $router->get('/', function ($args) {
  * ! All parameter in $args var, in the callback, are associated like: ['key'=>'val','key'=>'val']
  * !*/
 
-$router->post('/data', function ($args) {
+
+#Login
+$router->post('/login', function ($args) {
+
+    #Init Auth class
+    $auth = \Controllers\Auth::getInstance();
+
+    #Get Auth response
+    $Response= $auth->authenticate($args['username'], $args['pass']);
+
+    #If response is success refresh the page, else manage errors
+    ($Response === LOGIN_SUCCESS) ? header(' Location: /;') : $auth->ManageError($Response);
 
 });
 

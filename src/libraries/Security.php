@@ -61,7 +61,7 @@ class Security
     public function Hash(string $data):string
     {
         #Init config class
-        $env = Dotenv::getInstance();
+        $env = Enviroment::getInstance();
 
         #Get key and tag for encrypt
         $key = base64_decode($env->CRYPTOGRAPHY_KEY);
@@ -88,7 +88,7 @@ class Security
     public function Decrypt(string $string):string
     {
         #Init config class
-        $env = Dotenv::getInstance();
+        $env = Enviroment::getInstance();
 
         #Get key and tag for decrypt
         $key = base64_decode($env->CRYPTOGRAPHY_KEY);

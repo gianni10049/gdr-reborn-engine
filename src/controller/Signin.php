@@ -24,6 +24,29 @@ class Signin
         $checkaccount;
 
     /**
+     * Init vars PUBLIC STATIC
+     * @var Signin $_instance
+     */
+    public static
+        $_instance;
+
+    /**
+     * @fn getInstance()
+     * @note Self-instance
+     * @return Signin
+     */
+    public static function getInstance(): Signin
+    {
+        #If self-instance not defined
+        if (!(self::$_instance instanceof self)) {
+            #define it
+            self::$_instance = new self();
+        }
+        #return defined instance
+        return self::$_instance;
+    }
+
+    /**
      * @fn __constructor
      * @note Init needed classes
      * @return void
@@ -50,7 +73,7 @@ class Signin
 
         #Filter passed data
         $user = $this->security->Filter($post['username'], 'Convert');
-        $email = $this->security->Filter($post['Email'], 'Email');
+        $email = $this->security->Filter($post['email'], 'Email');
         $pass = $this->security->Filter($post['password'], 'Convert');
         $passVerification = $this->security->Filter($post['password_verification'], 'Convert');
 
