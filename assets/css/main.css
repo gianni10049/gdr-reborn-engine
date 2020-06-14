@@ -1,3 +1,7 @@
+
+
+/* region GENERAL */
+
 html{
     padding: 0;
     margin: 0;
@@ -9,12 +13,24 @@ body{
     padding: 0;
     margin: 0;
 }
+a,
+a:link,
+a:visited,
+a:hover,
+a:active{
+    text-decoration: none;
+    color: crimson;
+    cursor: pointer;
+}
 
 .container_page{
     width: 100vw;
     height: 100vh;
 }
 
+/* endregion */
+
+/* region HOMEPAGE */
 #Homepage .Title{
     text-align: center;
     padding-top: 10px;
@@ -37,3 +53,32 @@ body{
 #Homepage .homepage_login_container input{
     margin: 5px 0;
 }
+
+#Homepage .homepage_login_container .homepage_other{
+    margin-top: 30px;
+    text-align: center;
+}
+
+
+#Homepage .homepage_login_container .homepage_other .other_voice a{
+    color: crimson;
+}
+
+/* endregion */
+
+/* region SIGNIN */
+
+#Signin{
+    width: 200px;
+    padding-top: 20px;
+    height: 200px;
+    text-align: center;
+    margin:0 auto;
+}
+
+#Signin input:not([type='submit']){
+    margin-bottom: 10px;
+    background-color: grey;
+}
+
+/* endregion */

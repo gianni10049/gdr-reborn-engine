@@ -120,7 +120,7 @@ class Account
             $data = $db->Select("*","account","id='{$account}' LIMIT 1");
 
             #Save account data
-            $this->datas = $data[$account];
+            $this->datas = $data;
 
             #Save id account
             $this->datas['id'] = $account;

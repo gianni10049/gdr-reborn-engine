@@ -255,7 +255,7 @@ class Request
 
         #Foreach parameters
         foreach ($_POST as $key => $value) {
-            $args[$key] = $this->sec->Filter($key, 'Post');
+            $args[$key] = $this->sec->Filter($value, 'Convert');
         }
 
         #Return parameters array

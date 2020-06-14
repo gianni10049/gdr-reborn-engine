@@ -103,8 +103,10 @@ class Template
             $_POST[$key] = $value;
         }
 
+        $_POST['body'] = $template;
+
         #Load template
-        include $template;
+        include VIEWS.'Container.php';
 
         #Return output for echo
         return ob_get_clean();

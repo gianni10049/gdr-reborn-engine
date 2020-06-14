@@ -2,8 +2,8 @@
 
 namespace Controllers;
 
-use Libraries\Security,
-    Models\Account;
+use Libraries\Security;
+use Models\Account;
 
 /**
  * @class Sigin
@@ -68,8 +68,6 @@ class Signin
      */
     public function AccountRegistration(array $post): int
     {
-        #Validate post input
-        $post = $this->security->Filter($post, 'Post');
 
         #Filter passed data
         $user = $this->security->Filter($post['username'], 'Convert');
@@ -113,4 +111,54 @@ class Signin
             return REGISTRATION_PASS_ERROR;
         }
     }
+
+
+    /**
+     * @fn ManageError
+     * @note Manage response of Signin
+     * @param $response
+     * @return string
+     */
+    public function ManageError($response)
+    {
+        #Init html var
+        $html = '';
+
+        switch ((int)$response) {
+
+            #Case success
+            case (int)REGISTRATION_SUCCESS:
+                $html .= 'Registrazione avvenuta con successo!';
+                $html .= '<br> <a href="/">Torna alla home</a>';
+                break;
+
+            #Case username error
+            case (int)REGISTRATION_USER_ERROR:
+                $html .= 'Username già utilizzato o non valido.';
+                $html .= '<br> <a onclick="history.go(-1)">Riprova</a>';
+                break;
+
+            #Case password error
+            case (int)REGISTRATION_PASS_ERROR:
+                $html .= 'Password non valida. Deve contenere un carattere maiuscolo, uno minuscolo, una lettera, un carattere speciale ed essere compresa tra un minimo di 5 ed un massimo di 16 caratteri';
+                $html .= '<br> <a onclick="history.go(-1)">Riprova</a>';
+                break;
+
+            #Case email error
+            case (int)REGISTRATION_EMAIL_ERROR:
+                $html .= 'Email già utilizzata o non valida.';
+                $html .= '<br> <a onclick="history.go(-1)">Riprova</a>';
+                break;
+
+            #Default case
+            default:
+                $html .= 'Errore sconosciuto, contattare lo staff via email!';
+                $html .= '<br> <a href="/">Torna alla home</a>';
+                break;
+        }
+
+        #Return composed email
+        return $html;
+    }
+
 }

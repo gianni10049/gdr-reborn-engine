@@ -140,36 +140,47 @@ class Auth
      * @fn ManageError
      * @note Methods for manage authentication errors
      * @param int $response
+     * @return string
      */
-    public function ManageError(int $response)
+    public function ManageError(int $response):string
     {
+        #Init empty html var
+        $html = '';
 
         #Switch passed response
         switch ($response) {
 
+            case (int)LOGIN_SUCCESS:
+                $html .= '<meta http-equiv="refresh" content="0;url=/">';
+                break;
+
             #Case username error
             case (int)LOGIN_USERNAME_ERROR:
-                echo 'Account inesistente.';
+                $html .= 'Account inesistente.';
+                $html .= '<meta http-equiv="refresh" content="5;url=/"> ';
                 break;
 
             #Case password error
             case (int)LOGIN_PASSWORD_ERROR:
-                echo 'Password errata.';
+                $html .= 'Password errata.';
+                $html .= '<meta http-equiv="refresh" content="5;url=/"> ';
                 break;
 
             #Case max attempts
             case (int)LOGIN_MAX_ATTEMPTS:
-                echo 'Raggiunto numero massimo di tentativi.';
+                $html .= 'Raggiunto numero massimo di tentativi.';
+                $html .= '<meta http-equiv="refresh" content="5;url=/"> ';
                 break;
 
             #Case empty values
             case (int)LOGIN_EMPTY_VALUES:
-                echo 'Assicurati di aver compilato tutti i campi correttamente.';
+                $html .= 'Assicurati di aver compilato tutti i campi correttamente.';
+                $html .= '<meta http-equiv="refresh" content="5;url=/"> ';
                 break;
         }
 
-        #Echo meta tag and refresh after 5 sec
-        echo '<meta http-equiv="refresh" content="5;url=/"> ';
+        #Return composed html
+        return $html;
 
     }
 }

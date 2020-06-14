@@ -48,6 +48,29 @@ $router->get('/', function ($args) {
 
 });
 
+#Signin view
+$router->get('/Signin', function ($args) {
+
+    #Init Template
+    $tpl = new Template();
+
+    #Call signin view
+    $tpl->Render('Signin',[]);
+
+});
+
+
+#Signin view
+$router->get('/Logout', function ($args) {
+
+    #Init Session class
+    $session= \Libraries\Session::getInstance();
+
+    #Destroy session
+    echo ($session->destroy()) ? header('Location:/') : 'Errore durante il logout, contattare un\'amministratiore';
+
+
+});
 #POST
 /**!
  * ! All post parameter are passed only by forms
@@ -61,11 +84,19 @@ $router->post('/login', function ($args) {
     #Init Auth class
     $auth = \Controllers\Auth::getInstance();
 
-    #Get Auth response
-    $Response= $auth->authenticate($args['username'], $args['pass']);
+    #If response is success refresh the page, else echo errors
+    echo $auth->ManageError($auth->authenticate($args['username'], $args['pass']));
 
-    #If response is success refresh the page, else manage errors
-    ($Response === LOGIN_SUCCESS) ? header(' Location: /;') : $auth->ManageError($Response);
+});
+
+#Signin operation
+$router->post('/Signin', function ($args) {
+
+    #Init Signin class
+    $signin= \Controllers\Signin::getInstance();
+
+    #Echo response of the sign in operation
+    echo $signin->ManageError($signin->AccountRegistration($args));
 
 });
 

@@ -199,12 +199,15 @@ class Session
     /**
      * @fn destroy
      * @note Destroy method for delete session
-     * @return void
+     * @return bool
      */
-    public function destroy()
+    public function destroy():bool
     {
         #Destroy session
         session_destroy();
+
+        #If is correctly destroyed return true, else return false
+        return (session_status() === PHP_SESSION_NONE) ? true : false;
     }
 
     /**
