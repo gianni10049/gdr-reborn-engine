@@ -279,20 +279,21 @@ class Security
 
     /**
      * @fn GenerateFingerprint
-     * @note Generate fingerprint for session control
+     * @note Generate a couple of fingerprint for session control
      * @return string
      */
-    public function GenerateFingerprint(): string
+    public function GenerateFingerprint(): array
     {
-
         #Get Request instance
         $request = Request::getInstance();
 
-        #Create fingerprint
-        $fingerprint = hash_hmac('sha256', $request->getUserAgent(), hash('sha256', $request->getIPAddress(), true));
+        $ip = hash_hmac('sha256', $request->getUserAgent(), hash('sha256', $request->getIPAddress(), true));
+        $lang = hash_hmac('sha256', $request->getUserAgent(), hash('sha256', $request->getLang(), true));
 
         #Return fingerprint
-        return $this->Filter($fingerprint, 'String');
+        $fingerprint = [$this->Filter($ip, 'String'), $this->Filter($lang, 'String')]; 
+
+        return $fingerprint;
     }
 
     /**

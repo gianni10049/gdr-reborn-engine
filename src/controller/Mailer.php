@@ -90,8 +90,17 @@ class Mailer
         return $this;
     }
 
-
-    public function SendEmail(string $to, string $from, string $subject, string $message, array $headers = [])
+    /**
+     * SendMail
+     *
+     * @param array $to
+     * @param string $from
+     * @param string $subject
+     * @param string $message
+     * @param array $headers
+     * @return void
+     */
+    public function SendEmail(array $to, string $from, string $subject, string $message, array $headers = [])
     {
         $this->setTo($to)
             ->setFrom($from)

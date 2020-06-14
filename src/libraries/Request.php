@@ -267,4 +267,14 @@ class Request
         }
     }
 
+    /**
+     * @fn getLang
+     *
+     * @return string
+     */
+    public function getLang(): string
+    {
+        return $this->sec->Filter(strtolower($this->httpAcceptLanguage),'String');
+    }
+
 }
