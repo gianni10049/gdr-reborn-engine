@@ -20,8 +20,7 @@ $router = Router::getInstance($request);
 
 #Routing
 
-#GET
-/**!
+/**! GET
  * ! All get parameter need to be passed by syntax : "/data?key=val&key=val&key=val";
  * ! Root syntax for passing parameter is: "/?key=val&key=val&key=val";
  * ! All parameter in $args var, in the callback, are associated like: ['key'=>'val','key'=>'val']
@@ -71,8 +70,8 @@ $router->get('/Logout', function ($args) {
 
 
 });
-#POST
-/**!
+
+/**! POST
  * ! All post parameter are passed only by forms
  * ! All parameter in $args var, in the callback, are associated like: ['key'=>'val','key'=>'val']
  * !*/

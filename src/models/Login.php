@@ -44,13 +44,12 @@ class Login extends Wrapper
     public function countAttempts(string $ip): int
     {
         #Control if the use have reached the maximum attempts
-        $error = $this->db->Query(
-            "SELECT count(*) AS error FROM login_invalid WHERE ip = ? AND DATE_ADD(timerror, INTERVAL 10 MINUTE) > NOW()",
-            [$ip]
+        $error = $this->db->Count(
+            "login_invalid", "ip = '{$ip}' AND DATE_ADD(timerror, INTERVAL 10 MINUTE) > NOW()"
         );
 
         #If the user is valid
-        return (is_int($error['error'])) ? $error['error'] : 0 ;
+        return (is_int($error)) ? $error : 0 ;
     }
 
     /**
@@ -63,9 +62,8 @@ class Login extends Wrapper
     public function insertError(string $message, string $ip)
     {
         #Insert error in db
-        $this->db->Query(
-            "INSERT INTO login_invalid (message, ip) VALUES (?, ?)",
-            [$message, $ip]
+        $this->db->Insert(
+            "login_invalid","message, ip","'{$message}','{$ip}'"
         );
     }
 
@@ -77,10 +75,9 @@ class Login extends Wrapper
      */
     public function readByName(string $username = null)
     {
-        #Return user data by his name
-        return $this->db->Query(
-            "SELECT * FROM account WHERE username = ? AND active = 1",
-            [$username]
-        );
+        #Return account data
+        return $this->db->Select(
+            "*","account","username = '{$username}' AND active = 1 LIMIT 1"
+        )->Fetch();
     }
 }

@@ -117,7 +117,7 @@ class Account
             $db = $this->db;
 
             #Select data of the account
-            $data = $db->Select("*","account","id='{$account}' LIMIT 1");
+            $data = $db->Select("*","account","id='{$account}' LIMIT 1")->Fetch();
 
             #Save account data
             $this->datas = $data;
@@ -188,13 +188,13 @@ class Account
         $email= $this->sec->Filter($email,'Email');
 
         #Extract all emails
-        $accounts= $this->db->Select('id,email','account','1');
+        $accounts= $this->db->Select('id,email','account','1')->FetchArray();
 
         #Foreach account
         foreach ($accounts as $account){
 
-            #Extract email saved in db
-            $dbEmail= $this->sec->Filter($account['email'],'String');
+            #Extract email saved in db, if not is one, extract email, else extract single mail in db
+            $dbEmail = $this->sec->Filter($account['email'],'String');
 
             #If decrypted is equal to given email
             if($this->sec->VerifyHash($email,$dbEmail)){
@@ -258,7 +258,7 @@ class Account
         $email = $this->sec->Filter($email);
 
         #Extract user data
-        $data= $this->db->Select('id,email,password','account',"username='{$user}' LIMIT 1");
+        $data= $this->db->Select('id,email,password','account',"username='{$user}' LIMIT 1")->Fetch();
 
         #If password and email exist and user exist
         if(!is_null($data['password']) && !is_null($data['email'])) {
@@ -325,7 +325,7 @@ class Account
         $emails = [];
 
         #Extract all encrypted emails stored on server
-        $data = $this->db->Query("SELECT email FROM account");
+        $data = $this->db->Select("email","account","1")->FetchArray();
 
         #Foreach encrypted email
         foreach ($data as $email){

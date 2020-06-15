@@ -73,7 +73,7 @@ class Config
     {
 
         #Extract globals config vars
-        $data = $this->db->Select('*', 'config', 'global=1');
+        $data = $this->db->Select('*', 'config', 'global=1')->FetchArray();
 
         #Foreach value
         foreach ($data as $config) {

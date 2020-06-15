@@ -98,14 +98,15 @@ class Mailer
      * @param string $subject
      * @param string $message
      * @param array $headers
+     * @param bool $html
      * @return void
      */
-    public function SendEmail(array $to, string $from, string $subject, string $message, array $headers = [])
+    public function SendEmail(array $to, string $from, string $subject, string $message, array $headers = [], bool $html = false)
     {
         $this->setTo($to)
             ->setFrom($from)
             ->setSubject($subject)
-            ->setMessage($message)
+            ->setMessage($message,$html)
             ->addGenericHeaders($headers)
             ->getheadersToSend()
             ->send();

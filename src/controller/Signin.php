@@ -2,8 +2,10 @@
 
 namespace Controllers;
 
+use Controller\Mailer;
 use Libraries\Security;
 use Models\Account;
+use Models\Config;
 
 /**
  * @class Sigin
@@ -17,11 +19,15 @@ class Signin
      * @var Security $security
      * @var Account $account
      * @var AccountController $checkaccount
+     * @var Mailer $mailer
+     * @var Config $config
      */
     private
         $security,
         $account,
-        $checkaccount;
+        $checkaccount,
+        $mailer,
+        $config;
 
     /**
      * Init vars PUBLIC STATIC
@@ -57,6 +63,8 @@ class Signin
         $this->security = Security::getInstance();
         $this->checkaccount = AccountController::getInstance();
         $this->account = Account::getInstance();
+        $this->mailer = Mailer::getInstance();
+        $this->config = Config::getInstance();
     }
 
 
@@ -86,6 +94,18 @@ class Signin
 
                     #Insert new account
                     $this->account->NewAccount($user, $email, $pass);
+
+                    $subject = 'Iscrizione avvenuta con successo!';
+                    $text ="
+                        La tua iscrizione è avvenuta con successo!
+                         
+                        Il tuo nickname é: {$user}
+                        La tua password è: {$pass}
+                      
+                        Buon gioco! ";
+
+
+                    $this->mailer->SendEmail([$email], $this->config->domain_email, $subject, $text,['content-Type'=>'text/html;charset=utf-8'],true);
 
                     #Return success response
                     return REGISTRATION_SUCCESS;
