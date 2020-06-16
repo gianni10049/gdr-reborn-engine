@@ -33,7 +33,7 @@ class Mailer
         $to = [],
         $subject,
         $message,
-        $headers = [],
+        $headers = ['content-type' => 'text/html;charset=utf-8'],
         $header;
 
     /**

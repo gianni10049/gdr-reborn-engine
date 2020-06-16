@@ -99,6 +99,10 @@ class AccountController
             # Case id read info by id
             case 'Id':
                 return $this->account->readById($value);
+
+            # Case email read info by email
+            case 'Email':
+                return $this->account->readByEmail($value);
         }
     }
 
@@ -262,7 +266,7 @@ class AccountController
                 while (!$this->sec->PasswordControl($newPass)) {
 
                     #Generate new password
-                    $newPass = $this->RandompPassword(10, 'lower_case,upper_case,numbers,special_symbols');
+                    $newPass = $this->RandomPassword(10, 'lower_case,upper_case,numbers,special_symbols');
                 }
 
                 #If password is correct
@@ -284,7 +288,7 @@ class AccountController
                         ";
 
                         # Send email whit new password
-                        $this->mailer->SendEmail([$email], $this->config->domain_email, 'Cambio password!', $text, ['content-type' => 'text/html;charset=utf-8'], true);
+                        $this->mailer->SendEmail([$email], $this->config->domain_email, 'Cambio password!', $text, [], true);
 
                         # Set response to success
                         $response = PASSWORD_RECOVERY_SUCCESS;
@@ -352,7 +356,7 @@ class AccountController
      * @param string $characters
      * @return string
      */
-    private function RandompPassword(int $length, string $characters):string
+    public function RandomPassword(int $length, string $characters):string
     {
 
         # Set initial vars
@@ -379,13 +383,14 @@ class AccountController
         # Get max length of the used symbols
         $symbols_length = strlen($used_symbols) - 1; //strlen starts from 0 so to get number of characters deduct 1
 
-        #TODO cambiare in un while
-        for ($i = 0; $i < $length; $i++) {
+        while (strlen($pass) < $length) {
 
             $n = rand(0, $symbols_length); // get a random character from the string with all characters
 
             $pass .= $used_symbols[$n]; // add the character to the password string
         }
+
+        var_dump($pass);
 
         # Return random password
         return $pass;
@@ -444,4 +449,104 @@ class AccountController
         return $html;
 
     }
+
+    /**
+     * @fn UsernameRecovery
+     * @note Recovery username operation
+     * @param string $email
+     * @return string
+     */
+    public function UsernameRecovery(string $email): string
+    {
+        # Filter insert data
+        $email = $this->sec->Filter($email, 'String');
+
+        # If this email exist
+        if($this->account->EmailExist($email)) {
+
+            # Get account data from email
+            $data = $this->GetAccountData('Email', $email);
+
+            # Filter obtained username
+            $id= $this->sec->Filter($data['id'],'Int');
+            $username = $this->sec->Filter($data['username'],'String');
+
+            # If username exist
+            if($this->account->UsernameExist($username) && $this->AccountExist($id)){
+
+                # Compose text
+                $text= "Richiesta di recupero username.
+                
+                    L'username collegato a questa email risulta essere: {$username} .
+                    
+                    Buon gioco!
+                ";
+
+                # Send email whit username
+                $this->mailer->SendEmail([$email],$this->config->domain_email,'Recupero account',$text,[],true);
+
+                # Set success response
+                $response = USERNAME_RECOVERY_SUCCESS;
+
+            } # Else username don't exist
+            else{
+
+                # Set username not existence error
+                $response = USERNAME_RECOVERY_EXISTENCE_ERROR;
+            }
+
+        } # Else email don't exist
+        else{
+
+            # Set email not existence error
+            $response = USERNAME_RECOVERY_EMAIL_ERROR;
+        }
+
+        # Return managed error
+        return $this->UsernameRecoveryError($response);
+
+    }
+
+    /**
+     * @fn UsernameRecoveryError
+     * @note Manage username recovery error
+     * @param int $response
+     * @return string
+     */
+    private function UsernameRecoveryError(int $response): string
+    {
+
+        #Init empty html var
+        $html = '';
+
+        #Switch passed response
+        switch ($response) {
+
+            #Case success
+            case (int)USERNAME_RECOVERY_SUCCESS:
+                $html .= 'Username inviato con successo. Controllare l\'email inserita.';
+                $url = '/';
+                break;
+
+            #Case update error
+            case (int)USERNAME_RECOVERY_EXISTENCE_ERROR:
+                $html .= 'L\'username di riferimento dell\'email potrebbe essere stato bannato o non esistente.';
+                $url = '/UsernameRecovery';
+                break;
+
+            #Case creation error
+            case (int)USERNAME_RECOVERY_EMAIL_ERROR:
+                $html .= 'L\'email inserita non risulta associata a nessun account.';
+                $url = '/UsernameRecovery';
+                break;
+        }
+
+        #Add refresh
+        $html .= "<meta http-equiv='refresh' content='5;url={$url}'> ";
+
+        #Return composed html
+        return $html;
+
+    }
+
 }

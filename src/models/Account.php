@@ -136,7 +136,7 @@ class Account
     public function ExistenceControl( int $account):int
     {
         #If account exist return true, else return false
-        return ($this->db->Count("account", "id='{$account}'") === 1) ? true : false;
+        return ($this->db->Count("account", "id='{$account}' AND active=1") === 1) ? true : false;
     }
 
     /**
@@ -364,5 +364,36 @@ class Account
         return $this->db->Select(
             "*","account","id = '{$id}' AND active = 1 LIMIT 1"
         )->Fetch();
+    }
+
+
+    /**
+     * @fn readById
+     * @note Extract data of the user by his email
+     * @param string $email
+     * @return array
+     */
+    public function readByEmail(string $email = null):array
+    {
+
+        $accounts= $this->db->Select('id,username,email','account','1')->FetchArray();
+
+        $data = [];
+
+        #Foreach account
+        foreach ($accounts as $account) {
+
+            #Extract email saved in db, if not is one, extract email, else extract single mail in db
+            $dbEmail = $this->sec->Filter($account['email'], 'String');
+
+            #If decrypted is equal to given email
+            if ($this->sec->VerifyHash($email, $dbEmail)) {
+
+                $data = $account;
+            }
+        }
+
+        #Return account data
+        return $data;
     }
 }

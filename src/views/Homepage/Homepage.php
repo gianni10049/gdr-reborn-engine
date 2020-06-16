@@ -19,6 +19,7 @@
         <div class="homepage_other">
 
             <div class="other_voice"><a href="/Signin"> Registrati </a></div>
+            <div class="other_voice"><a href="/UsernameRecovery"> Recupero Username </a></div>
             <div class="other_voice"><a href="/PasswordRecovery"> Recupero Password </a></div>
 
         </div>

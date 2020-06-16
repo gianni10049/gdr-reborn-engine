@@ -66,9 +66,11 @@ a:active{
 
 /* endregion */
 
-/* region SIGNIN */
+/* region SIGNIN / PASSWORD RECOVERY / USERNAME RECOVERY */
 
-#Signin{
+#Signin,
+#PasswordRecovery,
+#UsernameRecovery{
     width: 200px;
     padding-top: 20px;
     height: 200px;
@@ -76,24 +78,9 @@ a:active{
     margin:0 auto;
 }
 
-#Signin input:not([type='submit']){
-    margin-bottom: 10px;
-    background-color: grey;
-}
-
-/* endregion */
-
-/* region RECUPERO PASSWORD */
-
-#PasswordRecovery{
-    width: 200px;
-    padding-top: 20px;
-    height: 200px;
-    text-align: center;
-    margin:0 auto;
-}
-
-#PasswordRecovery input:not([type='submit']){
+#Signin input:not([type='submit']),
+#PasswordRecovery input:not([type='submit']),
+#UsernameRecovery input:not([type='submit']){
     margin-bottom: 10px;
     background-color: grey;
 }

@@ -58,7 +58,7 @@ $router->get('/Signin', function ($args) {
 
 });
 
-#RecuperoPassword
+#Password Recovery
 $router->get('/PasswordRecovery',function($args){
 
     #Init Template
@@ -66,6 +66,17 @@ $router->get('/PasswordRecovery',function($args){
 
     #Call signin view
     $tpl->Render('Homepage/PasswordRecovery',[]);
+
+});
+
+#Username Recovery
+$router->get('/UsernameRecovery',function($args){
+
+    #Init Template
+    $tpl = new Template();
+
+    #Call signin view
+    $tpl->Render('Homepage/UsernameRecovery',[]);
 
 });
 
@@ -110,7 +121,7 @@ $router->post('/Signin', function ($args) {
 });
 
 
-#RecuperoPassword
+#Password Recovery operation
 $router->post('/PasswordRecovery',function($args){
 
     #Init AccountController class
@@ -118,6 +129,17 @@ $router->post('/PasswordRecovery',function($args){
 
     #Echo response of the recovery password operation
     echo $controller->PasswordRecovery($args['username'],$args['email']);
+
+});
+
+#Username Recovery operation
+$router->post('/UsernameRecovery',function($args){
+
+    #Init AccountController class
+    $controller = \Controllers\AccountController::getInstance();
+
+    #Echo response of the recovery password operation
+    echo $controller->UsernameRecovery($args['email']);
 
 });
 

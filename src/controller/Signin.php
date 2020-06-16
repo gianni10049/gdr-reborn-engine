@@ -105,7 +105,7 @@ class Signin
                         Buon gioco! ";
 
 
-                    $this->mailer->SendEmail([$email], $this->config->domain_email, $subject, $text,['content-Type'=>'text/html;charset=utf-8'],true);
+                    $this->mailer->SendEmail([$email], $this->config->domain_email, $subject, $text,[],true);
 
                     #Return success response
                     return REGISTRATION_SUCCESS;
