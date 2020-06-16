@@ -390,8 +390,6 @@ class AccountController
             $pass .= $used_symbols[$n]; // add the character to the password string
         }
 
-        var_dump($pass);
-
         # Return random password
         return $pass;
     }
