@@ -33,8 +33,7 @@ class Mailer
         $to = [],
         $subject,
         $message,
-        $headers = ['content-type' => 'text/html;charset=utf-8'],
-        $header;
+        $headers;
 
     /**
      * Init vars PRIVATE
@@ -86,6 +85,9 @@ class Mailer
         $this->subject = null;
         $this->message = null;
 
+        #Restart whit charset
+        $this->headers['content-type'] =  'text/plain;charset=utf-8';
+
         #Return new email object
         return $this;
     }
@@ -108,7 +110,6 @@ class Mailer
             ->setSubject($subject)
             ->setMessage($message,$html)
             ->addGenericHeaders($headers)
-            ->getheadersToSend()
             ->send();
     }
 
@@ -147,7 +148,7 @@ class Mailer
         if($this->security->EmailControl($email)) {
 
             #set From value
-            $this->headers[] = $email;
+            $this->headers['From'] = $email;
         }
 
         #Return Mailer class
@@ -205,22 +206,8 @@ class Mailer
         foreach ($headers as $header => $value) {
 
             #Add header to the email
-            $this->headers[] = sprintf('%s: %s', $header, $value);
+            $this->headers[$header] = $this->security->Filter($value,'String');
         }
-
-        #Return Mailer class
-        return $this;
-    }
-
-    /**
-     * @fn getheadersToSend
-     * @note Return compressed headers array
-     * @return Mailer
-     */
-    public function getheadersToSend(): Mailer
-    {
-        #Implode header array
-        $this->header = implode('"\r\n"', $this->headers);
 
         #Return Mailer class
         return $this;
@@ -233,12 +220,11 @@ class Mailer
      */
     public function send()
     {
-
         #Foreach recipient
         foreach ($this->to as $email){
 
             #Send email
-            mail($email, $this->subject, $this->message, $this->header);
+            mail($email, $this->subject, $this->message, $this->headers);
         }
     }
 
