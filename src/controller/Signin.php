@@ -87,10 +87,10 @@ class Signin
         if ( $this->security->PasswordMatch($pass, $passVerification) && $this->security->PasswordControl($pass) ) {
 
             #If username non exist
-            if ($this->account->UsernameExist($user)) {
+            if (!$this->account->UsernameExist($user)) {
 
                 #If email not exist
-                if ($this->account->EmailExist($email) && $this->security->EmailControl($email)) {
+                if (!$this->account->EmailExist($email) && $this->security->EmailControl($email)) {
 
                     #Insert new account
                     $this->account->NewAccount($user, $email, $pass);

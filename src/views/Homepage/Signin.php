@@ -18,5 +18,6 @@
         <input type="submit" value="Registrati">
     </form>
 
+    <a href="/">Indietro</a>
 
 </div>

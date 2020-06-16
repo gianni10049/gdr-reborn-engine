@@ -82,3 +82,20 @@ a:active{
 }
 
 /* endregion */
+
+/* region RECUPERO PASSWORD */
+
+#PasswordRecovery{
+    width: 200px;
+    padding-top: 20px;
+    height: 200px;
+    text-align: center;
+    margin:0 auto;
+}
+
+#PasswordRecovery input:not([type='submit']){
+    margin-bottom: 10px;
+    background-color: grey;
+}
+
+/* endregion */

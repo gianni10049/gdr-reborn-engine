@@ -93,7 +93,7 @@ class Auth
         }
 
         #Read data of the user from the DB
-        $user = $this->login_model->readByName($username);
+        $user = $this->account->GetAccountData('Username',$username);
 
         #If user exist in database
         if (!empty($user)) {

@@ -42,7 +42,7 @@ $router->get('/', function ($args) {
     else {
 
         #Render the homepage
-        echo $tpl->Render('Homepage', []);
+        echo $tpl->Render('Homepage/Homepage', []);
     }
 
 });
@@ -54,10 +54,20 @@ $router->get('/Signin', function ($args) {
     $tpl = new Template();
 
     #Call signin view
-    $tpl->Render('Signin',[]);
+    $tpl->Render('Homepage/Signin',[]);
 
 });
 
+#RecuperoPassword
+$router->get('/PasswordRecovery',function($args){
+
+    #Init Template
+    $tpl = new Template();
+
+    #Call signin view
+    $tpl->Render('Homepage/PasswordRecovery',[]);
+
+});
 
 #Signin view
 $router->get('/Logout', function ($args) {
@@ -96,6 +106,18 @@ $router->post('/Signin', function ($args) {
 
     #Echo response of the sign in operation
     echo $signin->ManageError($signin->AccountRegistration($args));
+
+});
+
+
+#RecuperoPassword
+$router->post('/PasswordRecovery',function($args){
+
+    #Init AccountController class
+    $controller = \Controllers\AccountController::getInstance();
+
+    #Echo response of the recovery password operation
+    echo $controller->PasswordRecovery($args['username'],$args['email']);
 
 });
 

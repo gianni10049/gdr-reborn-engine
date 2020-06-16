@@ -200,13 +200,13 @@ class Account
             if($this->sec->VerifyHash($email,$dbEmail)){
 
                 #Return false
-                return false;
+                return true;
             }
 
         }
 
         #If email not exist return true
-        return true;
+        return false;
     }
 
     /**
@@ -218,7 +218,7 @@ class Account
     public function UsernameExist(string $username):bool
     {
         #If not exist return true, else false
-        return ($this->db->Count("account", "username='{$username}'") === 0) ? true : false;
+        return ($this->db->Count("account", "username='{$username}'") === 0) ? false : true;
     }
 
     /**
@@ -336,5 +336,33 @@ class Account
 
         #Return container full of decrypted emails
         return $emails;
+    }
+
+    /**
+     * @fn readByName
+     * @note Extract data of the user by his username
+     * @param string $username
+     * @return array
+     */
+    public function readByName(string $username = null):array
+    {
+        #Return account data
+        return $this->db->Select(
+            "*","account","username = '{$username}' AND active = 1 LIMIT 1"
+        )->Fetch();
+    }
+
+    /**
+     * @fn readById
+     * @note Extract data of the user by his id
+     * @param int $id
+     * @return array
+     */
+    public function readById(int $id = null):array
+    {
+        #Return account data
+        return $this->db->Select(
+            "*","account","id = '{$id}' AND active = 1 LIMIT 1"
+        )->Fetch();
     }
 }

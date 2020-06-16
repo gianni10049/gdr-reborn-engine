@@ -66,18 +66,4 @@ class Login extends Wrapper
             "login_invalid","message, ip","'{$message}','{$ip}'"
         );
     }
-
-    /**
-     * @fn readByName
-     * @note Extract data of the user by his username
-     * @param string $username
-     * @return mixed
-     */
-    public function readByName(string $username = null)
-    {
-        #Return account data
-        return $this->db->Select(
-            "*","account","username = '{$username}' AND active = 1 LIMIT 1"
-        )->Fetch();
-    }
 }
