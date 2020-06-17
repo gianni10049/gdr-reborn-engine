@@ -86,3 +86,91 @@ a:active{
 }
 
 /* endregion */
+
+
+/*** PULSE CUSTOM ***/
+@-webkit-keyframes pulse-custom {
+    0% {
+        -webkit-transform: scale3d(1, 1, 1);
+        transform: scale3d(1, 1, 1); }
+    5% {
+        -webkit-transform: scale3d(1.05, 1.05, 1.05);
+        transform: scale3d(1.05, 1.05, 1.05); }
+    10% {
+        -webkit-transform: scale3d(1, 1, 1);
+        transform: scale3d(1, 1, 1); } }
+@keyframes pulse-custom {
+    0% {
+        -webkit-transform: scale3d(1, 1, 1);
+        transform: scale3d(1, 1, 1); }
+    5% {
+        -webkit-transform: scale3d(1.05, 1.05, 1.05);
+        transform: scale3d(1.05, 1.05, 1.05); }
+    10% {
+        -webkit-transform: scale3d(1, 1, 1);
+        transform: scale3d(1, 1, 1); } }
+.pulse-custom {
+    -webkit-animation-name: pulse-custom;
+    animation-name: pulse-custom;
+    -webkit-animation-duration: 10s;
+    animation-duration: 10s; }
+
+/*** SHAKE CUSTOM ***/
+@-webkit-keyframes shake-custom {
+    0% {
+        -webkit-transform: translate3d(0, 0, 0);
+        transform: translate3d(0, 0, 0); }
+    2%,
+    6% {
+        -webkit-transform: translate3d(-5px, 0, 0);
+        transform: translate3d(-5px, 0, 0); }
+    4%,
+    8% {
+        -webkit-transform: translate3d(5px, 0, 0);
+        transform: translate3d(5px, 0, 0); }
+    9% {
+        -webkit-transform: translate3d(0, 0, 0);
+        transform: translate3d(0, 0, 0); } }
+@keyframes shake-custom {
+    0% {
+        -webkit-transform: translate3d(0, 0, 0);
+        transform: translate3d(0, 0, 0); }
+    2%,
+    6% {
+        -webkit-transform: translate3d(-5px, 0, 0);
+        transform: translate3d(-5px, 0, 0); }
+    4%,
+    8% {
+        -webkit-transform: translate3d(5px, 0, 0);
+        transform: translate3d(5px, 0, 0); }
+    9% {
+        -webkit-transform: translate3d(0, 0, 0);
+        transform: translate3d(0, 0, 0); } }
+.shake-custom {
+    -webkit-animation-name: shake-custom;
+    animation-name: shake-custom;
+    -webkit-animation-duration: 10s;
+    animation-duration: 10s; }
+
+/*** FLASH CUSTOM ***/
+@-webkit-keyframes flash-custom {
+    0%,
+    5%,
+    10% {
+        opacity: 1; }
+    2.5%,
+    7.5% {
+        opacity: 0; } }
+@keyframes flash-custom {
+    0%,
+    5%,
+    10% {
+        opacity: 1; }
+    2.5%,
+    7.5% {
+        opacity: 0; } }
+.flash-custom {
+    -webkit-animation-name: flash-custom;
+    animation-name: flash-custom;
+    -webkit-animation-duration: 10s;
+    animation-duration: 10s; }

@@ -88,7 +88,7 @@ class Auth
         if ((!isset($username) || empty($username)) || (!isset($credential) || empty($credential))) {
             return LOGIN_EMPTY_VALUES;
         } #Else if the user have reached the max attempts for login
-        else if ($this->login_model->countAttempts($this->request->getIpAddress()) > $this->config->login_max_attempts) {
+        else if ($this->login_model->countAttempts($this->request->getIpAddress(),$username) >= $this->config->login_max_attempts) {
             return LOGIN_MAX_ATTEMPTS;
         }
 
@@ -118,7 +118,7 @@ class Auth
                 $error = "Authentication Error [Password]";
 
                 #Log the error in the db
-                $this->login_model->insertError($error, $this->request->getIPAddress());
+                $this->login_model->insertError($error, $this->request->getIPAddress(),$username);
 
                 #Die whit error
                 return LOGIN_PASSWORD_ERROR;
@@ -129,7 +129,7 @@ class Auth
             $error = "Authentication Error [Username]";
 
             #Log the error in the db
-            $this->login_model->insertError($error, $this->request->getIPAddress());
+            $this->login_model->insertError($error, $this->request->getIPAddress(),$username);
 
             #Die whit error
             return LOGIN_USERNAME_ERROR;
@@ -145,42 +145,45 @@ class Auth
     public function ManageError(int $response):string
     {
         #Init empty html var
-        $html = '';
+        $text = '';
+        $type = '';
 
         #Switch passed response
         switch ($response) {
 
             case (int)LOGIN_SUCCESS:
-                $html .= '<meta http-equiv="refresh" content="0;url=/">';
+                $type = 'success';
                 break;
 
             #Case username error
             case (int)LOGIN_USERNAME_ERROR:
-                $html .= 'Account inesistente.';
-                $html .= '<meta http-equiv="refresh" content="5;url=/"> ';
+                $text = 'Account inesistente.';
+                $type = 'info';
                 break;
 
             #Case password error
             case (int)LOGIN_PASSWORD_ERROR:
-                $html .= 'Password errata.';
-                $html .= '<meta http-equiv="refresh" content="5;url=/"> ';
+                $text = 'Password errata.';
+                $type = 'error';
                 break;
 
             #Case max attempts
             case (int)LOGIN_MAX_ATTEMPTS:
-                $html .= 'Raggiunto numero massimo di tentativi.';
-                $html .= '<meta http-equiv="refresh" content="5;url=/"> ';
+                $text = 'Raggiunto numero massimo di tentativi.';
+                $type = 'error';
                 break;
 
             #Case empty values
             case (int)LOGIN_EMPTY_VALUES:
-                $html .= 'Assicurati di aver compilato tutti i campi correttamente.';
-                $html .= '<meta http-equiv="refresh" content="5;url=/"> ';
+                $text = 'Assicurati di aver compilato tutti i campi correttamente.';
+                $type = 'info';
                 break;
         }
 
+        $json = ['text'=>$text,'type'=>$type];
+
         #Return composed html
-        return $html;
+        return json_encode($json);
 
     }
 }

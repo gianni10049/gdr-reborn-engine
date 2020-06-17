@@ -39,13 +39,14 @@ class Login extends Wrapper
      * @fn countAttempts
      * @note Count the max attempts of login from the ip
      * @param string $ip
+     * @param string $username
      * @return int
      */
-    public function countAttempts(string $ip): int
+    public function countAttempts(string $ip,string $username): int
     {
         #Control if the use have reached the maximum attempts
         $error = $this->db->Count(
-            "login_invalid", "ip = '{$ip}' AND DATE_ADD(timerror, INTERVAL 10 MINUTE) > NOW()"
+            "login_invalid", "( ip = '{$ip}' OR username = '{$username}') AND DATE_ADD(timerror, INTERVAL 10 MINUTE) > NOW()"
         );
 
         #If the user is valid
@@ -55,15 +56,16 @@ class Login extends Wrapper
     /**
      * @fn insertError
      * @note Add the login error to the invalids attempts
-     * @param  string $message
-     * @param  string $ip
+     * @param string $message
+     * @param string $ip
+     * @param string $username
      * @return void
      */
-    public function insertError(string $message, string $ip)
+    public function insertError(string $message, string $ip,string $username)
     {
         #Insert error in db
         $this->db->Insert(
-            "login_invalid","message, ip","'{$message}','{$ip}'"
+            "login_invalid","message, ip, username","'{$message}','{$ip}','{$username}'"
         );
     }
 }

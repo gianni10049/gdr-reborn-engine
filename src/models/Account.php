@@ -342,9 +342,9 @@ class Account
      * @fn readByName
      * @note Extract data of the user by his username
      * @param string $username
-     * @return array
+     * @return mixed
      */
-    public function readByName(string $username = null):array
+    public function readByName(string $username = null)
     {
         #Return account data
         return $this->db->Select(
@@ -356,9 +356,9 @@ class Account
      * @fn readById
      * @note Extract data of the user by his id
      * @param int $id
-     * @return array
+     * @return mixed
      */
-    public function readById(int $id = null):array
+    public function readById(int $id = null)
     {
         #Return account data
         return $this->db->Select(
@@ -371,9 +371,9 @@ class Account
      * @fn readById
      * @note Extract data of the user by his email
      * @param string $email
-     * @return array
+     * @return mixed
      */
-    public function readByEmail(string $email = null):array
+    public function readByEmail(string $email = null)
     {
 
         $accounts= $this->db->Select('id,username,email','account','1')->FetchArray();

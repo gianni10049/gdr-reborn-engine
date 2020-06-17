@@ -84,9 +84,9 @@ class AccountController
      * @note Function for switch the method for retrieve account data
      * @param string $type
      * @param string $value
-     * @return array
+     * @return mixed
      */
-    public function GetAccountData(string $type, string $value): array
+    public function GetAccountData(string $type, string $value)
     {
 
         # Switch the type of request
@@ -404,47 +404,47 @@ class AccountController
     {
 
         #Init empty html var
-        $html = '';
+        $text = '';
+        $type = '';
 
         #Switch passed response
         switch ($response) {
 
             #Case success
             case (int)PASSWORD_RECOVERY_SUCCESS:
-                $html .= 'Password modificata con successo. Controllare l\'email di riferimento con la nuova password.';
-                $url = '/';
+                $text = 'Password modificata con successo. Controllare l\'email di riferimento con la nuova password.';
+                $type = 'success';
                 break;
 
             #Case update error
             case (int)PASSWORD_RECOVERY_UPDATE_ERROR:
-                $html .= 'Errore nell\'update della password. Contattare lo staff tramite email.';
-                $url = '/PasswordRecovery';
+                $text = 'Errore nell\'update della password. Contattare lo staff tramite email.';
+                $type = 'error';
                 break;
 
             #Case creation error
             case (int)PASSWORD_RECOVERY_CREATION_ERROR:
-                $html .= 'Errore nella creazione della nuova password. Contatare lo staff tramite email.';
-                $url = '/PasswordRecovery';
+                $text = 'Errore nella creazione della nuova password. Contatare lo staff tramite email.';
+                $type = 'error';
                 break;
 
             #Case confirm error
             case (int)PASSWORD_RECOVERY_CONFIRM_ERROR:
-                $html .= 'Username ed email non coincidono con lo stesso account.';
-                $url = '/PasswordRecovery';
+                $text = 'Username ed email non coincidono con lo stesso account.';
+                $type = 'warning';
                 break;
 
             #Case existence error
             case (int)PASSWORD_RECOVERY_EXISTENCE_ERROR:
-                $html .= 'Username o email inesistenti in database.';
-                $url = '/PasswordRecovery';
+                $text = 'Username o email inesistenti in database.';
+                $type = 'warning';
                 break;
         }
 
-        #Add refresh
-        $html .= "<meta http-equiv='refresh' content='5;url={$url}'> ";
+        $json = ['type'=>$type,'text'=>$text];
 
         #Return composed html
-        return $html;
+        return json_encode($json);
 
     }
 
@@ -514,36 +514,37 @@ class AccountController
     private function UsernameRecoveryError(int $response): string
     {
 
-        #Init empty html var
-        $html = '';
+        #Init empty needed vars
+        $text= '';
+        $type = '';
 
         #Switch passed response
         switch ($response) {
 
             #Case success
             case (int)USERNAME_RECOVERY_SUCCESS:
-                $html .= 'Username inviato con successo. Controllare l\'email inserita.';
-                $url = '/';
+                $text = 'Username inviato con successo. Controllare l\'email inserita.';
+                $type = 'success';
                 break;
 
             #Case update error
             case (int)USERNAME_RECOVERY_EXISTENCE_ERROR:
-                $html .= 'L\'username di riferimento dell\'email potrebbe essere stato bannato o non esistente.';
-                $url = '/UsernameRecovery';
+                $text = 'L\'username di riferimento dell\'email potrebbe essere stato bannato o non esistente.';
+                $type = 'warning';
                 break;
 
             #Case creation error
             case (int)USERNAME_RECOVERY_EMAIL_ERROR:
-                $html .= 'L\'email inserita non risulta associata a nessun account.';
-                $url = '/UsernameRecovery';
+                $text = 'L\'email inserita non risulta associata a nessun account.';
+                $type = 'warning';
                 break;
         }
 
-        #Add refresh
-        $html .= "<meta http-equiv='refresh' content='5;url={$url}'> ";
+        # Create json data
+        $json = ['type'=>$type,'text'=>$text];
 
-        #Return composed html
-        return $html;
+        # Return json data
+        return json_encode($json);
 
     }
 

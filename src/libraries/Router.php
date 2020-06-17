@@ -43,6 +43,18 @@ class Router
     }
 
     /**
+     * @return bool
+     */
+    public function is_ajax():bool
+    {
+
+        $ajax = (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') ? true : false;
+
+        return $ajax;
+
+    }
+
+    /**
      * @fn __construct
      * @note Router constructor.
      * @param Request $request

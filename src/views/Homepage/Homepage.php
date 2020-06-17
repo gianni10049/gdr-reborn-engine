@@ -3,7 +3,7 @@
 
     <div class="homepage_login_container">
 
-        <form method="POST" action="/login">
+        <form method="POST" id="LoginForm">
 
             <label for="username">Username</label><br>
             <input type="text" name="username" id="username"><br>
@@ -25,5 +25,7 @@
         </div>
 
     </div>
+
+    <script src="/assets/JS/Homepage/Homepage.js"></script>
 
 </div>

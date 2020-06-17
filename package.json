@@ -1,0 +1,8 @@
+{
+  "name": "gdr-reborn-engine",
+  "version": "1.0.0",
+  "dependencies": {},
+  "devDependencies": {
+    "noty": "^3.2.0-beta"
+  }
+}

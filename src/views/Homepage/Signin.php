@@ -1,7 +1,6 @@
-
 <div id="Signin" class="container_page">
 
-    <form method="POST" action="/Signin">
+    <form method="POST" id="SigninForm">
 
         <label for="username">Username</label>
         <input type="text" name="username" id="username">
@@ -19,5 +18,7 @@
     </form>
 
     <a href="/">Indietro</a>
+
+    <script src="/assets/JS/Homepage/Signin.js"></script>
 
 </div>

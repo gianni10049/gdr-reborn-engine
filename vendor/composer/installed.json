@@ -109,6 +109,42 @@
         ]
     },
     {
+        "name": "needim/noty",
+        "version": "v3.1.4",
+        "version_normalized": "3.1.4.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/needim/noty.git",
+            "reference": "77268c46b6db6a1eb7a920ed7c859fbc8de17993"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/needim/noty/zipball/77268c46b6db6a1eb7a920ed7c859fbc8de17993",
+            "reference": "77268c46b6db6a1eb7a920ed7c859fbc8de17993",
+            "shasum": ""
+        },
+        "time": "2017-12-13T20:36:34+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Nedim Arabaci",
+                "homepage": "http://ned.im",
+                "role": "Developer"
+            }
+        ],
+        "description": "Noty is a library that makes it easy to create alert - success - error - warning - information - confirmation messages as an alternative the standard alert dialog.",
+        "homepage": "http://ned.im/noty",
+        "keywords": [
+            "notification",
+            "noty"
+        ]
+    },
+    {
         "name": "phpoption/phpoption",
         "version": "1.7.4",
         "version_normalized": "1.7.4.0",

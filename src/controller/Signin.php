@@ -72,9 +72,9 @@ class Signin
      * @fn AccountRegistration
      * @note Sign in new accounts
      * @param array $post (Input)
-     * @return int
+     * @return string
      */
-    public function AccountRegistration(array $post): int
+    public function AccountRegistration(array $post):string
     {
 
         #Filter passed data
@@ -83,20 +83,23 @@ class Signin
         $pass = $this->security->Filter($post['password'], 'Convert');
         $passVerification = $this->security->Filter($post['password_verification'], 'Convert');
 
-        #If password is correct
-        if ( $this->security->PasswordMatch($pass, $passVerification) && $this->security->PasswordControl($pass) ) {
+        # If all value are not empty
+        if(!empty($user) && !empty($email) && !empty($pass) && !empty($passVerification)) {
 
-            #If username non exist
-            if (!$this->account->UsernameExist($user)) {
+            #If password is correct
+            if ($this->security->PasswordMatch($pass, $passVerification) && $this->security->PasswordControl($pass)) {
 
-                #If email not exist
-                if (!$this->account->EmailExist($email) && $this->security->EmailControl($email)) {
+                #If username non exist
+                if (!$this->account->UsernameExist($user)) {
 
-                    #Insert new account
-                    $this->account->NewAccount($user, $email, $pass);
+                    #If email not exist
+                    if (!$this->account->EmailExist($email) && $this->security->EmailControl($email)) {
 
-                    $subject = 'Iscrizione avvenuta con successo!';
-                    $text ="
+                        #Insert new account
+                        $this->account->NewAccount($user, $email, $pass);
+
+                        $subject = 'Iscrizione avvenuta con successo!';
+                        $text = "
                         La tua iscrizione è avvenuta con successo!
                          
                         Il tuo nickname é: {$user}
@@ -105,31 +108,40 @@ class Signin
                         Buon gioco! ";
 
 
-                    $this->mailer->SendEmail([$email], $this->config->domain_email, $subject, $text,[],true);
+                        $this->mailer->SendEmail([$email], $this->config->domain_email, $subject, $text, [], true);
 
-                    #Return success response
-                    return REGISTRATION_SUCCESS;
+                        # Set success response
+                        $response = REGISTRATION_SUCCESS;
 
-                } #Else email exist
+                    } #Else email exist
+                    else {
+
+                        #Set email error
+                        $response = REGISTRATION_EMAIL_ERROR;
+                    }
+
+                } #Else username exist
                 else {
 
-                    #Return email error
-                    return REGISTRATION_EMAIL_ERROR;
+                    #Set username error
+                    $response = REGISTRATION_USER_ERROR;
                 }
 
-            } #Else username exist
+            } #Else password is not correct
             else {
 
-                #Return username error
-                return REGISTRATION_USER_ERROR;
+                #Set password error
+                $response = REGISTRATION_PASS_ERROR;
             }
 
-        } #Else password is not correct
-        else {
+        } # Else one of the value is empty
+        else{
 
-            #Return password error
-            return REGISTRATION_PASS_ERROR;
+            $response = REGISTRATION_EMPTY_ERROR;
         }
+
+        return $this->ManageError($response);
+
     }
 
 
@@ -141,44 +153,52 @@ class Signin
      */
     public function ManageError($response)
     {
-        #Init html var
-        $html = '';
+        #Init needed vars
+        $text = '';
+        $type = '';
 
         switch ((int)$response) {
 
             #Case success
             case (int)REGISTRATION_SUCCESS:
-                $html .= 'Registrazione avvenuta con successo!';
-                $html .= '<br> <a href="/">Torna alla home</a>';
+                $text = 'Registrazione avvenuta con successo!';
+                $type = 'success';
                 break;
 
             #Case username error
             case (int)REGISTRATION_USER_ERROR:
-                $html .= 'Username già utilizzato o non valido.';
-                $html .= '<br> <a onclick="history.go(-1)">Riprova</a>';
+                $text = 'Username già utilizzato o non valido.';
+                $type = 'warning';
                 break;
 
             #Case password error
             case (int)REGISTRATION_PASS_ERROR:
-                $html .= 'Password non valida. Deve contenere un carattere maiuscolo, uno minuscolo, una lettera, un carattere speciale ed essere compresa tra un minimo di 5 ed un massimo di 16 caratteri';
-                $html .= '<br> <a onclick="history.go(-1)">Riprova</a>';
+                $text = 'Password non valida. Deve contenere un carattere maiuscolo, uno minuscolo, una lettera, un carattere speciale ed essere compresa tra un minimo di 5 ed un massimo di 16 caratteri';
+                $type = 'info';
                 break;
 
             #Case email error
             case (int)REGISTRATION_EMAIL_ERROR:
-                $html .= 'Email già utilizzata o non valida.';
-                $html .= '<br> <a onclick="history.go(-1)">Riprova</a>';
+                $text = 'Email già utilizzata o non valida.';
+                $type = 'error';
+                break;
+
+            case (int)REGISTRATION_EMPTY_ERROR:
+                $text = 'Uno o più campi vuoti.';
+                $type = 'info';
                 break;
 
             #Default case
             default:
-                $html .= 'Errore sconosciuto, contattare lo staff via email!';
-                $html .= '<br> <a href="/">Torna alla home</a>';
+                $text = 'Errore sconosciuto, contattare lo staff via email!';
+                $type = 'error';
                 break;
         }
 
+        $json = ['type'=>$type,'text'=>$text];
+
         #Return composed email
-        return $html;
+        return json_encode($json);
     }
 
 }

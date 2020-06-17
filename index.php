@@ -1,9 +1,10 @@
 <?php
 
+
 #Import namespace
-use Core\Router,
-    Libraries\Request,
-    Controllers\Template;
+use Controllers\Template;
+use Core\Router;
+use Libraries\Request;
 
 #Import required files
 require('config/required.php');
@@ -11,12 +12,17 @@ require('config/required.php');
 #Import composer autoloader
 require(ROOT . 'vendor/autoload.php');
 
-#Import site header
-require(ROOT . 'public/header/header.php');
 
 #Init Request and Router classes
 $request = Request::getInstance();
 $router = Router::getInstance($request);
+
+#If not is ajax
+if (!$router->is_ajax()) {
+
+    #Import site header
+    require(ROOT . 'public/header/header.php');
+}
 
 #Routing
 
@@ -54,29 +60,29 @@ $router->get('/Signin', function ($args) {
     $tpl = new Template();
 
     #Call signin view
-    $tpl->Render('Homepage/Signin',[]);
+    $tpl->Render('Homepage/Signin', []);
 
 });
 
 #Password Recovery
-$router->get('/PasswordRecovery',function($args){
+$router->get('/PasswordRecovery', function ($args) {
 
     #Init Template
     $tpl = new Template();
 
     #Call signin view
-    $tpl->Render('Homepage/PasswordRecovery',[]);
+    $tpl->Render('Homepage/PasswordRecovery', []);
 
 });
 
 #Username Recovery
-$router->get('/UsernameRecovery',function($args){
+$router->get('/UsernameRecovery', function ($args) {
 
     #Init Template
     $tpl = new Template();
 
     #Call signin view
-    $tpl->Render('Homepage/UsernameRecovery',[]);
+    $tpl->Render('Homepage/UsernameRecovery', []);
 
 });
 
@@ -84,7 +90,7 @@ $router->get('/UsernameRecovery',function($args){
 $router->get('/Logout', function ($args) {
 
     #Init Session class
-    $session= \Libraries\Session::getInstance();
+    $session = \Libraries\Session::getInstance();
 
     #Destroy session
     echo ($session->destroy()) ? header('Location:/') : 'Errore durante il logout, contattare un\'amministratiore';
@@ -113,27 +119,27 @@ $router->post('/login', function ($args) {
 $router->post('/Signin', function ($args) {
 
     #Init Signin class
-    $signin= \Controllers\Signin::getInstance();
+    $signin = \Controllers\Signin::getInstance();
 
     #Echo response of the sign in operation
-    echo $signin->ManageError($signin->AccountRegistration($args));
+    echo $signin->AccountRegistration($args);
 
 });
 
 
 #Password Recovery operation
-$router->post('/PasswordRecovery',function($args){
+$router->post('/PasswordRecovery', function ($args) {
 
     #Init AccountController class
     $controller = \Controllers\AccountController::getInstance();
 
     #Echo response of the recovery password operation
-    echo $controller->PasswordRecovery($args['username'],$args['email']);
+    echo $controller->PasswordRecovery($args['username'], $args['email']);
 
 });
 
 #Username Recovery operation
-$router->post('/UsernameRecovery',function($args){
+$router->post('/UsernameRecovery', function ($args) {
 
     #Init AccountController class
     $controller = \Controllers\AccountController::getInstance();
@@ -144,4 +150,6 @@ $router->post('/UsernameRecovery',function($args){
 });
 
 #Import site footer
-require(ROOT . 'public/footer/footer.php');
+if (!$router->is_ajax()) {
+    require(ROOT . 'public/footer/footer.php');
+}

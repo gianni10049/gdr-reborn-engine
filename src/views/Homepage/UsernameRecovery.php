@@ -1,7 +1,7 @@
 
 <div id="UsernameRecovery" class="container_page">
 
-    <form method="POST" action="/UsernameRecovery">
+    <form method="POST" id="UsernameRecoveryForm">
 
         <label for="email">Email</label>
         <input type="text" name="email" id="email">
@@ -12,4 +12,5 @@
 
     <a href="/">Indietro</a>
 
+    <script src="/assets/JS/Homepage/UsernameRecovery.js"></script>
 </div>
