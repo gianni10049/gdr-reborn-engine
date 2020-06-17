@@ -1,10 +1,14 @@
 <?php
 
-$account= \Models\Account::getInstance();
+$account = \Models\Account::getInstance();
 
 $username = $account->username;
 
 ?>
 
-Bentornato <?=$username;?>!<br>
-<a href="/Logout">Esci</a>
+<div id="Lobby">
+    Bentornato <?= $username; ?>!<br>
+    <a href="/Logout">Esci</a>
+</div>
+
+<script src="/assets/JS/Main/Lobby.js"></script>

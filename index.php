@@ -89,13 +89,12 @@ $router->get('/UsernameRecovery', function ($args) {
 #Signin view
 $router->get('/Logout', function ($args) {
 
-    #Init Session class
+    #Init needed classes
     $session = \Libraries\Session::getInstance();
+    $tpl = new Template();
 
-    #Destroy session
-    echo ($session->destroy()) ? header('Location:/') : 'Errore durante il logout, contattare un\'amministratiore';
-
-
+    #Call signin view
+    $tpl->Render('Logout', ['response'=>$session->destroy()]);
 });
 
 /**! POST
