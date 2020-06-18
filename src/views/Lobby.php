@@ -1,14 +1,14 @@
 <?php
 
-$account = \Models\Account::getInstance();
+use Libraries\Enviroment;
 
-$username = $account->username;
+$env= Enviroment::getInstance();
+$layout= $env->LAYOUT_NAME;
 
 ?>
 
 <div id="Lobby">
-    Bentornato <?= $username; ?>!<br>
-    <a href="/Logout">Esci</a>
+    <?php include (ROOT."/public/Layouts/{$layout}/body.php");?>
 </div>
 
 <script src="/assets/JS/Main/Lobby.js"></script>

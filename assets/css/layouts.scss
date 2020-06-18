@@ -1,0 +1,222 @@
+#mono-column-left {
+  position: absolute;
+  top: 0;
+  height: 100vh;
+  left: 0;
+  z-index: 999;
+  font-family: 'Open Sans', serif;
+
+  &.hidden {
+    left: -50px;
+    transition: 1s all;
+    pointer-events: none;
+  }
+
+  &.show {
+    left: 0;
+    transition: 1s all;
+  }
+
+  .first-menu {
+    background-color: $(color_default);
+    height: calc(100vh - 60px);
+    width: 40px;
+    overflow: hidden;
+    -webkit-transition-duration: 0.3s;
+    -moz-transition-duration: 0.3s;
+    -o-transition-duration: 0.3s;
+    transition-duration: 0.3s;
+    padding: 30px 15px;
+    margin: 0;
+    list-style: none;
+
+    &:hover {
+      width: 150px;
+      padding: 30px 0;
+
+      .MenuVoice .NotifyMenu {
+        width: 20px;
+        height: 20px;
+        right: 2px;
+        color: #fff;
+        top: 11px;
+      }
+
+    }
+
+
+    .list-group-item {
+      border-right: 0;
+      height: 40px;
+      line-height: 40px;
+      transition: 0.2s all;
+      position: relative;
+
+      &:not(last-child) {
+        border-bottom: 0;
+      }
+
+      &:hover {
+        background-color: black;
+        transition: 0.2s all;
+      }
+
+      .MenuImg {
+        width: 25px;
+        height: 25px;
+        margin-left: 7px;
+        position: absolute;
+        margin-top: 7px;
+        font-size: 25px;
+        text-align: center;
+        color: white;
+      }
+
+
+    }
+
+    .MenuVoice {
+      white-space: nowrap;
+      font-weight: 400;
+      font-size: 14px;
+      margin: 10px 0;
+      cursor: pointer;
+
+      &:hover {
+
+        .MenuImg {
+          color: white;
+        }
+
+        .MenuVoiceText {
+
+          opacity: 1;
+          transition: 0.2s all;
+        }
+
+      }
+
+      .MenuVoiceText {
+        opacity: 0;
+        visibility: hidden;
+        margin-left: 28px;
+        text-align: center;
+        margin-top: -4px;
+        color: white;
+        transition: 0.2s all;
+      }
+
+
+      .NotifyMenu {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        right: -8px;
+        top: 1px;
+        background: #343436;
+        border-radius: 100%;
+        text-align: center;
+        line-height: 21px;
+        transition: all 0.2s ease;
+        color: transparent;
+        font-size: 15px;
+      }
+
+    }
+
+    &:hover {
+
+      .MenuVoiceText {
+
+        opacity: 0.5;
+        visibility: visible;
+        transition: 0.2s all;
+      }
+
+    }
+  }
+
+  .submenu {
+    position: fixed;
+    left: 149px;
+    width: 200px;
+    top: 0;
+    height: 100vh;
+    opacity: 0;
+    max-width: 0;
+    overflow: auto;
+    animation-name: slideOut;
+    -webkit-transition: 300ms opacity;
+    -moz-transition: 300ms opacity;
+    -o-transition: 300ms opacity;
+    transition: 300ms opacity;
+    pointer-events: none;
+    background-color: grey;
+    padding: 30px 0;
+
+    .list-group-item {
+      border-left: 0;
+      background-color: transparent;
+      height: 40px;
+      list-style: none;
+      padding: 0;
+
+      &:hover {
+        background-color: black;
+      }
+
+      .SubmenuItem {
+        color: #fff;
+        font-size: 14px;
+        white-space: nowrap;
+        font-weight: 400;
+        margin: 10px 0;
+        cursor: pointer;
+        padding: 0 20px;
+        height: 100%;
+        position: relative;
+        line-height: 40px;
+
+        &:hover {
+
+          .MenuImg {
+            color: white;
+          }
+
+          .SubmenuText {
+            opacity: 1;
+            transition: 0.2s all;
+          }
+
+        }
+
+        .SubmenuImg {
+          width: 25px;
+          height: 25px;
+          position: absolute;
+          margin-top: 7px;
+        }
+
+        .SubmenuText {
+          margin-left: 28px;
+          text-align: center;
+          margin-top: -4px;
+          opacity: 0.5;
+          transition: 0.2s all;
+          color: white;
+        }
+
+      }
+
+    }
+
+  }
+
+  .first-menu li:hover .submenu {
+    max-width: 100%;
+    opacity: 1;
+    pointer-events: all;
+  }
+
+
+}

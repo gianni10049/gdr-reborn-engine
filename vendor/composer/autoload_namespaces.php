@@ -7,4 +7,5 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Monolog' => array($vendorDir . '/monolog/monolog/src'),
+    'CssCrush' => array($vendorDir . '/css-crush/css-crush/lib'),
 );

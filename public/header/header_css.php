@@ -1,4 +1,3 @@
-
 <!-- Font Awesome css -->
 <link rel="stylesheet" href="<?= $sec->Version('packages/FontAwesome/css/all.css', '5.11.2'); ?>" type="text/css">
 
@@ -9,5 +8,4 @@
 <link href="<?= $sec->Version('/vendor/needim/noty/lib/noty.css', '3.1.3'); ?>" type="text/css" rel="stylesheet">
 
 <!-- CUSTOM -->
-<link href="<?= $sec->NoChace('/assets/css/main.css'); ?>" type="text/css" rel="stylesheet">
-<link href="<?= $sec->NoChace('/assets/css/layouts.css'); ?>" type="text/css" rel="stylesheet">
+<link href="<?= $sec->NoChace($css); ?>" type="text/css" rel="stylesheet">

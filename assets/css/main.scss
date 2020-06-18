@@ -1,67 +1,68 @@
-
-
 /* region GENERAL */
 
 html{
     padding: 0;
     margin: 0;
-}
 
-body{
-    background:black;
-    color:white;
-    padding: 0;
-    margin: 0;
-}
-a,
-a:link,
-a:visited,
-a:hover,
-a:active{
-    text-decoration: none;
-    color: crimson;
-    cursor: pointer;
-}
+    body{
+        background:black;
+        color:white;
+        padding: 0;
+        margin: 0;
 
-.container_page{
-    width: 100vw;
-    height: 100vh;
+        a,
+        a:link,
+        a:visited,
+        a:hover,
+        a:active{
+            text-decoration: none;
+            color: crimson;
+            cursor: pointer;
+        }
+
+
+        .container_page{
+            width: 100vw;
+            height: 100vh;
+        }
+    }
+
+
 }
 
 /* endregion */
 
 /* region HOMEPAGE */
-#Homepage .Title{
-    text-align: center;
-    padding-top: 10px;
-    clear: both;
-}
+#Homepage{
+    .Title{
+        text-align: center;
+        padding-top: 10px;
+        clear: both;
+    }
 
-#Homepage .homepage_login_container{
-    width: 400px;
-    height: 350px;
-    border:1px solid #531919;
-    margin:10px auto;
-}
+    .homepage_login_container{
+        width: 400px;
+        height: 350px;
+        border:1px solid #531919;
+        margin:10px auto;
 
+        form{
+            text-align: center;
+        }
 
-#Homepage .homepage_login_container form{
-    text-align: center;
-}
+        input{
+            margin: 5px 0;
+        }
 
+        .homepage_other{
+            margin-top: 30px;
+            text-align: center;
 
-#Homepage .homepage_login_container input{
-    margin: 5px 0;
-}
-
-#Homepage .homepage_login_container .homepage_other{
-    margin-top: 30px;
-    text-align: center;
-}
-
-
-#Homepage .homepage_login_container .homepage_other .other_voice a{
-    color: crimson;
+            .other_voice a{
+                color: crimson;
+            }
+        }
+    }
 }
 
 /* endregion */
@@ -76,19 +77,25 @@ a:active{
     height: 200px;
     text-align: center;
     margin:0 auto;
-}
 
-#Signin input:not([type='submit']),
-#PasswordRecovery input:not([type='submit']),
-#UsernameRecovery input:not([type='submit']){
-    margin-bottom: 10px;
-    background-color: grey;
+    input:not([type='submit']){
+        margin-bottom: 10px;
+        background-color: grey;
+    }
 }
 
 /* endregion */
 
+/* region LOBBY */
 
-/*** PULSE CUSTOM ***/
+#Lobby{
+    width: 100%;
+    height: 100%;
+}
+
+/*endregion*/
+
+/* region PULSE CUSTOM */
 @-webkit-keyframes pulse-custom {
     0% {
         -webkit-transform: scale3d(1, 1, 1);
@@ -114,8 +121,9 @@ a:active{
     animation-name: pulse-custom;
     -webkit-animation-duration: 10s;
     animation-duration: 10s; }
+/*endregion*/
 
-/*** SHAKE CUSTOM ***/
+/* region SHAKE CUSTOM */
 @-webkit-keyframes shake-custom {
     0% {
         -webkit-transform: translate3d(0, 0, 0);
@@ -151,8 +159,9 @@ a:active{
     animation-name: shake-custom;
     -webkit-animation-duration: 10s;
     animation-duration: 10s; }
+/*endregion*/
 
-/*** FLASH CUSTOM ***/
+/* region FLASH CUSTOM */
 @-webkit-keyframes flash-custom {
     0%,
     5%,
@@ -174,3 +183,4 @@ a:active{
     animation-name: flash-custom;
     -webkit-animation-duration: 10s;
     animation-duration: 10s; }
+/*endregion*/

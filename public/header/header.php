@@ -6,6 +6,7 @@ use Libraries\Enviroment;
 use Libraries\Security;
 use Libraries\Session;
 use Models\Account;
+use Libraries\Preprocessor;
 
 #Init instance of Enviroment
 $env = Enviroment::getInstance();
@@ -22,6 +23,12 @@ $session = Session::getInstance();
 
 #Init instance of Account
 $account = Account::getInstance();
+
+# Init preprocessor
+$preprocessor = Preprocessor::getInstance();
+
+# Get css link for compiled files
+$css = $preprocessor->Compile();
 
 #Import sub-header files
 require('header_css.php');

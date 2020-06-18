@@ -109,7 +109,7 @@ class Template
         $_POST['body'] = $template;
 
         #Load template
-        include VIEWS . "Layouts/{$this->env->LAYOUT_NAME}.php";
+        include $template;
 
         #Return output for echo
         return ob_get_clean();
