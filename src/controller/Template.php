@@ -3,6 +3,7 @@
 namespace Controllers;
 
 use Libraries\Security;
+use Libraries\Enviroment;
 
 /**
  * @class Template
@@ -23,7 +24,8 @@ class Template
      * @var string $sec
      */
     private
-        $sec;
+        $sec,
+        $env;
 
     /**
      * @fn __construct
@@ -33,8 +35,9 @@ class Template
      */
     public function __construct(string $folder = null)
     {
-        #Init security class
+        #Init needed classes
         $this->sec = Security::getInstance();
+        $this->env = Enviroment::getInstance();
 
         #If folder is specified set folder, else set default folder for views
         (!is_null($folder)) ? $this->SetFolder($folder) : $this->folder = $this->sec->Filter(VIEWS, 'String');
@@ -46,7 +49,7 @@ class Template
      * @param string $folder
      * @return Template
      */
-     public function SetFolder(string $folder): Template
+    public function SetFolder(string $folder): Template
     {
         #Set new folder
         $this->folder = $this->sec->Filter($folder, 'String');
@@ -76,7 +79,7 @@ class Template
      * @param string $path
      * @return string
      */
-    function FindTemplate(string $path):string
+    function FindTemplate(string $path): string
     {
         #Create path to file
         $file = "{$this->folder}{$path}.php";
@@ -87,17 +90,17 @@ class Template
 
     /**
      * @fn GetVars
-     * @var string $template
-     * @var array $vars
      * @return string
+     * @var array $vars
+     * @var string $template
      */
-    function RenderTemplate( string $template, array $vars ):string
+    function RenderTemplate(string $template, array $vars): string
     {
         #Start output
         ob_start();
 
         #Foreach var
-        foreach ( $vars as $key => $value) {
+        foreach ($vars as $key => $value) {
 
             #Set values like post var
             $_POST[$key] = $value;
@@ -106,7 +109,7 @@ class Template
         $_POST['body'] = $template;
 
         #Load template
-        include VIEWS.'Container.php';
+        include VIEWS . "Layouts/{$this->env->LAYOUT_NAME}.php";
 
         #Return output for echo
         return ob_get_clean();

@@ -1,4 +1,6 @@
 
+<!-- FONT AWESOME JS -->
+<script type="text/javascript" src="<?= $sec->Version('packages/FontAwesome/js/all.js', '5.10.1'); ?>"></script>
 
 <!-- JQUERY / JQUERY UI / JQUERY MOBILE / JQUERY COOKIE -->
 <script src="<?= $sec->Version('/packages/JQuery/jquery.js', '3.5.1'); ?>" type="text/javascript"></script>
