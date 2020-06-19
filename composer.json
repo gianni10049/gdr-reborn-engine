@@ -1,6 +1,8 @@
 {
   "require": {
     "monolog/monolog": "1.0.*",
-    "vlucas/phpdotenv": "^5.0"
+    "vlucas/phpdotenv": "^5.0",
+    "needim/noty": "^3.1",
+    "css-crush/css-crush": "^3.0"
   }
 }

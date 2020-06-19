@@ -117,10 +117,10 @@ class Account
             $db = $this->db;
 
             #Select data of the account
-            $data = $db->Select("*","account","id='{$account}' LIMIT 1");
+            $data = $db->Select("*","account","id='{$account}' LIMIT 1")->Fetch();
 
             #Save account data
-            $this->datas = $data[$account];
+            $this->datas = $data;
 
             #Save id account
             $this->datas['id'] = $account;
@@ -136,7 +136,7 @@ class Account
     public function ExistenceControl( int $account):int
     {
         #If account exist return true, else return false
-        return ($this->db->Count("account", "id='{$account}'") === 1) ? true : false;
+        return ($this->db->Count("account", "id='{$account}' AND active=1") === 1) ? true : false;
     }
 
     /**
@@ -188,25 +188,25 @@ class Account
         $email= $this->sec->Filter($email,'Email');
 
         #Extract all emails
-        $accounts= $this->db->Select('id,email','account','1');
+        $accounts= $this->db->Select('id,email','account','1')->FetchArray();
 
         #Foreach account
         foreach ($accounts as $account){
 
-            #Extract email saved in db
-            $dbEmail= $this->sec->Filter($account['email'],'String');
+            #Extract email saved in db, if not is one, extract email, else extract single mail in db
+            $dbEmail = $this->sec->Filter($account['email'],'String');
 
             #If decrypted is equal to given email
             if($this->sec->VerifyHash($email,$dbEmail)){
 
                 #Return false
-                return false;
+                return true;
             }
 
         }
 
         #If email not exist return true
-        return true;
+        return false;
     }
 
     /**
@@ -218,7 +218,7 @@ class Account
     public function UsernameExist(string $username):bool
     {
         #If not exist return true, else false
-        return ($this->db->Count("account", "username='{$username}'") === 0) ? true : false;
+        return ($this->db->Count("account", "username='{$username}'") === 0) ? false : true;
     }
 
     /**
@@ -258,7 +258,7 @@ class Account
         $email = $this->sec->Filter($email);
 
         #Extract user data
-        $data= $this->db->Select('id,email,password','account',"username='{$user}' LIMIT 1");
+        $data= $this->db->Select('id,email,password','account',"username='{$user}' LIMIT 1")->Fetch();
 
         #If password and email exist and user exist
         if(!is_null($data['password']) && !is_null($data['email'])) {
@@ -325,7 +325,7 @@ class Account
         $emails = [];
 
         #Extract all encrypted emails stored on server
-        $data = $this->db->Query("SELECT email FROM account");
+        $data = $this->db->Select("email","account","1")->FetchArray();
 
         #Foreach encrypted email
         foreach ($data as $email){
@@ -336,5 +336,64 @@ class Account
 
         #Return container full of decrypted emails
         return $emails;
+    }
+
+    /**
+     * @fn readByName
+     * @note Extract data of the user by his username
+     * @param string $username
+     * @return mixed
+     */
+    public function readByName(string $username = null)
+    {
+        #Return account data
+        return $this->db->Select(
+            "*","account","username = '{$username}' AND active = 1 LIMIT 1"
+        )->Fetch();
+    }
+
+    /**
+     * @fn readById
+     * @note Extract data of the user by his id
+     * @param int $id
+     * @return mixed
+     */
+    public function readById(int $id = null)
+    {
+        #Return account data
+        return $this->db->Select(
+            "*","account","id = '{$id}' AND active = 1 LIMIT 1"
+        )->Fetch();
+    }
+
+
+    /**
+     * @fn readById
+     * @note Extract data of the user by his email
+     * @param string $email
+     * @return mixed
+     */
+    public function readByEmail(string $email = null)
+    {
+
+        $accounts= $this->db->Select('id,username,email','account','1')->FetchArray();
+
+        $data = [];
+
+        #Foreach account
+        foreach ($accounts as $account) {
+
+            #Extract email saved in db, if not is one, extract email, else extract single mail in db
+            $dbEmail = $this->sec->Filter($account['email'], 'String');
+
+            #If decrypted is equal to given email
+            if ($this->sec->VerifyHash($email, $dbEmail)) {
+
+                $data = $account;
+            }
+        }
+
+        #Return account data
+        return $data;
     }
 }

@@ -2,10 +2,10 @@
 
 namespace Database;
 
-use Libraries\Security,
-    Libraries\Enviroment,
-    PDO,
-    PDOException;
+use Libraries\Enviroment;
+use Libraries\Security;
+use PDO;
+use PDOException;
 
 #TODO White-List of the approachable tables
 
@@ -35,7 +35,8 @@ class DB
         $user,
         $charset,
         $pdo,
-        $options = [];
+        $options = [],
+        $result;
 
     /**
      * Init Vars PUBLIC STATIC
@@ -55,7 +56,7 @@ class DB
     {
         #Init Security instance
         $this->sec = Security::getInstance();
-        $env= Enviroment::getInstance();
+        $env = Enviroment::getInstance();
 
         #Set base values for connection
         $this->db = (isset($db)) ? $db : $env->DB_NAME;
@@ -155,27 +156,11 @@ class DB
             # Execute query
             $rows->execute($params);
 
-            # Count number of rows called
-            $resNum= $rows->rowCount();
+            #Save result in parameter
+            $this->result = $rows;
 
-            # If rows called is more than one
-            if($resNum > 1) {
-
-                # Fetch all extracted data
-                $data = $rows->fetchAll(PDO::FETCH_UNIQUE);
-
-            } #Else called rows are only one
-            else{
-
-                #Fetch them classically
-                $data = $rows->fetch();
-            }
-
-            #Close connection
-            $this->pdo = NULL;
-
-            #return query result
-            return $data;
+            #Return DB instance
+            return $this;
         } catch (PDOException $e) {
             # Write into log and display Exception
             die($e->getMessage());
@@ -183,6 +168,25 @@ class DB
 
     }
 
+    /**
+     * @fn Fetch()
+     * @note Fetch single row result
+     * @return mixed
+     */
+    public function Fetch(){
+        return $this->result->fetch();
+    }
+
+    /**
+     * @fn FetchArray
+     * @note Fetch multiple row for foreach
+     * @return mixed
+     */
+    public function FetchArray(){
+
+        return $this->result->fetchAll();
+
+    }
 
     /**
      * @fn Select
@@ -208,6 +212,44 @@ class DB
 
             #Compose query
             $text = "SELECT {$value} FROM {$table} WHERE {$where}";
+
+            #Return Query result
+            return $this->Query($text, $params);
+        } #Else one of the vars is empty
+        else {
+            #Get error and stop script
+            die('Campi vuoti');
+        }
+    }
+
+    /**
+     * @fn Join
+     * @note Query type JOIN
+     * @param string $table
+     * @param string $value
+     * @param string $joinTable
+     * @param string $joinCond
+     * @param string $where
+     * @param array $params
+     * @return mixed
+     */
+    public function Join(string $table, string $value, string $joinTable, string $joinCond, string $where, array $params = [])
+    {
+        #Init Security class
+        $sec = $this->sec;
+
+        #Filtering all vars
+        $table = $sec->Filter($table, 'Convert');
+        $value = $sec->Filter($value, 'Convert');
+        $joinTable = $sec->Filter($joinTable, 'Convert');
+        $joinCond = $sec->Filter($joinCond, 'Convert');
+        $where = $sec->Filter($where, 'Convert');
+
+        #If needed vars are not empty
+        if (!empty($table) && !empty($value) && !empty($joinTable) && !empty($joinCond) && !empty($where)) {
+
+            #Compose query
+            $text = "SELECT {$value} FROM {$table} LEFT JOIN {$joinTable} ON {$joinCond} WHERE {$where}";
 
             #Return Query result
             return $this->Query($text, $params);
@@ -346,7 +388,7 @@ class DB
             $text = "SELECT SUM($cell) as Total FROM {$table} WHERE {$where}";
 
             #Return sum of rows selected
-            return $this->Query($text, $params)['Total'];
+            return $this->Query($text, $params)->Fetch()['Total'];
         } #Else one of the vars is empty
         else {
             #Get error and stop script
@@ -362,8 +404,7 @@ class DB
      * @param array $params
      * @return int
      */
-
-    public function Count(string $table, string $where, array $params = []):int
+    public function Count(string $table, string $where, array $params = []): int
     {
         #Init Security class
         $sec = $this->sec;
@@ -376,53 +417,13 @@ class DB
         if (!empty($table) && !empty($where)) {
 
             #Compose query
-            $text = "SELECT count(id) as NUM FROM {$table} WHERE {$where} ";
+            $text = "SELECT count(id) AS NUM FROM {$table} WHERE {$where} ";
 
-            #Execute Query
-            $data = $this->Query($text, $params);
-
-            #Return number of rows selected
-            return $data['NUM'];
+            #Return result
+            return $this->Query($text, $params)->Fetch()['NUM'];
         } else {
             die('Campi vuoti');
         }
     }
 
-    /**
-     * @fn Join
-     * @note Query type JOIN
-     * @param string $table
-     * @param string $value
-     * @param string $joinTable
-     * @param string $joinCond
-     * @param string $where
-     * @param array $params
-     * @return mixed
-     */
-    public function Join(string $table, string $value, string $joinTable, string $joinCond, string $where, array $params = [])
-    {
-        #Init Security class
-        $sec = $this->sec;
-
-        #Filtering all vars
-        $table = $sec->Filter($table, 'Convert');
-        $value = $sec->Filter($value, 'Convert');
-        $joinTable = $sec->Filter($joinTable, 'Convert');
-        $joinCond = $sec->Filter($joinCond, 'Convert');
-        $where = $sec->Filter($where, 'Convert');
-
-        #If needed vars are not empty
-        if (!empty($table) && !empty($value) && !empty($joinTable) && !empty($joinCond) && !empty($where)) {
-
-            #Compose query
-            $text = "SELECT {$value} FROM {$table} LEFT JOIN {$joinTable} ON {$joinCond} WHERE {$where}";
-
-            #Return Query result
-            return $this->Query($text, $params);
-        } #Else one of the vars is empty
-        else {
-            #Get error and stop script
-            die('Campi vuoti');
-        }
-    }
 }

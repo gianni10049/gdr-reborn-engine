@@ -1,0 +1,186 @@
+/* region GENERAL */
+
+html{
+    padding: 0;
+    margin: 0;
+
+    body{
+        background:black;
+        color:white;
+        padding: 0;
+        margin: 0;
+
+        a,
+        a:link,
+        a:visited,
+        a:hover,
+        a:active{
+            text-decoration: none;
+            color: crimson;
+            cursor: pointer;
+        }
+
+
+        .container_page{
+            width: 100vw;
+            height: 100vh;
+        }
+    }
+
+
+}
+
+/* endregion */
+
+/* region HOMEPAGE */
+#Homepage{
+    .Title{
+        text-align: center;
+        padding-top: 10px;
+        clear: both;
+    }
+
+    .homepage_login_container{
+        width: 400px;
+        height: 350px;
+        border:1px solid #531919;
+        margin:10px auto;
+
+        form{
+            text-align: center;
+        }
+
+        input{
+            margin: 5px 0;
+        }
+
+        .homepage_other{
+            margin-top: 30px;
+            text-align: center;
+
+            .other_voice a{
+                color: crimson;
+            }
+        }
+    }
+}
+
+/* endregion */
+
+/* region SIGNIN / PASSWORD RECOVERY / USERNAME RECOVERY */
+
+#Signin,
+#PasswordRecovery,
+#UsernameRecovery{
+    width: 200px;
+    padding-top: 20px;
+    height: 200px;
+    text-align: center;
+    margin:0 auto;
+
+    input:not([type='submit']){
+        margin-bottom: 10px;
+        background-color: grey;
+    }
+}
+
+/* endregion */
+
+/* region LOBBY */
+
+#Lobby{
+    width: 100%;
+    height: 100%;
+}
+
+/*endregion*/
+
+/* region PULSE CUSTOM */
+@-webkit-keyframes pulse-custom {
+    0% {
+        -webkit-transform: scale3d(1, 1, 1);
+        transform: scale3d(1, 1, 1); }
+    5% {
+        -webkit-transform: scale3d(1.05, 1.05, 1.05);
+        transform: scale3d(1.05, 1.05, 1.05); }
+    10% {
+        -webkit-transform: scale3d(1, 1, 1);
+        transform: scale3d(1, 1, 1); } }
+@keyframes pulse-custom {
+    0% {
+        -webkit-transform: scale3d(1, 1, 1);
+        transform: scale3d(1, 1, 1); }
+    5% {
+        -webkit-transform: scale3d(1.05, 1.05, 1.05);
+        transform: scale3d(1.05, 1.05, 1.05); }
+    10% {
+        -webkit-transform: scale3d(1, 1, 1);
+        transform: scale3d(1, 1, 1); } }
+.pulse-custom {
+    -webkit-animation-name: pulse-custom;
+    animation-name: pulse-custom;
+    -webkit-animation-duration: 10s;
+    animation-duration: 10s; }
+/*endregion*/
+
+/* region SHAKE CUSTOM */
+@-webkit-keyframes shake-custom {
+    0% {
+        -webkit-transform: translate3d(0, 0, 0);
+        transform: translate3d(0, 0, 0); }
+    2%,
+    6% {
+        -webkit-transform: translate3d(-5px, 0, 0);
+        transform: translate3d(-5px, 0, 0); }
+    4%,
+    8% {
+        -webkit-transform: translate3d(5px, 0, 0);
+        transform: translate3d(5px, 0, 0); }
+    9% {
+        -webkit-transform: translate3d(0, 0, 0);
+        transform: translate3d(0, 0, 0); } }
+@keyframes shake-custom {
+    0% {
+        -webkit-transform: translate3d(0, 0, 0);
+        transform: translate3d(0, 0, 0); }
+    2%,
+    6% {
+        -webkit-transform: translate3d(-5px, 0, 0);
+        transform: translate3d(-5px, 0, 0); }
+    4%,
+    8% {
+        -webkit-transform: translate3d(5px, 0, 0);
+        transform: translate3d(5px, 0, 0); }
+    9% {
+        -webkit-transform: translate3d(0, 0, 0);
+        transform: translate3d(0, 0, 0); } }
+.shake-custom {
+    -webkit-animation-name: shake-custom;
+    animation-name: shake-custom;
+    -webkit-animation-duration: 10s;
+    animation-duration: 10s; }
+/*endregion*/
+
+/* region FLASH CUSTOM */
+@-webkit-keyframes flash-custom {
+    0%,
+    5%,
+    10% {
+        opacity: 1; }
+    2.5%,
+    7.5% {
+        opacity: 0; } }
+@keyframes flash-custom {
+    0%,
+    5%,
+    10% {
+        opacity: 1; }
+    2.5%,
+    7.5% {
+        opacity: 0; } }
+.flash-custom {
+    -webkit-animation-name: flash-custom;
+    animation-name: flash-custom;
+    -webkit-animation-duration: 10s;
+    animation-duration: 10s; }
+/*endregion*/

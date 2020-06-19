@@ -4,8 +4,64 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1592ca6c5f894fc887736b507980c09b",
+    "content-hash": "52a94e51a4c1761d52928c542e1dec4b",
     "packages": [
+        {
+            "name": "css-crush/css-crush",
+            "version": "v3.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/peteboere/css-crush.git",
+                "reference": "b37cd5f5a462baebac08bb033482dcc3876ef73c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/peteboere/css-crush/zipball/b37cd5f5a462baebac08bb033482dcc3876ef73c",
+                "reference": "b37cd5f5a462baebac08bb033482dcc3876ef73c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.6.1"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "5.*",
+                "psr/log": "1.0.*@dev",
+                "twig/twig": "1.*"
+            },
+            "bin": [
+                "bin/csscrush"
+            ],
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "CssCrush": "lib/"
+                },
+                "files": [
+                    "lib/functions.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Pete Boere",
+                    "email": "pete@the-echoplex.net"
+                },
+                {
+                    "name": "GitHub contributors",
+                    "homepage": "https://github.com/peteboere/css-crush/contributors"
+                }
+            ],
+            "description": "CSS preprocessor",
+            "homepage": "http://the-echoplex.net/csscrush",
+            "keywords": [
+                "css",
+                "preprocessor"
+            ],
+            "time": "2020-01-16T12:05:00+00:00"
+        },
         {
             "name": "graham-campbell/result-type",
             "version": "v1.0.1",
@@ -110,6 +166,40 @@
                 "logging"
             ],
             "time": "2011-10-24T09:39:02+00:00"
+        },
+        {
+            "name": "needim/noty",
+            "version": "v3.1.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/needim/noty.git",
+                "reference": "77268c46b6db6a1eb7a920ed7c859fbc8de17993"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/needim/noty/zipball/77268c46b6db6a1eb7a920ed7c859fbc8de17993",
+                "reference": "77268c46b6db6a1eb7a920ed7c859fbc8de17993",
+                "shasum": ""
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nedim Arabaci",
+                    "homepage": "http://ned.im",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Noty is a library that makes it easy to create alert - success - error - warning - information - confirmation messages as an alternative the standard alert dialog.",
+            "homepage": "http://ned.im/noty",
+            "keywords": [
+                "notification",
+                "noty"
+            ],
+            "time": "2017-12-13T20:36:34+00:00"
         },
         {
             "name": "phpoption/phpoption",

@@ -203,7 +203,7 @@ class Security
 
             #Validate Input post
             case 'Post':
-                $data = filter_input(INPUT_POST, $data, FILTER_SANITIZE_SPECIAL_CHARS);
+                $data = filter_input_array(INPUT_POST, $data, FILTER_SANITIZE_SPECIAL_CHARS);
                 break;
 
         }
