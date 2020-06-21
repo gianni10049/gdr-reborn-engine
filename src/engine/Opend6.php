@@ -47,10 +47,7 @@ class Opend6 implements Engine
             return $this->data;
         }
         
-        for($i = 0; $i < 50; $i++)
-        {
-            $this->data['roll'][$i] = $this->getRoll($this->data['increment']) + $this->data['partial_die'];
-        }
+        $this->data['roll'] = $this->getRoll($this->data['increment']) + $this->data['partial_die'];
 
         return $this->data;
 
