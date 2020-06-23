@@ -4,5 +4,5 @@ namespace Engine;
 
 interface Engine
 {
-    public function getData(array $input = null): array;
+    public function getData(string $input = null): array;
 }

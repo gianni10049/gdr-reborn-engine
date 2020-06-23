@@ -2,29 +2,42 @@
 
 namespace Controllers;
 
-use Models\Character,
-    Libraries\Security;
+use Libraries\Security;
+use Models\Character;
 
+/**
+ * @class CharacterController
+ * @package Controllers
+ * @note Controller for characters
+ */
 class CharacterController
 {
     /**
      * Init vars PUBLIC STATIC
      * @var CharacterController $_instance
      */
-    public static $_instance;
+    public static
+        $_instance;
 
     /**
-     * Init vars 
+     * Init vars PRIVATE
+     * @var Character $character
+     * @var Security $sec
      */
-    protected $character,
-            $sec;
+    private
+        $character,
+        $sec;
 
-    public function __construct(int $id)
+    /**
+     * @fn __construct
+     * @note CharacterController constructor.
+     * @return void
+     */
+    public function __construct()
     {
+        #Init needed classes
         $this->sec = Security::getInstance();
-        $id = $this->sec->Filter($id, 'Int');
-
-        $this->character = Character::getInstance($id);
+        $this->character = Character::getInstance();
     }
 
     /**
@@ -32,37 +45,50 @@ class CharacterController
      * @note Self Instance
      * @return CharacterController
      */
-    public static function getInstance(int $id): CharacterController
+    public static function getInstance(): CharacterController
     {
         #If self-instance not defined
         if (!(self::$_instance instanceof self)) {
             #define it
-            self::$_instance = new self($id);
+            self::$_instance = new self();
         }
         #return defined instance
         return self::$_instance;
     }
 
-    public function createCharacter(array $data)
+    /**
+     * @fn createCharacter
+     * @note Method for create character
+     * @param array $data
+     * @return int
+     */
+    public function createCharacter(array $data):int
     {
 
-    }
-
-    public function getCharacter(): array
-    {
-        return $this->character->getCharacter();
     }
 
     /**
-     * @fn getSkill
-     *
-     * @param string $skill
-     * @return void
+     * @fn getCharacter
+     * @note Get character data
+     * @return array
      */
-    public function getSkill(string $skill)
+    public function getCharacter(): array
     {
-        $skill = $this->sec->Filter($skill);
+        #Return character data
+        return $this->character->getCharacter();
+    }
 
-        $this->character->getStat($skill);
+    #TODO Da rividere
+    /**
+     * @fn GetStat
+     * @param string $stat
+     * @return array|bool
+     */
+    public function GetStat(string $stat)
+    {
+        #Filter name of the needed stat
+        $skill = $this->sec->Filter($stat);
+
+        return $this->character->GetStat($stat);
     }
 }

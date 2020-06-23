@@ -7,6 +7,11 @@ use Controllers\CheckSession,
     Libraries\Security,
     Libraries\Session;
 
+/**
+ * @class Character
+ * @package Models
+ * @note Model for character
+ */
 class Character
 {
     /**
@@ -18,34 +23,54 @@ class Character
 
     /**
      * Init vars PRIVATE
-     * @var array $datas
+     * @var array $data
      * @var DB $db
      * @var Security $sec
      * @var CheckSession $sessionController
      * @var Session $session
      */
     private
-        $datas,
+        $data,
         $db,
         $sec,
         $sessionController,
         $session;
 
-    public function __construct(int $id)
+    /**
+     * @fn getInstance
+     * @note Self Instance
+     * @return Character
+     */
+    public static function getInstance(): Character
+    {
+        #If self-instance not defined
+        if (!(self::$_instance instanceof self))
+        {
+            #define it
+            self::$_instance = new self();
+        }
+        #return defined instance
+        return self::$_instance;
+    }
+
+    /**
+     * @fn __constructor.
+     * @note Character constructor.
+     * @return void
+     */
+    private function __construct()
     {
         #Init needed classes
         $this->sec = Security::getInstance();
         $this->sessionController = CheckSession::getInstance();
         $this->session = Session::getInstance();
         $this->db = DB::getInstance();
-
-        #Extract data of the account
-        $this->RetrieveData($id);
     }
 
     /**
      * @fn RetrieveData
-     * @note Extract data of the characters table and save in object $datas
+     * @note Extract data of the characters table and save in object $data
+     * @param int $id
      * @return void
      */
     public function RetrieveData(int $id)
@@ -54,38 +79,17 @@ class Character
         if ($this->sessionController->SessionExist()) {
 
             #Get account id
-            $account = $this->session->id;
             $id = $this->sec->Filter($id, 'Int');
 
             #Get pdo object
             $db = $this->db;
 
-            #Select data of the account //NB field ID_ACCOUNT per agganciare l'account al personaggio
-            $data = $db->Select("*","characters","id_account='{$account}' AND id='{$id}' LIMIT 1")->Fetch();
+            #Select data of the character, if account is the same than session
+            $data = $db->Select("*","characters","id='{$id}' LIMIT 1")->Fetch();
 
             #Save account data
-            $this->datas = $data;
-
-            #Save id account
-            $this->datas['id'] = $id;
+            $this->data = $data;
         }
-    }
-
-    /**
-     * @fn getInstance
-     * @note Self Instance
-     * @return Account
-     */
-    public static function getInstance(int $id): Character
-    {
-        #If self-instance not defined
-        if (!(self::$_instance instanceof self)) 
-        {
-            #define it
-            self::$_instance = new self($id);
-        }
-        #return defined instance
-        return self::$_instance;
     }
 
     /**
@@ -96,16 +100,18 @@ class Character
     public function getCharacter()
     {
         #Return account data
-        return $this->datas;
+        return $this->data;
     }
 
-    //EX. table
+    #TODO Da rividere
     /**
-     * skill stat bonus id_character
-     * acrobazia 3 2 21
+     * @fn GetStat
+     * @note Get skills data
+     * @param string $stat
+     * @return array|bool
      */
-    public function getSkill(string $skill)
+    public function GetStat(string $stat)
     {
-        $data = $db->Select("*","stats","id_character='{$this->datas['id']}' AND stat='{$skill}' LIMIT 1")->Fetch();
+        return $this->db->Select("*","stats","id_character='{$this->data['id']}' AND stat='{$stat}' LIMIT 1")->Fetch();
     }
 }
