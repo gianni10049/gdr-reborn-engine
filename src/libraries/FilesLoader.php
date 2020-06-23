@@ -2,6 +2,7 @@
 
 # ARRAY OF ROOTS WHERE LOAD FILES
 $dirs = [
+    "src/traits",
     "src/libraries",
     "src/models",
     "src/database",

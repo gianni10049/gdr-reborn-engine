@@ -195,20 +195,6 @@ class Session
                 : false;
         }
     }
-   
-    /**
-     * @fn destroy
-     * @note Destroy method for delete session
-     * @return bool
-     */
-    public function destroy():bool
-    {
-        #Destroy session
-        session_destroy();
-
-        #If is correctly destroyed return true, else return false
-        return (session_status() === PHP_SESSION_NONE) ? true : false;
-    }
 
     /**
      * @fn regenerate

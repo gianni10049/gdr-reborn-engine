@@ -29,6 +29,8 @@
     padding: 30px 15px;
     margin: 0;
     list-style: none;
+    z-index: 2;
+    position: absolute;
 
     &:hover {
       width: 150px;
@@ -218,5 +220,21 @@
     pointer-events: all;
   }
 
+  .central-box{
+    width: calc(100% - 70px);
+    position: absolute;
+    right: 0;
+    top:0;
+    height: 100%;
+    z-index: 1;
 
+    .content-box{
+      width: calc(100% - 200px);
+      min-width: 700px;
+      height: calc(100% - 52px);
+      margin:25px auto;
+      border:1px solid red;
+    }
+
+  }
 }

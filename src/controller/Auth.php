@@ -4,7 +4,6 @@ namespace Controllers;
 
 use Libraries\Request,
     Libraries\Security,
-    Libraries\Session,
     Models\Login,
     Models\Config,
     Models\Account;
@@ -99,8 +98,12 @@ class Auth
         if (!empty($user)) {
             #Compare credentials for authentication
             if ($this->security->VerifyHash($credential, $user['password'])) {
+
                 #Init new Session
-                $session = Session::getInstance();
+                $session = \Controllers\SessionController::getInstance();
+
+                # Destroy old session for regenerate for limit error
+                $session->destroy();
 
                 #Insert needed parameters for login
                 $session->id = $user['id'];

@@ -3,38 +3,22 @@
 namespace Engine;
 
 use Controllers\CharacterController,
-    Libraries\Security;
+    Libraries\Security,
+    Engine\EngineI;
 
-class Opend6 implements Engine
+class Opend6 extends EngineI
 {
-    protected $character,
-        $data = [],
-        $sec;
-
     /**
-     * @fn __construct
-     * @note Opend6 constructor
-     * @return void
-     */
-    public function __construct()
-    {
-        # Init needed classes
-        $this->sec = Security::getInstance();
-        $this->character = CharacterController::getInstance();
-        $this->sec = Security::getInstance();
-    }
-
-    /**
-     * @fn getData
-     * @note Get engine data
+     * @fn LaunchDice
+     * @note Control values before dice roll
      * @param string|null $stat
      * @return array
      */
-    public function getData(string $stat = null): array
+    public function LaunchDice(string $stat = null): array
     {
         # Filter and get stat data
         $stat = $this->sec->Filter($stat);
-        $stats = $this->character->getStat($stat);
+        $stats = $this->character->GetStat($stat);
 
         # Get increment and partial die
         $this->data['increment'] = $this->sec->Filter($stats['increment'], 'Int');
@@ -51,20 +35,19 @@ class Opend6 implements Engine
         }
 
         # Roll dices
-        $this->data['roll'] = $this->getRoll($this->data['increment']) + $this->data['partial_die'];
+        $this->data['roll'] = $this->RollDice($this->data['increment']) + $this->data['partial_die'];
 
         # Return datas
         return $this->data;
     }
 
-    #TODO controllare
     /**
-     * @fn getRoll
-     * @note Role random stats
+     * @fn RollDice
+     * @note Role dices
      * @param integer $increment
      * @return integer
      */
-    protected function getRoll(int $increment): int
+    public function RollDice(int $increment): int
     {
         # Init empty array
         $roll = [];
@@ -76,19 +59,6 @@ class Opend6 implements Engine
         }
 
         return array_sum($roll);
-    } 
-
-    /**
-     * @fn validateInterval
-     * @note Validate if the number is in the right interval
-     * @param integer $stat
-     * @param integer $min
-     * @param integer $max
-     * @return bool
-     */
-    protected function validateInterval(int $stat, int $min, int $max): bool
-    {
-        return (($stat <= $max) && ($stat >= $min)) ? true : false;
     }
 
 }
