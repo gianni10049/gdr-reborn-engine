@@ -12,7 +12,7 @@
     foreach ($characters as $character) {
 
         # Filter needed vars
-        $id = $sec->Filter($character['id'], 'Int');
+        $id = (int) $sec->Filter($character['id'], 'Int');
         $name = $sec->Filter($character['name'], 'String');
         $img = $sec->Filter($character['select_image'], 'Url');
 
