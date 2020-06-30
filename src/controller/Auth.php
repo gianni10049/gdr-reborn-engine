@@ -103,7 +103,9 @@ class Auth
                 $session = \Controllers\SessionController::getInstance();
 
                 # Destroy old session for regenerate for limit error
-                $session->destroy();
+                if($session->SessionExist()){
+                    $session->destroy();
+                }
 
                 #Insert needed parameters for login
                 $session->id = $user['id'];

@@ -74,7 +74,7 @@ class SessionController
     public function SessionExist(): bool
     {
         #If session exist return true, else false
-        return (isset($_SESSION)) ? true : false;
+        return (isset($_SESSION['id'])) ? true : false;
     }
 
     /**
