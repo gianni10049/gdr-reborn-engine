@@ -6,15 +6,15 @@ namespace Controllers;
 use Libraries\Request,
     Libraries\Security,
     Libraries\Session,
-    Models\Account,
     Models\Config;
+use Models\Account;
 
 /**
- * @class CheckSession
+ * @class SessionController
  * @package Controllers
  * @brief Controller used for control sessions infos
  */
-class CheckSession
+class SessionController
 {
 
     /**
@@ -28,19 +28,18 @@ class CheckSession
         $session,
         $request,
         $sec,
-        $config,
-        $account;
+        $config;
 
     /**
      * Init vars PUBLIC STATIC
-     * @var CheckSession $_instance
+     * @var SessionController $_instance
      */
     public static
         $_instance;
 
     /**
      * @fn __construct
-     * @note CheckSession constructor.
+     * @note SessionController constructor.
      * @return void
      */
     public function __construct()
@@ -54,9 +53,9 @@ class CheckSession
     /**
      * @fn getInstance
      * @note Self Instance
-     * @return CheckSession
+     * @return SessionController
      */
-    public static function getInstance(): CheckSession
+    public static function getInstance(): SessionController
     {
         #If self-instance not defined
         if (!(self::$_instance instanceof self)) {
@@ -75,7 +74,7 @@ class CheckSession
     public function SessionExist(): bool
     {
         #If session exist return true, else false
-        return (isset($_SESSION)) ? true : false;
+        return (isset($_SESSION['id'])) ? true : false;
     }
 
     /**
@@ -145,4 +144,57 @@ class CheckSession
         return ($contr) ? true : false;
     }
 
+    /**
+     * @fn __get
+     * @note Get magic method
+     * @param string $name
+     * @return mixed
+     */
+    public function __get(string $name)
+    {
+        #Filter entered value
+        $name= $this->sec->Filter($name,'String');
+
+        #If session param exist
+        if($this->session->$name)
+        {
+            #Return session param
+            return $this->session->$name;
+        } #Else not exist
+        else{
+            #Return false
+            return false;
+        }
+    }
+
+    /**
+     * @fn __set
+     * @note Set magic method
+     * @param string $name
+     * @param mixed $value
+     * @return void
+     */
+    public function __set(string $name, $value)
+    {
+        #Filter entered value
+        $name= $this->sec->Filter($name,'String');
+
+        #Set session value
+        $this->session->$name = $value;
+    }
+
+
+    /**
+     * @fn destroy
+     * @note Destroy method for delete session
+     * @return bool
+     */
+    public function destroy():bool
+    {
+        #Destroy session
+        session_destroy();
+
+        #If is correctly destroyed return true, else return false
+        return (session_status() === PHP_SESSION_NONE) ? true : false;
+    }
 }

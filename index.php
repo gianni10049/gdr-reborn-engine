@@ -1,6 +1,5 @@
 <?php
 
-
 #Import namespace
 use Controllers\Template;
 use Core\Router;
@@ -86,11 +85,36 @@ $router->get('/UsernameRecovery', function ($args) {
 
 });
 
+#ChangeCharacter view
+$router->get('/ChangeCharacter', function ($args) {
+
+    $char= new \Controllers\CharacterController();
+    $charlist= $char->CharactersList();
+
+
+    #Init Template
+    $tpl = new Template();
+
+    #Call signin view
+    $tpl->Render('Card/ChangeCharacter', ['characters'=>$charlist]);
+
+});
+
+# Logout Character
+$router->get('/LogoutCharacter',function($args){
+
+    # Init character controller
+    $character = \Controllers\CharacterController::getInstance();
+
+    # Logout character
+    echo $character->Logout();
+});
+
 #Signin view
 $router->get('/Logout', function ($args) {
 
     #Init needed classes
-    $session = \Libraries\Session::getInstance();
+    $session = \Controllers\SessionController::getInstance();
     $tpl = new Template();
 
     #Call signin view
@@ -145,6 +169,17 @@ $router->post('/UsernameRecovery', function ($args) {
 
     #Echo response of the recovery password operation
     echo $controller->UsernameRecovery($args['email']);
+
+});
+
+# Change character
+$router->post('/ChangeCharacter', function ($args) {
+
+    #Init AccountController class
+    $controller = \Controllers\CharacterController::getInstance();
+
+    #Echo response of the recovery password operation
+    echo $controller->ChangeCharacter($args['character_id']);
 
 });
 

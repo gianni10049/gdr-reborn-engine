@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Giu 16, 2020 alle 17:23
+-- Generation Time: Giu 23, 2020 alle 23:47
 -- Versione del server: 5.6.33-log
 -- PHP Version: 5.3.10
 
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Database: `my_giovannipaneselling2`
+-- Database: `my_reborngdr`
 --
 
 -- --------------------------------------------------------
@@ -37,7 +37,40 @@ CREATE TABLE IF NOT EXISTS `account` (
   `last_active` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `active` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=10 ;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `characters`
+--
+
+CREATE TABLE IF NOT EXISTS `characters` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `account` int(11) NOT NULL,
+  `name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `select_image` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `avatar_image` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `miniavatar_image` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `last_login` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `favorite` tinyint(1) NOT NULL DEFAULT '0',
+  `selected` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=3 ;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `characters_stats`
+--
+
+CREATE TABLE IF NOT EXISTS `characters_stats` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `character` int(11) NOT NULL,
+  `stat` int(11) NOT NULL,
+  `value` int(3) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=5 ;
 
 -- --------------------------------------------------------
 
@@ -56,6 +89,7 @@ CREATE TABLE IF NOT EXISTS `config` (
   `global` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=19 ;
+
 
 --
 -- Dump dei dati per la tabella `config`
@@ -80,20 +114,6 @@ REPLACE INTO `config` (`id`, `type`, `name`, `default`, `value`, `description`, 
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `login_invalid`
---
-
-CREATE TABLE IF NOT EXISTS `login_invalid` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `message` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `ip` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `timerror` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
 -- Struttura della tabella `layout_options`
 --
 
@@ -104,13 +124,34 @@ CREATE TABLE IF NOT EXISTS `layout_options` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=2 ;
 
+-- --------------------------------------------------------
+
 --
--- Dump dei dati per la tabella `layout_options`
+-- Struttura della tabella `login_invalid`
 --
 
-REPLACE INTO `layout_options` (`id`, `name`, `value`) VALUES
-(1, 'color_default', '#323232');
+CREATE TABLE IF NOT EXISTS `login_invalid` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `message` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `ip` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `username` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `timerror` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=25 ;
 
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `stats_list`
+--
+
+CREATE TABLE IF NOT EXISTS `stats_list` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `init_min` int(11) NOT NULL,
+  `init_max` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=5 ;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

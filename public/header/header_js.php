@@ -13,5 +13,6 @@
 
 <!-- CUSTOM JS -->
 <script src="<?= $sec->NoChace('/assets/JS/Alert.js'); ?>" type="text/javascript"></script>
+<script src="<?= $sec->NoChace('/assets/JS/Ajax.js'); ?>" type="text/javascript"></script>
 <script src="<?= $sec->NoChace('/assets/JS/Form.js'); ?>" type="text/javascript"></script>
 <script src="<?= $sec->NoChace('/assets/JS/Hyperlink.js'); ?>" type="text/javascript"></script>

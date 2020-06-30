@@ -2,10 +2,9 @@
 
 namespace Models;
 
-use Controllers\CheckSession,
+use Controllers\SessionController,
     Database\DB,
-    Libraries\Security,
-    Libraries\Session;
+    Libraries\Security;
 
 /**
  * @class Account
@@ -26,14 +25,12 @@ class Account
      * @var array $datas
      * @var DB $db
      * @var Security $sec
-     * @var CheckSession $sessionController
-     * @var Session $session
+     * @var SessionController $session
      */
     private
         $datas,
         $db,
         $sec,
-        $sessionController,
         $session;
 
     /**
@@ -61,8 +58,7 @@ class Account
     {
         #Init needed classes
         $this->sec = Security::getInstance();
-        $this->sessionController = CheckSession::getInstance();
-        $this->session = Session::getInstance();
+        $this->session = SessionController::getInstance();
         $this->db = DB::getInstance();
 
         #Extract data of the account
@@ -108,7 +104,7 @@ class Account
     public function RetrieveData()
     {
         #If session exist
-        if ($this->sessionController->SessionExist()) {
+        if ($this->session->SessionExist()) {
 
             #Get account id
             $account = $this->session->id;

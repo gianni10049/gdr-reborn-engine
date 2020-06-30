@@ -4,6 +4,8 @@ namespace Controllers;
 
 use Libraries\Security;
 use Models\Character;
+use Controllers\AccountController;
+use Controllers\SessionController;
 
 /**
  * @class CharacterController
@@ -22,10 +24,14 @@ class CharacterController
     /**
      * Init vars PRIVATE
      * @var Character $character
+     * @var AccountController $account
+     * @var SessionController $session
      * @var Security $sec
      */
     private
         $character,
+        $account,
+        $session,
         $sec;
 
     /**
@@ -38,6 +44,8 @@ class CharacterController
         #Init needed classes
         $this->sec = Security::getInstance();
         $this->character = Character::getInstance();
+        $this->account = AccountController::getInstance();
+        $this->session = SessionController::getInstance();
     }
 
     /**
@@ -57,38 +65,98 @@ class CharacterController
     }
 
     /**
-     * @fn createCharacter
-     * @note Method for create character
-     * @param array $data
-     * @return int
-     */
-    public function createCharacter(array $data):int
-    {
-
-    }
-
-    /**
      * @fn getCharacter
      * @note Get character data
-     * @return array
-     */
-    public function getCharacter(): array
-    {
-        #Return character data
-        return $this->character->getCharacter();
-    }
-
-    #TODO Da rividere
-    /**
-     * @fn GetStat
-     * @param string $stat
+     * @param int $id
      * @return array|bool
      */
-    public function GetStat(string $stat)
+    public function getCharacter(int $id)
     {
-        #Filter name of the needed stat
-        $skill = $this->sec->Filter($stat);
-
-        return $this->character->GetStat($stat);
+        #Return character data
+        if($this->character->CharacterExistence($id)) {
+            return $this->character->RetrieveData($id);
+        }
+        else{
+            return false;
+        }
     }
+
+    /**
+     * @fn CharacterList
+     * @note Extract an array full of all the data of the characters of the account
+     * @return mixed
+     */
+    public function CharactersList(){
+
+        # Get connected account
+        $account = $this->session->id;
+
+        # If account exist
+        if($this->account->AccountExist($account)){
+
+            #Return characters list
+            return $this->character->CharactersList($account);
+        }
+    }
+
+    /**
+     * @fn ChangeCharacter
+     * @param int $id
+     * @return string
+     */
+    public function ChangeCharacter(int $id):string
+    {
+
+        # Filter character id and get account id
+        $id = $this->sec->Filter($id,'Int');
+        $account = $this->sec->Filter($this->session->id,'Int');
+
+        # Get character data for extract account of the requested character
+        $data = $this->getCharacter($id);
+        $characterAccount = $this->sec->Filter($data['account'],'Int');
+
+        # If mine account and character account is the same
+        if($account === $characterAccount){
+
+            # Logout other character
+            $this->character->UpdateLogout($account);
+
+            # Login in new character
+            $this->character->UpdateCharacterLogin($id);
+
+            # Set success response
+            $response = ['type'=>'success','text'=>'Personaggio correttamente collegato'];
+
+        } # Else accounts don't are the sames
+        else{
+
+            # Set account error response
+            $response = ['type'=>'error','text'=>"Account non di proprietà dell'account."];
+        }
+
+        # Return json response
+        return json_encode($response);
+
+    }
+
+    /**
+     * @fn Logout
+     * @note Logout character from the session
+     * @return false|string
+     */
+    public function Logout(){
+
+        # Extract account id
+        $account = $this->sec->Filter($this->session->id,'Int');
+
+        # Logout account and save logout in db
+        $this->character->UpdateLogout($account);
+
+        # Set success response
+        $response = ['type'=>'success','text'=>'Personaggio sloggato correttamente.'];
+
+        # Return json response
+        return json_encode($response);
+    }
+
 }

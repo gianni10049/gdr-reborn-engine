@@ -2,10 +2,9 @@
 
 namespace Models;
 
-use Controllers\CheckSession,
-    Database\DB,
-    Libraries\Security,
-    Libraries\Session;
+use Controllers\SessionController;
+use Database\DB;
+use Libraries\Security;
 
 /**
  * @class Character
@@ -26,14 +25,12 @@ class Character
      * @var array $data
      * @var DB $db
      * @var Security $sec
-     * @var CheckSession $sessionController
-     * @var Session $session
+     * @var SessionController $session
      */
     private
         $data,
         $db,
         $sec,
-        $sessionController,
         $session;
 
     /**
@@ -44,8 +41,7 @@ class Character
     public static function getInstance(): Character
     {
         #If self-instance not defined
-        if (!(self::$_instance instanceof self))
-        {
+        if (!(self::$_instance instanceof self)) {
             #define it
             self::$_instance = new self();
         }
@@ -62,8 +58,7 @@ class Character
     {
         #Init needed classes
         $this->sec = Security::getInstance();
-        $this->sessionController = CheckSession::getInstance();
-        $this->session = Session::getInstance();
+        $this->session = SessionController::getInstance();
         $this->db = DB::getInstance();
     }
 
@@ -71,47 +66,82 @@ class Character
      * @fn RetrieveData
      * @note Extract data of the characters table and save in object $data
      * @param int $id
-     * @return void
+     * @return mixed
      */
     public function RetrieveData(int $id)
     {
-        #If session exist
-        if ($this->sessionController->SessionExist()) {
+        #Get account id
+        $id = $this->sec->Filter($id, 'Int');
 
-            #Get account id
-            $id = $this->sec->Filter($id, 'Int');
+        #Get pdo object
+        $db = $this->db;
 
-            #Get pdo object
-            $db = $this->db;
+        #Select data of the character, if account is the same than session
+        $data = $db->Select("*", "characters", "id='{$id}' LIMIT 1")->Fetch();
 
-            #Select data of the character, if account is the same than session
-            $data = $db->Select("*","characters","id='{$id}' LIMIT 1")->Fetch();
+        #Save account data
+        $this->data = $data;
 
-            #Save account data
-            $this->data = $data;
-        }
-    }
-
-    /**
-     * @fn getCharacter
-     * @note Extract data of character by id
-     * @return mixed
-     */
-    public function getCharacter()
-    {
-        #Return account data
         return $this->data;
     }
 
-    #TODO Da rividere
     /**
-     * @fn GetStat
-     * @note Get skills data
-     * @param string $stat
-     * @return array|bool
+     * @fn CharacterExistence
+     * @note Control if character exist
+     * @param int $id
+     * @return bool
      */
-    public function GetStat(string $stat)
+    public function CharacterExistence(int $id):bool
     {
-        return $this->db->Select("*","stats","id_character='{$this->data['id']}' AND stat='{$stat}' LIMIT 1")->Fetch();
+        # Count number of account whit that id
+        $data= $this->db->Count('characters',"id='{$id}' LIMIT 1");
+
+        # If exist return true, else return false
+        return ($data === 1) ? true : false;
+    }
+
+    /**
+     * @fn CharactersList
+     * @note Extract data of the characters connected whit that account
+     * @param int $account
+     * @return mixed
+     */
+    public function CharactersList(int $account)
+    {
+        # Filter entered account id
+        $account = $this->sec->Filter($account,'Int');
+
+        # Return array of characters list
+        return $this->db->Select('*','characters',"account='{$account}'")->FetchArray();
+    }
+
+    /**
+     * @fn UpdateCharacterLogin
+     * @note Set character login in session and in db
+     * @param int $character
+     * @return void
+     */
+    public function UpdateCharacterLogin(int $character){
+
+        # Set session character var whit the character id
+        $this->session->character = $character;
+
+        # Set character selected in db
+        $this->db->Update('characters','selected=1',"id='{$character}'");
+    }
+
+    /**
+     * @fn UpdateLogout
+     * @note Update logout in session and in db
+     * @param int $account
+     * @result void
+     */
+    public function UpdateLogout(int $account){
+
+        # Set session character var on null
+        $this->session->character = NULL;
+
+        # Set all character of the account not selected in db
+        $this->db->Update('characters','selected=0',"account='{$account}'");
     }
 }
