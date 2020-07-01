@@ -2,7 +2,7 @@
 
 namespace Controllers;
 
-use Controller\Mailer;
+use Libraries\Mailer;
 use Libraries\Security;
 use Models\Account;
 use Models\Config;
@@ -153,10 +153,6 @@ class Signin
      */
     public function ManageError($response)
     {
-        #Init needed vars
-        $text = '';
-        $type = '';
-
         switch ((int)$response) {
 
             #Case success

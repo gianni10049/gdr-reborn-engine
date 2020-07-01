@@ -2,7 +2,7 @@
 
 namespace Controllers;
 
-use Controller\Mailer;
+use Libraries\Mailer;
 use Database\DB;
 use Libraries\Security;
 use Models\Account;
@@ -76,7 +76,7 @@ class AccountController
         $id = $this->sec->Filter($this->account->id, 'Int');
 
         #If account id exist return true, else return false
-        return (!empty($id)) ? true : false;
+        return ( !empty($id) );
     }
 
     /**
@@ -103,6 +103,9 @@ class AccountController
             # Case email read info by email
             case 'Email':
                 return $this->account->readByEmail($value);
+
+            default:
+                return false;
         }
     }
 
@@ -346,7 +349,7 @@ class AccountController
         $decrypted = $this->sec->Decrypt($dbEmail);
 
         # If is the same return true, else return false
-        return ($email == $decrypted) ? true : false;
+        return ( $email == $decrypted );
     }
 
     /**

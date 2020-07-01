@@ -2,8 +2,6 @@
 
 namespace Models;
 
-use Models\Wrapper;
-
 /**
  * @class Login
  * @package Models

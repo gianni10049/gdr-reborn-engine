@@ -9,11 +9,11 @@ use Libraries\Request,
     Models\Account;
 
 /**
- * @class Auth
+ * @class LoginController
  * @package Controllers
  * @note Controller for manage authentication controls
  */
-class Auth
+class LoginController
 {
     /**
      * Init vars PRIVATE
@@ -32,7 +32,7 @@ class Auth
 
     /**
      * Init vars PUBLIC STATIC
-     * @var Auth $_instance
+     * @var LoginController $_instance
      */
     public static
         $_instance;
@@ -56,9 +56,9 @@ class Auth
     /**
      * @fn getInstance
      * @note Self Instance
-     * @return Auth
+     * @return LoginController
      */
-    public static function getInstance(): Auth
+    public static function getInstance(): LoginController
     {
         #If self-instance not defined
         if (!(self::$_instance instanceof self)) {
@@ -100,7 +100,7 @@ class Auth
             if ($this->security->VerifyHash($credential, $user['password'])) {
 
                 #Init new Session
-                $session = \Controllers\SessionController::getInstance();
+                $session = SessionController::getInstance();
 
                 # Destroy old session for regenerate for limit error
                 if($session->SessionExist()){

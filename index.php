@@ -1,7 +1,7 @@
 <?php
 
 #Import namespace
-use Controllers\Template;
+use Libraries\Template;
 use Core\Router;
 use Libraries\Request;
 
@@ -130,8 +130,8 @@ $router->get('/Logout', function ($args) {
 #Login
 $router->post('/login', function ($args) {
 
-    #Init Auth class
-    $auth = \Controllers\Auth::getInstance();
+    #Init Login class
+    $auth = \Controllers\LoginController::getInstance();
 
     #If response is success refresh the page, else echo errors
     echo $auth->ManageError($auth->authenticate($args['username'], $args['pass']));

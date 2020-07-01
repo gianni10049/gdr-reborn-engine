@@ -22,13 +22,11 @@ class Character
 
     /**
      * Init vars PRIVATE
-     * @var array $data
      * @var DB $db
      * @var Security $sec
      * @var SessionController $session
      */
     private
-        $data,
         $db,
         $sec,
         $session;
@@ -77,12 +75,7 @@ class Character
         $db = $this->db;
 
         #Select data of the character, if account is the same than session
-        $data = $db->Select("*", "characters", "id='{$id}' LIMIT 1")->Fetch();
-
-        #Save account data
-        $this->data = $data;
-
-        return $this->data;
+        return $db->Select("*", "characters", "id='{$id}' LIMIT 1")->Fetch();
     }
 
     /**
@@ -97,7 +90,7 @@ class Character
         $data= $this->db->Count('characters',"id='{$id}' LIMIT 1");
 
         # If exist return true, else return false
-        return ($data === 1) ? true : false;
+        return ($data === 1);
     }
 
     /**

@@ -132,7 +132,7 @@ class Account
     public function ExistenceControl( int $account):int
     {
         #If account exist return true, else return false
-        return ($this->db->Count("account", "id='{$account}' AND active=1") === 1) ? true : false;
+        return ( $this->db->Count("account", "id='{$account}' AND active=1") === 1 );
     }
 
     /**
@@ -264,7 +264,7 @@ class Account
             $dbEmail = $this->sec->Filter($data['email']);
 
             #If password and email are verified, return true, else return false
-            return ($this->sec->VerifyHash($pass, $dbPass) && $this->sec->VerifyHash($email, $dbEmail)) ? true : false;
+            return ( $this->sec->VerifyHash($pass, $dbPass) && $this->sec->VerifyHash($email, $dbEmail) );
 
         } #Else account don't exist
         else{

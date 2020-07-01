@@ -1,4 +1,3 @@
-
 <div id="UsernameRecovery" class="container_page">
 
     <form method="POST" id="UsernameRecoveryForm">

@@ -74,7 +74,7 @@ class SessionController
     public function SessionExist(): bool
     {
         #If session exist return true, else false
-        return (isset($_SESSION['id'])) ? true : false;
+        return ( isset($_SESSION['id']) );
     }
 
     /**
@@ -120,7 +120,7 @@ class SessionController
         $timeout = $this->config->session_timeout;
 
         #Control if session is timed out
-        return (time() < ($account->last_active + $timeout)) ? true : false;
+        return ( time() < ($account->last_active + $timeout) );
     }
 
     /**
@@ -195,6 +195,6 @@ class SessionController
         session_destroy();
 
         #If is correctly destroyed return true, else return false
-        return (session_status() === PHP_SESSION_NONE) ? true : false;
+        return ( session_status() === PHP_SESSION_NONE );
     }
 }

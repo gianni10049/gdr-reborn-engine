@@ -1,6 +1,6 @@
 <?php
 
-namespace Controller;
+namespace Libraries;
 
 use Libraries\Security;
 use Models\Account;
@@ -233,16 +233,10 @@ class Mailer
      * @note Send an email to all accounts
      * @return void
      */
-    public function SendAllAccount()
+    public function SendAll($array)
     {
-        #Start Account instance
-        $accounts = Account::getInstance();
-
-        #Get all account emails
-        $emails = $accounts->AccountEmails();
-
         #Foreach email
-        foreach ($emails as $email) {
+        foreach ($array as $email) {
 
             #Add the recipient to array
             $this->to[] = $email;

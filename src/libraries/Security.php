@@ -2,8 +2,7 @@
 
 namespace Libraries;
 
-use Dotenv\Dotenv,
-    Models\Config;
+use Models\Config;
 
 /**
  * @class Security
@@ -413,6 +412,6 @@ class Security
         $string = preg_replace('/\s+/', '', $string);
 
         #If is the same and not is null return true, else return false
-        return (($string === $confstr) && (!is_null($string))) ? true : false;
+        return ($string === $confstr) && (!is_null($string));
     }
 }
