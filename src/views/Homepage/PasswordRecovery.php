@@ -1,4 +1,3 @@
-
 <div id="PasswordRecovery" class="container_page">
 
     <form method="POST" id="PasswordRecoveryForm">

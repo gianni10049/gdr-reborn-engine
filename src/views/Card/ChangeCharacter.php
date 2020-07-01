@@ -1,9 +1,16 @@
+<?php
+
+# Init needed classes
+use Controllers\SessionController;
+use Libraries\Security;
+
+?>
+
 <div class="change-character-box">
     <?php
 
-    # Init needed classes
-    $sec = \Libraries\Security::getInstance();
-    $mineChar = \Controllers\SessionController::getInstance()->character;
+    $sec = Security::getInstance();
+    $mineChar = SessionController::getInstance()->character;
 
     # Get passed characters array
     $characters = $_POST['characters'];
@@ -12,7 +19,7 @@
     foreach ($characters as $character) {
 
         # Filter needed vars
-        $id = (int) $sec->Filter($character['id'], 'Int');
+        $id = (int)$sec->Filter($character['id'], 'Int');
         $name = $sec->Filter($character['name'], 'String');
         $img = $sec->Filter($character['select_image'], 'Url');
 

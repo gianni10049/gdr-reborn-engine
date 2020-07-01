@@ -97,6 +97,9 @@ class CharacterController
             #Return characters list
             return $this->character->CharactersList($account);
         }
+        else{
+            return false;
+        }
     }
 
     /**

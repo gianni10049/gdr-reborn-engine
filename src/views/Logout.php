@@ -1,7 +1,4 @@
-<?php
-
-if ($_POST['response']) {
-    ?>
+<?php if ($_POST['response']) { ?>
     <div id="Logout">
         Torna presto!<br>
         <a href="/">Torna alla home</a>

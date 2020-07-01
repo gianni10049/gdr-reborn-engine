@@ -37,7 +37,7 @@ trait EngineTrait{
      */
     protected function validateInterval(int $stat, int $min, int $max): bool
     {
-        return (($stat <= $max) && ($stat >= $min)) ? true : false;
+        return ( ($stat <= $max) && ($stat >= $min) );
     }
 
 

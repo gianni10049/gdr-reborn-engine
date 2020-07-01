@@ -1,6 +1,6 @@
 <?php
 
-namespace Controllers;
+namespace Libraries;
 
 use Libraries\Security;
 use Libraries\Enviroment;
@@ -91,8 +91,8 @@ class Template
     /**
      * @fn GetVars
      * @return string
-     * @var array $vars
      * @var string $template
+     * @var array $vars
      */
     function RenderTemplate(string $template, array $vars): string
     {
@@ -109,7 +109,7 @@ class Template
         $_POST['body'] = $template;
 
         #Load template
-        include $template;
+        include($template);
 
         #Return output for echo
         return ob_get_clean();
