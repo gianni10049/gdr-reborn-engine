@@ -81,16 +81,31 @@ class Character
     /**
      * @fn CharacterExistence
      * @note Control if character exist
-     * @param int $id
+     * @param int $character
      * @return bool
      */
-    public function CharacterExistence(int $id):bool
+    public function CharacterExistence(int $character):bool
     {
         # Count number of account whit that id
-        $data= $this->db->Count('characters',"id='{$id}' LIMIT 1");
+        $data= $this->db->Count('characters',"id='{$character}' LIMIT 1");
 
         # If exist return true, else return false
         return ($data === 1);
+    }
+
+    /**
+     * @fn getOwner
+     * @note Extract owner of the character
+     * @param int $character
+     * @return int|bool
+     */
+    public function getOwner($character){
+
+        # Filter passed character id
+        $character= $this->sec->Filter($character,'Int');
+
+        # Return owner id of the character
+        return $this->db->Select('account','characters',"id='{$character}' LIMIT 1")->Fetch()['account'];
     }
 
     /**
@@ -106,6 +121,27 @@ class Character
 
         # Return array of characters list
         return $this->db->Select('*','characters',"account='{$account}'")->FetchArray();
+    }
+
+    /**
+     * @fn CharacterStats
+     * @note Extract stats of the selected character
+     * @param int $character
+     * @return mixed
+     */
+    public function CharacterStats($character){
+
+        #Filter character id
+        $character= $this->sec->Filter($character,'Int');
+
+        #Return array of character stats
+        return $this->db->Join(
+            'characters_stats',
+            'characters_stats.value,stats_list.*',
+            'stats_list',
+            'stats_list.id = characters_stats.stat',
+            "characters_stats.character='{$character}'"
+        )->FetchArray();
     }
 
     /**

@@ -79,7 +79,7 @@ class Signin
 
         #Filter passed data
         $user = $this->security->Filter($post['username'], 'Convert');
-        $email = $this->security->Filter($post['email'], 'Email');
+        $email = $this->security->Filter($post['email'], 'String');
         $pass = $this->security->Filter($post['password'], 'Convert');
         $passVerification = $this->security->Filter($post['password_verification'], 'Convert');
 

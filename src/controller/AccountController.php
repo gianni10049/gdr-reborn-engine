@@ -183,7 +183,7 @@ class AccountController
         #Filter passed data
         $user = $this->sec->Filter($post['username'], 'Convert');
         $NewPass = $this->sec->Filter($post['password'], 'Convert');
-        $EmailVerification = $this->sec->Filter($post['email'], 'Email');
+        $EmailVerification = $this->sec->Filter($post['email'], 'String');
 
         #If infos match whit username passed
         if ($this->ConfirmData($user, $EmailVerification)) {
@@ -223,8 +223,8 @@ class AccountController
         #Filter passed data
         $user = $this->sec->Filter($post['username'], 'Convert');
         $pass = $this->sec->Filter($post['password'], 'Convert');
-        $oldEmail = $this->sec->Filter($post['old_email'], 'Email');
-        $newEmail = $this->sec->Filter($post['new_email'], 'Email');
+        $oldEmail = $this->sec->Filter($post['old_email'], 'String');
+        $newEmail = $this->sec->Filter($post['new_email'], 'String');
 
         #If infos match whit username passed
         if ($this->account->DataMatch($user, $pass, $oldEmail)) {

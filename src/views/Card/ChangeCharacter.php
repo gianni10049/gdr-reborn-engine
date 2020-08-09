@@ -1,19 +1,23 @@
 <?php
 
-# Init needed classes
+# Call needed classes
+use Controllers\CharacterController;
 use Controllers\SessionController;
 use Libraries\Security;
 
+# Init needed classes
+$sec = Security::getInstance();
+$mineChar = SessionController::getInstance()->character;
+$characterController = CharacterController::getInstance();
+
+# Get passed characters array
+$characters = $_POST['characters'];
 ?>
 
 <div class="change-character-box">
+
     <?php
 
-    $sec = Security::getInstance();
-    $mineChar = SessionController::getInstance()->character;
-
-    # Get passed characters array
-    $characters = $_POST['characters'];
 
     # Foreach character
     foreach ($characters as $character) {
@@ -26,37 +30,51 @@ use Libraries\Security;
         # Know if the character is selected
         $selected = ($mineChar === $id);
 
-        ?>
+        # If character exist and owner is the account of the player
+        if ($characterController->CharacterExistence($id) && $characterController->CharacterProperty($id)) {
+            ?>
 
-        <div class="single-character">
-            <form method="POST" class="ChangeCharacterForm">
+            <div class="single-character">
+                <form method="POST" class="ChangeCharacterForm">
 
-                <div class="character-name">
+                    <div class="character-name">
                     <span><?= $name;
                         if ($selected) {
                             echo ' (Selezionato)';
                         } ?></span>
-                </div>
-                <div class="character-image">
-                    <img src='<?= $img; ?>' alt="Selection image"/>
-                </div>
-                <div class="character-stats">
-                    <div class="single-stat">Forza : <span>10</span></div>
-                    <div class="single-stat">Destrezza : <span>5</span></div>
-                    <div class="single-stat">Intelletto : <span>3</span></div>
-                    <div class="single-stat">Carisma : <span>3</span></div>
-                </div>
+                    </div>
+                    <div class="character-image">
+                        <img src='<?= $img; ?>' alt="Selection image"/>
+                    </div>
+                    <div class="character-stats">
+                        <?php
 
-                <input type="hidden" name="character_id" value="<?= $id; ?>">
+                        #Foreach character extract stats
+                        foreach ($characterController->getCharacterStats($id) as $stat) {
 
-                <?php if (!$selected) { ?>
-                    <input type="submit" value="Scegli">
-                <?php } ?>
+                            #Filter needed values
+                            $name = $sec->Filter($stat['name'], 'String');
+                            $value = $sec->Filter($stat['value'], 'Int');
+                            ?>
 
-            </form>
-        </div>
+                            <div class="single-stat"><?= $name; ?> : <span> <?= $value; ?> </span></div>
 
-    <?php } ?>
+                        <?php } ?>
+                    </div>
+
+                    <input type="hidden" name="character_id" value="<?= $id; ?>">
+
+                    <?php if (!$selected) { ?>
+                        <input type="submit" value="Scegli">
+                    <?php } ?>
+
+                </form>
+            </div>
+
+            <?php
+        }
+    }
+    ?>
 
     <div class="character-logout">
         <a href="/LogoutCharacter" title="Esci dal personaggio corrente">

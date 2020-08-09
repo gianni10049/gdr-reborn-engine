@@ -181,7 +181,7 @@ class Account
     public function EmailExist(string $email):bool
     {
         #Crypt email for extract data
-        $email= $this->sec->Filter($email,'Email');
+        $email= $this->sec->Filter($email,'String');
 
         #Extract all emails
         $accounts= $this->db->Select('id,email','account','1')->FetchArray();

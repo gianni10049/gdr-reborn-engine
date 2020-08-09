@@ -4,8 +4,6 @@ namespace Controllers;
 
 use Libraries\Security;
 use Models\Character;
-use Controllers\AccountController;
-use Controllers\SessionController;
 
 /**
  * @class CharacterController
@@ -65,6 +63,40 @@ class CharacterController
     }
 
     /**
+     * @fn CharacterExistence
+     * @note Call model existence control of the character
+     * @param int $character
+     * @return bool
+     */
+    public function CharacterExistence($character):bool
+    {
+        # Filter passed character id
+        $character = $this->sec->Filter($character,'Int');
+
+        # Return response existence
+        return $this->character->CharacterExistence($character);
+    }
+
+    /**
+     * @fn CharacterProperty
+     * @note Control if account is owner of the character
+     * @param int $character
+     * @return bool
+     */
+    public function CharacterProperty($character):bool
+    {
+        # Filter needed vars
+        $character= $this->sec->Filter($character,'Int');
+        $account= $this->sec->Filter($this->session->id,'Int');
+
+        # Get and Filter owner id
+        $owner= $this->sec->Filter($this->character->getOwner($character),'Int');
+
+        # Control if owner and account is the same
+        return $owner === $account;
+    }
+
+    /**
      * @fn getCharacter
      * @note Get character data
      * @param int $id
@@ -73,10 +105,9 @@ class CharacterController
     public function getCharacter(int $id)
     {
         #Return character data
-        if($this->character->CharacterExistence($id)) {
+        if ($this->character->CharacterExistence($id)) {
             return $this->character->RetrieveData($id);
-        }
-        else{
+        } else {
             return false;
         }
     }
@@ -92,40 +123,56 @@ class CharacterController
         $account = $this->session->id;
 
         # If account exist
-        if($this->account->AccountExist($account)){
+        if ($this->account->AccountExist($account)) {
 
             #Return characters list
             return $this->character->CharactersList($account);
+        } else {
+            return false;
         }
-        else{
+    }
+
+    /**
+     * @fn getCharacterStats
+     * @note Get character stats
+     * @param int $character
+     * @return array|bool
+     **/
+    public function getCharacterStats($character)
+    {
+        # Filter passed character id
+        $character = $this->sec->Filter($character, 'Int');
+
+        # If character exist
+        if ($this->character->CharacterExistence($character)) {
+
+            #Extract characters stats
+            return $this->character->CharacterStats($character);
+        } else {
             return false;
         }
     }
 
     /**
      * @fn ChangeCharacter
-     * @param int $id
+     * @param int $character
      * @return string
      */
-    public function ChangeCharacter(int $id):string
+    public function ChangeCharacter(int $character):string
     {
 
         # Filter character id and get account id
-        $id = $this->sec->Filter($id,'Int');
+        $id = $this->sec->Filter($character,'Int');
         $account = $this->sec->Filter($this->session->id,'Int');
 
-        # Get character data for extract account of the requested character
-        $data = $this->getCharacter($id);
-        $characterAccount = $this->sec->Filter($data['account'],'Int');
-
         # If mine account and character account is the same
-        if($account === $characterAccount){
+        if($this->CharacterProperty($character)){
 
             # Logout other character
             $this->character->UpdateLogout($account);
 
             # Login in new character
-            $this->character->UpdateCharacterLogin($id);
+            $this->character->UpdateCharacterLogin($character);
 
             # Set success response
             $response = ['type'=>'success','text'=>'Personaggio correttamente collegato'];

@@ -313,7 +313,7 @@ class Security
         $min = $config->email_min;
 
         #If is an email
-        if (!$this->Filter($email,'Email')) {
+        if (!$this->Filter($email,'String')) {
             #Return false
             return false;
         }
