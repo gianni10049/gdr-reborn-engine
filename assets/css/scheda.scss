@@ -16,6 +16,7 @@
     float: left;
     border-radius: 10px;
     text-align: center;
+    position: relative;
 
     .character-name{
       text-align: center;
@@ -24,6 +25,23 @@
       height: 30px;
       line-height: 30px;
       margin-bottom: 10px;
+    }
+
+    .character-favorite{
+      position: absolute;
+      top: 30px;
+      right: 30px;
+      cursor: pointer;
+
+      button{
+        background: crimson;
+        color: black;
+        border-radius: 5px;
+        border:none;
+        cursor: pointer;
+        outline: none;
+      }
+
     }
 
     .character-image{
@@ -48,10 +66,21 @@
     }
   }
 
-  .character-logout{
+  .character-extra-option{
     position: absolute;
     top: 10px;
     right: 10px;
+
+    ul{
+      list-style: none;
+      padding: 0;
+      margin: 0;
+
+      li{
+        margin-bottom: 10px;
+      }
+    }
+
   }
 
 }

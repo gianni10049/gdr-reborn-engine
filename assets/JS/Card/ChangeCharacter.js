@@ -1,13 +1,27 @@
 $(function(){
 
     /* Form for change character */
-    Form('.ChangeCharacterForm','/ChangeCharacter',ChangeCharacterSuccess);
+    Form('.ChangeCharacterForm','/ChangeCharacter',OperationResponse);
+
+    /* Form for favorite character */
+    Form('.character-favorite-form','/SetFavoriteCharacter',OperationResponse);
 
     /* Ajax for logout character */
-    Ajax('.content-box .change-character-box .character-logout a','click','/LogoutCharacter',{},ChangeCharacterSuccess,'get');
+    $('.content-box .change-character-box .character-extra-option li.Logout a').on('click',function(e) {
+        e.preventDefault();
+
+        Ajax('/LogoutCharacter', {}, OperationResponse, 'get');
+    });
+
+    $('.content-box .change-character-box .character-extra-option li.Favorite a').on('click',function(e) {
+        e.preventDefault();
+
+        Ajax('/LeaveFavorite', {}, OperationResponse, 'get');
+    });
+
 
     /* Change character response manager */
-    function ChangeCharacterSuccess(data){
+    function OperationResponse(data){
 
         let datas= JSON.parse(data);
 

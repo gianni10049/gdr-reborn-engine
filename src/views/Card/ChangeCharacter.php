@@ -26,6 +26,7 @@ $characters = $_POST['characters'];
         $id = (int)$sec->Filter($character['id'], 'Int');
         $name = $sec->Filter($character['name'], 'String');
         $img = $sec->Filter($character['select_image'], 'Url');
+        $favorite = $sec->Filter($character['favorite'], 'Bool');
 
         # Know if the character is selected
         $selected = ($mineChar === $id);
@@ -35,33 +36,52 @@ $characters = $_POST['characters'];
             ?>
 
             <div class="single-character">
-                <form method="POST" class="ChangeCharacterForm">
 
-                    <div class="character-name">
+                <!-- NAME -->
+                <div class="character-name">
                     <span><?= $name;
                         if ($selected) {
                             echo ' (Selezionato)';
                         } ?></span>
-                    </div>
-                    <div class="character-image">
-                        <img src='<?= $img; ?>' alt="Selection image"/>
-                    </div>
-                    <div class="character-stats">
-                        <?php
+                </div>
 
-                        #Foreach character extract stats
-                        foreach ($characterController->getCharacterStats($id) as $stat) {
+                <!-- PREFERRED -->
+                <div class="character-favorite">
+                    <form method="post" class="character-favorite-form">
+                        <input type="hidden" name="character" value="<?= $id; ?>">
+                        <button type="submit">
+                            <?php if ($favorite) { ?>
+                                <i class="fas fa-heart" title="Preferito"></i>
+                            <?php } else { ?>
+                                <i class="far fa-heart" title="Non Preferito"></i>
+                            <?php } ?>
+                        </button>
+                    </form>
+                </div>
 
-                            #Filter needed values
-                            $name = $sec->Filter($stat['name'], 'String');
-                            $value = $sec->Filter($stat['value'], 'Int');
-                            ?>
+                <!-- IMAGE -->
+                <div class="character-image">
+                    <img src='<?= $img; ?>' alt="Selection image"/>
+                </div>
 
-                            <div class="single-stat"><?= $name; ?> : <span> <?= $value; ?> </span></div>
+                <!-- STATS -->
+                <div class="character-stats">
+                    <?php
 
-                        <?php } ?>
-                    </div>
+                    #Foreach character extract stats
+                    foreach ($characterController->getCharacterStats($id) as $stat) {
 
+                        #Filter needed values
+                        $name = $sec->Filter($stat['name'], 'String');
+                        $value = $sec->Filter($stat['value'], 'Int');
+                        ?>
+
+                        <div class="single-stat"><?= $name; ?> : <span> <?= $value; ?> </span></div>
+
+                    <?php } ?>
+                </div>
+
+                <form method="POST" class="ChangeCharacterForm">
                     <input type="hidden" name="character_id" value="<?= $id; ?>">
 
                     <?php if (!$selected) { ?>
@@ -76,10 +96,19 @@ $characters = $_POST['characters'];
     }
     ?>
 
-    <div class="character-logout">
-        <a href="/LogoutCharacter" title="Esci dal personaggio corrente">
-            <i class="fas fa-sign-out-alt"></i>
-        </a>
+    <div class="character-extra-option">
+        <ul>
+            <li class="Logout">
+                <a href="/LogoutCharacter" title="Esci dal personaggio corrente">
+                    <i class="fas fa-sign-out-alt"></i>
+                </a>
+            </li>
+            <li class="Favorite">
+                <a href="/LeaveFavorite" title="Deseleziona preferito">
+                    <i class="fas fa-heart-broken"></i>
+                </a>
+            </li>
+        </ul>
     </div>
 
     <script src="assets/JS/Card/ChangeCharacter.js"></script>

@@ -23,14 +23,6 @@ if (!$router->is_ajax()) {
     require(ROOT . 'public/header/header.php');
 }
 
-#Routing
-
-/**! GET
- * ! All get parameter need to be passed by syntax : "/data?key=val&key=val&key=val";
- * ! Root syntax for passing parameter is: "/?key=val&key=val&key=val";
- * ! All parameter in $args var, in the callback, are associated like: ['key'=>'val','key'=>'val']
- * !*/
-
 #Root switch
 $router->get('/', function ($args) {
 
@@ -52,6 +44,17 @@ $router->get('/', function ($args) {
 
 });
 
+/* ------------------ GET --------------------- */
+/**! GET
+ * ! All get parameter need to be passed by syntax : "/data?key=val&key=val&key=val";
+ * ! Root syntax for passing parameter is: "/?key=val&key=val&key=val";
+ * ! All parameter in $args var, in the callback, are associated like: ['key'=>'val','key'=>'val']
+ * !*/
+
+
+/*********************************
+ **** HOMEPAGE
+ **********************************/
 #Signin view
 $router->get('/Signin', function ($args) {
 
@@ -85,6 +88,9 @@ $router->get('/UsernameRecovery', function ($args) {
 
 });
 
+/*********************************
+ **** CHANGE CHARACTER
+ **********************************/
 #ChangeCharacter view
 $router->get('/ChangeCharacter', function ($args) {
 
@@ -110,7 +116,20 @@ $router->get('/LogoutCharacter',function($args){
     echo $character->Logout();
 });
 
-#Signin view
+# Leave favorite character
+$router->get('/LeaveFavorite', function ($args) {
+
+    # Init AccountController class
+    $controller = \Controllers\CharacterController::getInstance();
+
+    # Echo response of the recovery password operation
+    echo $controller->LeaveFavorite();
+});
+
+/*********************************
+ **** LOGOUT
+ **********************************/
+#Logout view
 $router->get('/Logout', function ($args) {
 
     #Init needed classes
@@ -121,12 +140,15 @@ $router->get('/Logout', function ($args) {
     $tpl->Render('Logout', ['response'=>$session->destroy()]);
 });
 
+/* ------------------ POST --------------------- */
 /**! POST
- * ! All post parameter are passed only by forms
+ * ! All post parameter are passed only by forms or ajax
  * ! All parameter in $args var, in the callback, are associated like: ['key'=>'val','key'=>'val']
  * !*/
 
-
+/*********************************
+ **** HOMEPAGE
+ **********************************/
 #Login
 $router->post('/login', function ($args) {
 
@@ -148,7 +170,6 @@ $router->post('/Signin', function ($args) {
     echo $signin->AccountRegistration($args);
 
 });
-
 
 #Password Recovery operation
 $router->post('/PasswordRecovery', function ($args) {
@@ -172,16 +193,32 @@ $router->post('/UsernameRecovery', function ($args) {
 
 });
 
+/*********************************
+ **** CHANGE CHARACTER
+ **********************************/
 # Change character
 $router->post('/ChangeCharacter', function ($args) {
 
     #Init AccountController class
     $controller = \Controllers\CharacterController::getInstance();
 
-    #Echo response of the recovery password operation
+    #Echo response of the character change
     echo $controller->ChangeCharacter($args['character_id']);
 
 });
+
+# Set favorite character
+$router->post('/SetFavoriteCharacter', function ($args) {
+
+    #Init AccountController class
+    $controller = \Controllers\CharacterController::getInstance();
+
+    #Echo response of the favorite set
+    echo $controller->SetFavorite($args['character']);
+
+});
+
+/* ---------------------------------------- */
 
 #Import site footer
 if (!$router->is_ajax()) {

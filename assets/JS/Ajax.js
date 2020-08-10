@@ -1,9 +1,4 @@
-function Ajax(selector,action,path,data,success,type = 'get'){
-
-
-    $(selector).on(action,function(e){
-        e.preventDefault();
-
+function Ajax(path,data,success,type = 'get'){
         $.ajax({
             url: path,
             type: type,
@@ -17,8 +12,4 @@ function Ajax(selector,action,path,data,success,type = 'get'){
                 }
             }
         });
-
-    });
-
-
 }

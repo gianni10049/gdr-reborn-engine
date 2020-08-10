@@ -155,6 +155,7 @@ class CharacterController
 
     /**
      * @fn ChangeCharacter
+     * @note Change active character
      * @param int $character
      * @return string
      */
@@ -162,13 +163,9 @@ class CharacterController
     {
         # Filter character id and get account id
         $character = $this->sec->Filter($character,'Int');
-        $account = $this->sec->Filter($this->session->id,'Int');
 
         # If mine account and character account is the same
         if($this->CharacterProperty($character)){
-
-            # Logout other character
-            $this->character->UpdateLogout($account);
 
             # Login in new character
             $this->character->UpdateCharacterLogin($character);
@@ -180,11 +177,98 @@ class CharacterController
         else{
 
             # Set account error response
-            $response = ['type'=>'error','text'=>"Account non di proprietà dell'account."];
+            $response = ['type'=>'error','text'=>"Personaggio non di proprietà dell'account."];
         }
 
         # Return json response
         return json_encode($response);
+
+    }
+
+    /**
+     * @fn SetFavorite
+     * @note Set favorite character
+     * @param int $character
+     * @return string
+     */
+    public function SetFavorite(int $character):string
+    {
+        # Filter character id and get account id
+        $character = $this->sec->Filter($character,'Int');
+
+        # If mine account and character account is the same
+        if($this->CharacterProperty($character)){
+            if($this->CharacterExistence($character)) {
+
+                # Set new Favorite
+                $this->character->UpdateFavorite($character);
+
+                # Set success response
+                $response = ['type' => 'success', 'text' => 'Personaggio impostato come preferito'];
+            }
+            else{
+
+                # Set account error response
+                $response = ['type'=>'error','text'=>"Personaggio non esistente."];
+            }
+
+        } # Else accounts don't are the sames
+        else{
+
+            # Set account error response
+            $response = ['type'=>'error','text'=>"Personaggio non di proprietà dell'account."];
+        }
+
+        # Return json response
+        return json_encode($response);
+
+    }
+
+    /**
+     * @fn LeaveFavorite
+     * @note Leave favorites character
+     * @return string
+     */
+    public function LeaveFavorite(){
+
+        # Leave favorite character
+        $this->character->LeaveFavorite();
+
+        # Set success response
+        $response = ['type' => 'success', 'text' => 'Preferiti disattivati'];
+
+        # Return json response
+        return json_encode($response);
+    }
+
+    /**
+     * @fn LeaveFavorite
+     * @note Leave favorites character
+     * @param int $account
+     */
+    public function LoginFavorite(int $account):void
+    {
+        # Filter passed data
+        $account= $this->sec->Filter($account,'num');
+
+        # Get id of the favorite character
+        $favorite = $this->character->getFavorite($account);
+
+        # If favorite is set
+        if(!is_null($favorite)) {
+
+            # Control if the character is of the property of the account
+            if ($this->CharacterProperty($favorite)) {
+
+                # Set favorite character like active character
+                $this->session->character = $favorite;
+            }
+        } # Else is not set
+        else{
+
+            # Set character null
+            $this->session->character= NULL;
+        }
 
     }
 

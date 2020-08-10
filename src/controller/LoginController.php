@@ -4,6 +4,7 @@ namespace Controllers;
 
 use Libraries\Request,
     Libraries\Security,
+    Controllers\CharacterController,
     Models\Login,
     Models\Config,
     Models\Account;
@@ -50,6 +51,7 @@ class LoginController
         $this->login_model = Login::getInstance();
         $this->config = Config::getInstance();
         $this->account = AccountController::getInstance();
+        $this->character = CharacterController::getInstance();
     }
 
 
@@ -108,11 +110,14 @@ class LoginController
                 }
 
                 #Insert needed parameters for login
-                $session->id = $user['id'];
+                $session->id = $this->security->Filter($user['id'],'Int');
 
                 #Generate fingerprint and update the account last activity
                 $this->account->RegenerateFingerprint($session->id);
                 $this->account->CreateLastActive();
+
+                # Set favorite character
+                $this->character->LoginFavorite($session->id);
 
                 #Return true
                 return LOGIN_SUCCESS;
