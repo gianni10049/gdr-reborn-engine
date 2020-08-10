@@ -160,9 +160,8 @@ class CharacterController
      */
     public function ChangeCharacter(int $character):string
     {
-
         # Filter character id and get account id
-        $id = $this->sec->Filter($character,'Int');
+        $character = $this->sec->Filter($character,'Int');
         $account = $this->sec->Filter($this->session->id,'Int');
 
         # If mine account and character account is the same
