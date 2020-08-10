@@ -29,7 +29,7 @@ $characters = $_POST['characters'];
         $favorite = $sec->Filter($character['favorite'], 'Bool');
 
         # Know if the character is selected
-        $selected = ($mineChar === $id);
+        $selected = ($mineChar == $id);
 
         # If character exist and owner is the account of the player
         if ($characterController->CharacterExistence($id) && $characterController->CharacterProperty($id)) {
