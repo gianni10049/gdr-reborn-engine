@@ -158,6 +158,65 @@ class Router
     }
 
     /**
+     * @fn addRoutes
+     * @note Get all php files whit routes in folder and sub-folders
+     * @return void
+     */
+    public function addRoutes($routes_folder)
+    {
+        # Start container array for all routes
+        $alldirs= [];
+
+        # If folder exist and is correct
+        if(is_dir($routes_folder)){
+
+            # Extract all sub-folders and files in the folder
+            $files = glob( "{$routes_folder}/*" ); //GLOB_MARK adds a slash to directories returned
+
+            # Foreach extracted path
+            foreach( $files as $file )
+            {
+                # Get dir extension
+                $extention= pathinfo($file,PATHINFO_EXTENSION );
+
+                # If is a php file
+                if($extention == 'php'){
+
+                    # Add the path to the general paths array
+                    array_push($alldirs,$file);
+                }
+                else{
+
+                    # Scan sub-folder and repeat process
+                    $this->addRoutes( $file );
+                }
+            }
+        }
+
+        # Foreach extracted dir
+        foreach ($alldirs as $dir){
+
+            # Include extracted dir
+            require($dir);
+        }
+    }
+
+    function scanDir($target) {
+
+        if(is_dir($target)){
+
+            $files = glob( $target . '*', GLOB_MARK ); //GLOB_MARK adds a slash to directories returned
+
+            foreach( $files as $file )
+            {
+                $this->scanDir( $file );
+            }
+
+
+        }
+    }
+
+    /**
      * @fn __destruct
      * @note Get route and passed data
      * @return void
@@ -166,5 +225,6 @@ class Router
     {
         $this->resolve();
     }
+
 
 }

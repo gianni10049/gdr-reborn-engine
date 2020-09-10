@@ -223,7 +223,7 @@ class Character
      * @param int $account
      * @return int
      */
-    public function getFavorite(int $account):int
+    public function getFavorite(int $account)
     {
 
         # Filter passed data
