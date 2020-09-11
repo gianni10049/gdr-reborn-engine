@@ -1,12 +1,12 @@
 
-.change-character-box{
+.change-character-box {
   width: calc(100% - 40px);
   height: calc(100% - 40px);
   padding: 20px;
   overflow: auto;
   position: relative;
 
-  .single-character{
+  .single-character {
     width: calc(33% - 20px);
     height: 580px;
     min-width: 200px;
@@ -18,38 +18,38 @@
     text-align: center;
     position: relative;
 
-    .character-name{
+    .character-name {
       text-align: center;
       width: 100%;
-      color:crimson;
+      color: crimson;
       height: 30px;
       line-height: 30px;
       margin-bottom: 10px;
     }
 
-    .character-favorite{
+    .character-favorite {
       position: absolute;
       top: 30px;
       right: 30px;
       cursor: pointer;
 
-      button{
+      button {
         background: crimson;
         color: black;
         border-radius: 5px;
-        border:none;
+        border: none;
         cursor: pointer;
         outline: none;
       }
 
     }
 
-    .character-image{
+    .character-image {
       text-align: center;
       width: 100%;
       height: 400px;
 
-      img{
+      img {
         display: block;
         margin: 0 auto;
         width: 200px;
@@ -58,7 +58,7 @@
     }
 
 
-    .character-stats{
+    .character-stats {
       height: 100px;
       margin-top: 10px;
       width: 100%;
@@ -66,20 +66,204 @@
     }
   }
 
-  .character-extra-option{
+  .character-extra-option {
     position: absolute;
     top: 10px;
     right: 10px;
 
-    ul{
+    ul {
       list-style: none;
       padding: 0;
       margin: 0;
 
-      li{
+      li {
         margin-bottom: 10px;
       }
     }
+
+  }
+
+}
+
+#card-container {
+  height: 100%;
+  width: 100%;
+
+  .internal-container {
+    width: 800px;
+    height: 450px;
+    margin: 30px auto;
+    background: ghostwhite;
+    position: relative;
+    border-radius: 5px;
+    overflow: hidden;
+
+    .card-menu-container {
+      height: 30px;
+      border-bottom: 2px solid black;
+
+      .card-menu {
+        width: 100%;
+        margin: 0;
+        height: 15px;
+        list-style: none;
+        text-align: center;
+        color: black;
+        padding: 8px 0;
+        display: flex;
+        justify-content: center;
+        white-space: nowrap;
+        line-height: 15px;
+
+
+        li {
+          float: left;
+          padding: 0 10px;
+          border-right: 1px solid black;
+          font-family: Tahoma, sans-serif;
+          color: rgba(0, 0, 0, 0.8);
+
+          span{
+            cursor: pointer;
+
+            &:hover{
+              color:crimson;
+            }
+          }
+
+          &:last-child {
+            border-right: none;
+          }
+        }
+      }
+    }
+
+    .main-card {
+      height: calc(100% - 32px);
+      width: 100%;
+
+      .card-pic {
+        float: left;
+        height: 100%;
+        width: 300px;
+        background: crimson;
+
+        img {
+          object-fit: cover;
+          width: 100%;
+          height: 100%;
+          margin-top: -1px;
+        }
+      }
+
+      .card-info {
+        width: calc(100% - 300px);
+        height: 100%;
+        background: ghostwhite;
+        float: right;
+
+        .card-info-internal {
+          width: 80%;
+          height: 50%;
+          margin: 103px auto;
+          text-align: center;
+          color: black;
+
+          .card-info-name {
+            display: block;
+            font-size: 2em;
+            margin-top: 0.17em;
+            margin-bottom: 0.17em;
+            margin-left: 0;
+            margin-right: 0;
+            font-weight: bold;
+            font-family: Tahoma, sans-serif;
+          }
+
+          .card-info-title {
+            display: block;
+            margin-top: 0em;
+            margin-bottom: 0.17em;
+            margin-left: 0;
+            margin-right: 0;
+            font-weight: bold;
+          }
+
+          .card-info-data {
+
+            .card-info-data-table {
+              float: left;
+              width: calc(50% - 20px);
+              margin: 10px 10px;
+              text-align: center;
+
+              table {
+                width: 100%;
+                background-color: #fff;
+                border-radius: 5px;
+                border:1px solid black;
+
+                tr {
+
+                  td {
+                    font-family: Tahoma;
+                    font-size: 15px;
+                    color: rgba(0,0,0,1);
+                    line-height: 1.4;
+                    width: 50%;
+                    font-weight: unset;
+                    padding: 3px 6px;
+                    text-align: center;
+
+                    &:hover {
+                      background-color: #57b846;
+                      color: #fff;
+                    }
+                  }
+
+                  &:hover td {
+                    background-color: crimson;
+                    color: #fff;
+                  }
+
+                }
+
+                tbody tr:nth-child(even) {
+                  background-color: lightgrey;
+                }
+
+                .hov-column-ver2 {
+                  background-color: #83d160;
+                  color: #fff;
+                }
+
+                .hov-column-head-ver2 {
+                  background-color: #484848 !important;
+                }
+              }
+            }
+          }
+        }
+      }
+
+      .card-info:before {
+        content: " ";
+        position: absolute;
+        display: block;
+        width: 65px;
+        height: 100%;
+        margin: -1px 0 0 -63px;
+        z-index: 3;
+        -webkit-transform-origin: bottom left;
+        -ms-transform-origin: bottom left;
+        transform-origin: bottom left;
+        -ms-transform: skew(-30deg, 0deg);
+        -webkit-transform: skew(-30deg, 0deg);
+        transform: skew(-8deg, 0deg);
+        background: ghostwhite;
+      }
+    }
+
 
   }
 

@@ -63,6 +63,16 @@ class CharacterController
     }
 
     /**
+     * @fn CharacterConnected
+     * @note Control if a character is connected to the session
+     */
+    public function CharacterConnected(){
+
+        # If character is connected and id is setted
+        return ($this->session->character !== false);
+    }
+
+    /**
      * @fn CharacterExistence
      * @note Call model existence control of the character
      * @param int $character

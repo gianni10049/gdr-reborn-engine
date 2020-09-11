@@ -11,14 +11,16 @@
             </div>
             <div class="submenu svg-submenu">
                 <div class="list-group-item">
-                    <div class="SubmenuItem" id="Scheda" data-id='<?= $pg; ?>'>
-                        <div class="MenuImg">
-                            <i class="fas fa-id-card"></i>
+                    <a href="/Card-Main" class="container_central">
+                        <div class="SubmenuItem" id="Scheda">
+                            <div class="MenuImg">
+                                <i class="fas fa-id-card"></i>
+                            </div>
+                            <div class="SubmenuText">
+                                Scheda PG
+                            </div>
                         </div>
-                        <div class="SubmenuText">
-                            Scheda PG
-                        </div>
-                    </div>
+                    </a>
                 </div>
 
                 <div class="list-group-item">
