@@ -6,7 +6,8 @@ use Controllers\CharacterController;
 $cardController = CardController::getInstance();
 $charController= CharacterController::getInstance();
 
-$character= $cardController->getCharacterCardId($_POST['character']);
+$character= $cardController->getCharacterCardId($_GET['character']);
+
 
 ?>
 
@@ -16,11 +17,10 @@ $character= $cardController->getCharacterCardId($_POST['character']);
     <div class="internal-container">
         <?php  require(VIEWS.'/Card/Pages/Card-Menu.php'); ?>
 
-
         <div class="content-container">
              <?php require(VIEWS.'/Card/Pages/Card-Main.php'); ?>
         </div>
-
-        <input type="hidden" id="PGID" data-character="<?=$character;?>">
     </div>
+
+    <script src="/assets/JS/Card/Card-Container.js"></script>
 </div>

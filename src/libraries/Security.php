@@ -152,7 +152,7 @@ class Security
 
             #Type Int (1,2,3)
             case 'Int':
-                $data = filter_var($data, FILTER_SANITIZE_NUMBER_INT);
+                $data = (int)filter_var($data, FILTER_SANITIZE_NUMBER_INT);
                 break;
 
             #Type Float (0.1,0.2,0.3)

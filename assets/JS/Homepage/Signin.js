@@ -1,7 +1,7 @@
 $(function(){
 
     /* Login form send */
-    Form('#Signin #SigninForm','/Signin',SigninSuccess);
+    Form('#Signin #SigninForm','/HomepageOperations',SigninSuccess);
 
     /* Hyperlinks href in js */
     Hyperlink('#Signin a','body');

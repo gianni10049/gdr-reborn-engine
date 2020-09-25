@@ -1,5 +1,6 @@
 <?php
 
+
 # Call needed classes
 use Controllers\CharacterController;
 use Controllers\SessionController;
@@ -9,9 +10,10 @@ use Libraries\Security;
 $sec = Security::getInstance();
 $mineChar = SessionController::getInstance()->character;
 $characterController = CharacterController::getInstance();
+$charlist= $characterController->CharactersList();
 
 # Get passed characters array
-$characters = $_POST['characters'];
+$characters = $charlist;
 ?>
 
 <div class="change-character-box">
@@ -23,7 +25,7 @@ $characters = $_POST['characters'];
     foreach ($characters as $character) {
 
         # Filter needed vars
-        $id = (int)$sec->Filter($character['id'], 'Int');
+        $id = $sec->Filter($character['id'], 'Int');
         $name = $sec->Filter($character['name'], 'String');
         $img = $sec->Filter($character['select_image'], 'Url');
         $favorite = $sec->Filter($character['favorite'], 'Bool');
@@ -49,6 +51,7 @@ $characters = $_POST['characters'];
                 <div class="character-favorite">
                     <form method="post" class="character-favorite-form">
                         <input type="hidden" name="character" value="<?= $id; ?>">
+                        <input type="hidden" name="operation" value="SetFavorite">
                         <button type="submit">
                             <?php if ($favorite) { ?>
                                 <i class="fas fa-heart" title="Preferito"></i>
@@ -69,7 +72,7 @@ $characters = $_POST['characters'];
                     <?php
 
                     #Foreach character extract stats
-                    foreach ($characterController->getCharacterStats($id) as $stat) {
+                    foreach ($characterController->getCharacterStats($character) as $stat) {
 
                         #Filter needed values
                         $name = $sec->Filter($stat['name'], 'String');
@@ -83,6 +86,7 @@ $characters = $_POST['characters'];
 
                 <form method="POST" class="ChangeCharacterForm">
                     <input type="hidden" name="character_id" value="<?= $id; ?>">
+                    <input type="hidden" name="operation" value="ChangeCharacter">
 
                     <?php if (!$selected) { ?>
                         <input type="submit" value="Scegli">

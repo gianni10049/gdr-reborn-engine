@@ -5,6 +5,7 @@
         <label for="email">Email</label>
         <input type="text" name="email" id="email">
 
+        <input type="hidden" name="operation" value="UsernameRecovery">
         <input type="submit" value="Richiedi">
 
     </form>

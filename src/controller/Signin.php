@@ -153,7 +153,7 @@ class Signin
      */
     public function ManageError($response)
     {
-        switch ((int)$response) {
+        switch ($this->security->Filter($response,'Int')) {
 
             #Case success
             case (int)REGISTRATION_SUCCESS:

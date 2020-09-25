@@ -14,6 +14,7 @@
         <label for="password_verification">Conferma Password</label>
         <input type="password" name="password_verification" id="password_verification">
 
+        <input type="hidden" name="operation" value="Signin">
         <input type="submit" value="Registrati">
     </form>
 

@@ -2,7 +2,7 @@
 
 namespace Libraries;
 
-use Libraries\Security;
+use Database\DB;
 
 /**
  * @class Request
@@ -33,9 +33,11 @@ class Request
     /**
      * Init vars PRIVATE
      * @var Security $sec
+     * @var DB $db
      */
     private
-        $sec;
+        $sec,
+        $db;
 
     /**
      * @fn __construct
@@ -45,7 +47,8 @@ class Request
     private function __construct()
     {
         #Init needed classes
-        $this->sec= Security::getInstance();
+        $this->sec = Security::getInstance();
+        $this->db = DB::getInstance();
 
         #Fetch server info
         $this->bootstrapSelf();
@@ -74,7 +77,7 @@ class Request
      */
     public function getProtocol(): string
     {
-        return $this->sec->Filter(strtolower($this->serverProtocol),'String');
+        return $this->sec->Filter(strtolower($this->serverProtocol), 'String');
     }
 
     /**
@@ -102,7 +105,7 @@ class Request
             $ipaddress = '127.0.0.1';
         }
 
-        return $this->sec->Filter($ipaddress,'String');
+        return $this->sec->Filter($ipaddress, 'String');
     }
 
     /**
@@ -110,9 +113,9 @@ class Request
      * @note Get User Agent Client
      * @return string|void
      */
-    public function getUserAgent():string
+    public function getUserAgent(): string
     {
-        return isset($this->httpUserAgent) ? $this->sec->Filter($this->httpUserAgent,'String') : '';
+        return isset($this->httpUserAgent) ? $this->sec->Filter($this->httpUserAgent, 'String') : '';
     }
 
     /**
@@ -122,7 +125,7 @@ class Request
      */
     public function getMethod(): string
     {
-        return $this->sec->Filter(strtolower($this->requestMethod),'String');
+        return $this->sec->Filter(strtolower($this->requestMethod), 'String');
     }
 
     /**
@@ -132,7 +135,7 @@ class Request
      */
     public function getURI(): string
     {
-        return $this->sec->Filter(strtolower($this->requestUri),'String');
+        return $this->sec->Filter(strtolower($this->requestUri), 'String');
     }
 
     /**
@@ -141,7 +144,7 @@ class Request
      * @param string $header
      * @return mixed
      */
-    public function getHeader(string $header):string
+    public function getHeader(string $header): string
     {
         $headers = getallheaders();
 
@@ -156,7 +159,7 @@ class Request
     public function getLang(): string
     {
         #Return filtered HTTP_ACCEPT_LANGUAGE
-        return $this->sec->Filter(strtolower($this->httpAcceptLanguage),'String');
+        return $this->sec->Filter(strtolower($this->httpAcceptLanguage), 'String');
     }
 
     /**
@@ -166,12 +169,12 @@ class Request
      */
     private function bootstrapSelf()
     {
-        $sec= $this->sec;
+        $sec = $this->sec;
 
         #Foreach server info
         foreach ($_SERVER as $key => $value) {
             #Create a param
-            $this->{$this->toCamelCase($key)} = $sec->Filter($value,'String');
+            $this->{$this->toCamelCase($key)} = $sec->Filter($value, 'String');
         }
     }
 
@@ -180,7 +183,7 @@ class Request
      * @param string $string
      * @return string
      */
-    private function toCamelCase(string $string):string
+    private function toCamelCase(string $string): string
     {
         #Lower the string
         $result = strtolower($string);
@@ -206,7 +209,7 @@ class Request
      * @note Take parameters passed by get request
      * @return array
      */
-    private function getArgs():array
+    private function getArgs(): array
     {
 
         $url = $this->getURI();
@@ -214,6 +217,7 @@ class Request
 
         //Split data from base url
         $data = explode('?', $url);
+
 
         //If parameters exist
         if (!empty($data[1])) {
@@ -235,12 +239,10 @@ class Request
                 $args[$key] = $val;
 
             }
-
-            //Return array with parameters
-            return $args;
-        } else {
-            return [];
         }
+
+        # Return values
+        return $args;
     }
 
     /**
@@ -248,7 +250,7 @@ class Request
      * @note Take parameters passed by post request
      * @return array
      */
-    private function postArgs():array
+    private function postArgs(): array
     {
         #Init void array
         $args = array();
@@ -258,23 +260,56 @@ class Request
             $args[$key] = $this->sec->Filter($value, 'Convert');
         }
 
+
         #Return parameters array
         return $args;
     }
 
     /**
+     * @fn getPage
+     * @note Get page whit that alias
+     * @param $url string
+     * @return int|mixed|string
+     */
+    public function getPage(string $url): string
+    {
+        # Filter passed url
+        $url = $this->sec->Filter($url, 'String');
+
+        # Get file for that alias
+        $data = $this->db->Select('file', 'routes', "alias='{$url}' AND active='1' LIMIT 1")->Fetch();
+
+        # Filter path of the alias
+        $path = $this->sec->Filter($data['file'], 'String');
+
+        # Return result
+        return $path;
+    }
+
+    /**
      * @fn getBody
      * @note Fetch types of request method for get right parameters
+     * @param $route string
      * @return array
      */
-    public function getBody():array
+    public function getBody(string $route): array
     {
+
+        # Get arguments or abort
         if ($this->requestMethod === "GET") {
-            return $this->getArgs();
+            $args = $this->getArgs();
         } else if ($this->requestMethod == "POST") {
-            return $this->postArgs();
+            $args = $this->postArgs();
         } else {
             die('Method not allowed.');
         }
+
+        # Get page name
+        $args['Page'] = $this->getPage($route);
+
+        # Return arguments and page name
+        return $args;
+
+
     }
 }

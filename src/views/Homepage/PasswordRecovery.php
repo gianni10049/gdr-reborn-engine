@@ -8,6 +8,7 @@
         <label for="email">Email</label>
         <input type="text" name="email" id="email">
 
+        <input type="hidden" name="operation" value="PasswordRecovery">
         <input type="submit" value="Richiedi">
 
     </form>

@@ -1,7 +1,7 @@
 $(function(){
 
     /* Login form send */
-    Form('#PasswordRecovery #PasswordRecoveryForm','/PasswordRecovery',PasswordRecoverySuccess);
+    Form('#PasswordRecovery #PasswordRecoveryForm','/HomepageOperations',PasswordRecoverySuccess);
 
     /* Hyperlinks href in js */
     Hyperlink('#PasswordRecovery a','body');

@@ -61,14 +61,13 @@ class Template
     /**
      * @fn Render
      * @note Render view
-     * @param string $view
      * @param array $variables
      * @return bool|string
      */
-    function Render(string $view, array $variables = [])
+    function Render( array $variables = [])
     {
         #Find template
-        $template = $this->FindTemplate($view);
+        $template = $this->FindTemplate($variables['Page']);
 
         #If template exist render template else return false
         echo ($template !== false) ? $this->RenderTemplate($template, $variables) : false;

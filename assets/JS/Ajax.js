@@ -5,10 +5,10 @@ function Ajax(path,data,success,type = 'get'){
             data: data,
             contentType: false,
             processData: false,
-            success: function (data) {
+            success: function (response) {
 
                 if(success != false) {
-                    success(data);
+                    success(response);
                 }
             }
         });

@@ -1,7 +1,7 @@
 $(function(){
 
     /* Login form send */
-    Form('#UsernameRecovery #UsernameRecoveryForm','/UsernameRecovery',UsernameRecoverySuccess);
+    Form('#UsernameRecovery #UsernameRecoveryForm','/HomepageOperations',UsernameRecoverySuccess);
 
     /* Hyperlinks href in js */
     Hyperlink('#UsernameRecovery a','body');

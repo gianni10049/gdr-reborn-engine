@@ -11,6 +11,7 @@
 
             <label for="password">Password</label><br>
             <input type="password" name="pass" id="password"><br>
+            <input type="hidden" name="operation" value="Login">
 
             <input type="submit" value="Entra">
 

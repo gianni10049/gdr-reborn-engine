@@ -1,22 +1,22 @@
 $(function(){
 
     /* Form for change character */
-    Form('.ChangeCharacterForm','/ChangeCharacter',OperationResponse);
+    Form('.ChangeCharacterForm','/ChangeCharacterOperation',OperationResponse);
 
     /* Form for favorite character */
-    Form('.character-favorite-form','/SetFavoriteCharacter',OperationResponse);
+    Form('.character-favorite-form','/ChangeCharacterOperation',OperationResponse);
 
     /* Ajax for logout character */
     $('.content-box .change-character-box .character-extra-option li.Logout a').on('click',function(e) {
         e.preventDefault();
 
-        Ajax('/LogoutCharacter', {}, OperationResponse, 'get');
+        Ajax('/ChangeCharacterOperation', {'operation':'LogoutCharacter'}, OperationResponse, 'post');
     });
 
     $('.content-box .change-character-box .character-extra-option li.Favorite a').on('click',function(e) {
         e.preventDefault();
 
-        Ajax('/LeaveFavorite', {}, OperationResponse, 'get');
+        Ajax('/ChangeCharacterOperation', {'operation':'LeaveFavorite'}, OperationResponse, 'post');
     });
 
 

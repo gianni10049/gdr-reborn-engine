@@ -62,7 +62,9 @@ class CardController{
     }
 
     public function getCharacterCardId($character){
-        return ( !is_null($character) && ( $this->char->CharacterExistence($character) ) ) ? $character : $this->session->character;
+        $val= ( !is_null($character) && ( $this->char->CharacterExistence($character) ) ) ? $character : $this->session->character;
+
+        return $this->sec->Filter($val,'Int');
     }
 
 }
