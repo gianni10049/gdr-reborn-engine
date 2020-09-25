@@ -144,6 +144,38 @@ CREATE TABLE IF NOT EXISTS `login_invalid` (
 
 -- --------------------------------------------------------
 
+
+--
+-- Struttura della tabella `routes`
+--
+
+CREATE TABLE IF NOT EXISTS `routes` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `modulo` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `file` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `alias` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `active` tinyint(1) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=21 ;
+
+--
+-- Dump dei dati per la tabella `routes`
+--
+
+INSERT INTO `routes` (`id`, `modulo`, `file`, `alias`, `active`) VALUES
+(19, 'Lobby', 'Lobby', '/Lobby', 1),
+(2, 'Scheda', 'Card/Card-Container', '/Card-Main', 1),
+(3, 'Scheda', 'Card/Pages/Card-Background', '/Card-Background', 1),
+(4, 'Logout', 'Logout', '/Logout', 1),
+(5, 'Homepage', 'Homepage/Visual', '/Homepage', 1),
+(7, 'Homepage', 'Homepage/Signin', '/Signin', 1),
+(8, 'Homepage', 'Homepage/PasswordRecovery', '/PasswordRecovery', 1),
+(9, 'Homepage', 'Homepage/UsernameRecovery', '/UsernameRecovery', 1),
+(20, 'Homepage', 'Homepage/Operations\r\n', '/HomepageOperations', 1),
+(14, 'ChangeCharacter', 'ChangeCharacter/Visual', '/ChangeCharacter', 1),
+(16, 'ChangeCharacter', 'ChangeCharacter/Operations', '/ChangeCharacterOperation', 1);
+
+-- --------------------------------------------------------
 --
 -- Struttura della tabella `stats_list`
 --
