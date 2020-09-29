@@ -4,6 +4,7 @@ namespace Libraries;
 
 use Libraries\Security;
 use Libraries\Enviroment;
+use Database\DB;
 
 /**
  * @class Template
@@ -25,7 +26,8 @@ class Template
      */
     private
         $sec,
-        $env;
+        $env,
+        $db;
 
     /**
      * @fn __construct
@@ -38,6 +40,7 @@ class Template
         #Init needed classes
         $this->sec = Security::getInstance();
         $this->env = Enviroment::getInstance();
+        $this->db = DB::getInstance();
 
         #If folder is specified set folder, else set default folder for views
         (!is_null($folder)) ? $this->SetFolder($folder) : $this->folder = $this->sec->Filter(VIEWS, 'String');
@@ -64,7 +67,7 @@ class Template
      * @param array $variables
      * @return bool|string
      */
-    function Render( array $variables = [])
+    public function Render( array $variables = [])
     {
         #Find template
         $template = $this->FindTemplate($variables['Page']);
@@ -78,7 +81,7 @@ class Template
      * @param string $path
      * @return string
      */
-    function FindTemplate(string $path): string
+    public function FindTemplate(string $path): string
     {
         #Create path to file
         $file = "{$this->folder}{$path}.php";
@@ -93,7 +96,7 @@ class Template
      * @var string $template
      * @var array $vars
      */
-    function RenderTemplate(string $template, array $vars): string
+    public function RenderTemplate(string $template, array $vars): string
     {
         #Start output
         ob_start();
@@ -112,5 +115,74 @@ class Template
 
         #Return output for echo
         return ob_get_clean();
+    }
+
+    public function MenuList($type){
+
+        $type= $this->sec->Filter($type,'String');
+
+        return $this->db->Select('*','menu',"active='1' AND box='{$type}' AND father_id='0'")->FetchArray();
+    }
+
+    public function SubMenuList($father){
+
+        $father= $this->sec->Filter($father,'String');
+
+        return $this->db->Select('*','menu',"active='1' AND father_id='{$father}'")->FetchArray();
+    }
+
+    public function GetContainerForLinks($type){
+
+        $type = $this->sec->Filter($type,'String');
+
+        switch ($type){
+            case 'central':
+                $val = 'container_central';
+                break;
+            case 'body':
+                $val = 'container_body';
+                break;
+            case 'card-complete':
+                $val = 'complete';
+                break;
+            case 'card-internal':
+                $val = 'internal';
+                break;
+        }
+;
+        return $this->sec->Filter($val,'String');
+    }
+
+    function SetParam($array)
+    {
+
+        #  $array = ['character' => 2, 'page' => 'prova.php', 'testo' => 'titolo a caso'];
+
+        $input = '{"character":"character_id","page":"page_id","text":"text_id"}'; #Extracted from DB
+
+        $data = (array)json_decode($input);
+
+        foreach ($array as $index => $value) {
+            $data[$index] = $value;
+        }
+
+        return $data;
+    }
+
+    function modifyParam($input){
+        # $input = (string)'character,page,text';
+
+        $data = explode(',', $input);
+
+        $array_data = [];
+
+        foreach ($data as $sub_data) {
+            $val = $sub_data . '_id';
+            $array_data[$sub_data] = $val;
+        }
+
+        $res = json_encode($array_data);
+
+        return $res;
     }
 }
