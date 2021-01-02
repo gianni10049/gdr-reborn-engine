@@ -12,5 +12,5 @@
 
     <a href="/">Indietro</a>
 
-    <script src="/assets/JS/Homepage/UsernameRecovery.js"></script>
+    <script src="<?= \Libraries\Security::getInstance()->NoChace('/assets/JS/Homepage/UsernameRecovery.js');?>"></script>
 </div>

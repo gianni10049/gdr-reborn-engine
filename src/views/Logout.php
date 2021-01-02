@@ -14,4 +14,4 @@ if ($response) { ?>
     </div>
 <?php } ?>
 
-<script src="/assets/JS/Homepage/Logout.js"></script>
+<script src="<?= \Libraries\Security::getInstance()->NoChace('/assets/JS/Homepage/Logout.js');?>"></script>

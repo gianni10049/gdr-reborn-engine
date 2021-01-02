@@ -115,6 +115,6 @@ $characters = $charlist;
         </ul>
     </div>
 
-    <script src="assets/JS/Card/ChangeCharacter.js"></script>
+    <script src="<?=$sec->NoChace('/assets/JS/Card/ChangeCharacter.js');?>"></script>
 
 </div>

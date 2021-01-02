@@ -27,6 +27,6 @@
 
     </div>
 
-    <script src="/assets/JS/Homepage/Homepage.js"></script>
+    <script src="<?= \Libraries\Security::getInstance()->NoChace('/assets/JS/Homepage/Homepage.js');?>"></script>
 
 </div>

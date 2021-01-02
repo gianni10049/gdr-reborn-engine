@@ -20,6 +20,6 @@
 
     <a href="/">Indietro</a>
 
-    <script src="/assets/JS/Homepage/Signin.js"></script>
+    <script src="<?= \Libraries\Security::getInstance()->NoChace('/assets/JS/Homepage/Signin.js');?>"></script>
 
 </div>

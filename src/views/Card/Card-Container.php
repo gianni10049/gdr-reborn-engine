@@ -2,9 +2,11 @@
 
 use Controllers\CardController;
 use Controllers\CharacterController;
+use Libraries\Security;
 
 $cardController = CardController::getInstance();
 $charController= CharacterController::getInstance();
+$sec = Security::getInstance();
 
 $character= $cardController->getCharacterCardId($_GET['character']);
 
@@ -22,5 +24,5 @@ $character= $cardController->getCharacterCardId($_GET['character']);
         </div>
     </div>
 
-    <script src="/assets/JS/Card/Card-Container.js"></script>
+    <script src="<?=$sec->NoChace('/assets/JS/Card/Card-Container.js');?>"></script>
 </div>
