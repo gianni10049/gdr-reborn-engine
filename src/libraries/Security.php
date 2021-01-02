@@ -414,4 +414,47 @@ class Security
         #If is the same and not is null return true, else return false
         return ($string === $confstr) && (!is_null($string));
     }
+
+    /**
+     * @fn LocalTime
+     * @param string $date
+     * @param string $format
+     * @return string
+     */
+    public function LocalTime(string $date,string $format = 'H:i d/m/Y'):string
+    {
+        #Pars Passed data
+        $date= $this->Filter($date,'String');
+
+        #Format data in local time
+        $formatted = date( $format,strtotime($date));
+
+        #Return formatted result
+        return $this->Filter($formatted,'String');
+    }
+
+    /**
+     * @fn TimeComparison
+     * @param string $date
+     * @param string $comparison
+     * @param string $operation
+     * @return bool
+     */
+    public function TimeComparison(string $date,string $comparison,string $operation):bool
+    {
+        #Convert the dates
+        $date = strtotime($date);
+        $comparison = strtotime($comparison);
+
+        #Switch required operation and return bool result
+        switch ($operation){
+            case '>':
+                return ($date > $comparison);
+            case '<':
+                return ($date < $comparison);
+            case '=':
+                return ($date = $comparison);
+    }
+
+    }
 }
