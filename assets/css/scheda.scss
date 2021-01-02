@@ -88,6 +88,7 @@
 #card-container {
   height: 100%;
   width: 100%;
+  user-select: none;
 
   .internal-container {
     width: 800px;
@@ -289,6 +290,110 @@
         color: black;
         box-sizing: border-box;
         padding: 5px;
+      }
+
+      .parts-card{
+        width: 100%;
+        height: 100%;
+        color: black;
+        box-sizing: border-box;
+        padding: 5px;
+
+        .single-part{
+
+          width: 100%;
+          border:1px solid black;
+          margin: 5px 0;
+          box-sizing: border-box;
+          padding: 3px 5px;
+          text-align: center;
+
+          .single-part-internal{
+            display: inline-block;
+            vertical-align: middle;
+            width: calc( (100% / 3.1) - 1px);
+            box-sizing: border-box;
+            border-right: 1px solid black;
+
+            &.single-part-internal-name:hover{
+              cursor: pointer;
+              color:crimson;
+            }
+
+            &:last-child{
+              border: 0;
+            }
+          }
+
+        }
+      }
+
+      .part-data-card{
+        width: 100%;
+        height: 100%;
+        color: black;
+        box-sizing: border-box;
+        padding: 5px;
+
+        .single-damage{
+          position: relative;
+          width: calc( (100% / 3.1) - 1px);
+          border:1px solid black;
+          margin: 5px 0;
+          box-sizing: border-box;
+          padding: 3px 5px;
+          text-align: center;
+          display: inline-block;
+          vertical-align: top;
+
+          .single-damage-title{
+            font-family: 'Tahoma',sans-serif;
+            font-size: 18px;
+
+            &:hover{
+              cursor: pointer;
+              color:crimson;
+            }
+          }
+
+          .single-damage-body{
+            display: none;
+
+            .single-damage-body-value{
+              margin-top: 3px;
+            }
+
+            .single-damage-body-ending{
+              margin-top: 3px;
+            }
+
+            .single-damage-body-description{
+              padding: 5px;
+              box-sizing: border-box;
+              text-align: left;
+              background: lightgrey;
+              border-radius: 5px;
+              height: 100px;
+              margin: 3px 0 1px 0;
+              overflow: auto;
+
+            }
+          }
+
+          &.active {
+
+            .single-damage-title{
+              border:solid black;
+              border-width: 0 0 1px 0;
+              padding-bottom: 3px;
+            }
+
+            .single-damage-body {
+              display: block;
+            }
+          }
+
+        }
       }
     }
 
