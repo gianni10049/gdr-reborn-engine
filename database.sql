@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Ago 09, 2020 alle 23:50
+-- Generation Time: Gen 02, 2021 alle 03:44
 -- Versione del server: 5.6.33-log
 -- PHP Version: 5.3.10
 
@@ -59,6 +59,25 @@ CREATE TABLE IF NOT EXISTS `characters` (
   `selected` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=13 ;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `characters_parts_damage`
+--
+
+CREATE TABLE IF NOT EXISTS `characters_parts_damage` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `character_id` int(11) NOT NULL,
+    `part` int(11) NOT NULL,
+    `damage` int(11) NOT NULL,
+    `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+    `description` text COLLATE utf8mb4_unicode_ci,
+    `creator` int(11) NOT NULL,
+    `creation` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `ending` date NOT NULL,
+    PRIMARY KEY (`id`)
+    ) ENGINE=MyISAM  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=7 ;
 
 -- --------------------------------------------------------
 
@@ -124,6 +143,36 @@ CREATE TABLE IF NOT EXISTS `layout_options` (
   `value` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=2 ;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `list_parts`
+--
+
+CREATE TABLE IF NOT EXISTS `list_parts` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+    `description` text COLLATE utf8mb4_unicode_ci NOT NULL,
+    `total_hp` int(11) NOT NULL,
+    `active` tinyint(1) NOT NULL DEFAULT '1',
+    `sequence` int(11) NOT NULL,
+    PRIMARY KEY (`id`)
+    ) ENGINE=MyISAM  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=7 ;
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `list_parts_status`
+--
+
+CREATE TABLE IF NOT EXISTS `list_parts_status` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `text` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+    `description` text COLLATE utf8mb4_unicode_ci NOT NULL,
+    `max_hp` int(11) NOT NULL,
+    PRIMARY KEY (`id`)
+    ) ENGINE=MyISAM  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=7 ;
 
 -- --------------------------------------------------------
 
@@ -207,17 +256,6 @@ REPLACE INTO `routes` (`id`, `modulo`, `file`, `alias`, `active`) VALUES
 (16, 'ChangeCharacter', 'ChangeCharacter/Operations', '/ChangeCharacterOperation', 1);
 
 -- --------------------------------------------------------
---
--- Struttura della tabella `stats_list`
---
-
-CREATE TABLE IF NOT EXISTS `stats_list` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `init_min` int(11) NOT NULL,
-  `init_max` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=5 ;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
