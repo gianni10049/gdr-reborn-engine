@@ -31,6 +31,8 @@ class Character
         $sec,
         $session;
 
+    /**** GENERAL ****/
+
     /**
      * @fn getInstance
      * @note Self Instance
@@ -60,6 +62,8 @@ class Character
         $this->db = DB::getInstance();
     }
 
+    /**** GET DATA ****/
+
     /**
      * @fn RetrieveData
      * @note Extract data of the characters table and save in object $data
@@ -79,34 +83,72 @@ class Character
     }
 
     /**
-     * @fn CharacterExistence
-     * @note Control if character exist
-     * @param int $character
-     * @return bool
-     */
-    public function CharacterExistence(int $character):bool
-    {
-        # Count number of account whit that id
-        $data= $this->db->Count('characters',"id='{$character}' LIMIT 1");
-
-        # If exist return true, else return false
-        return ($data === 1);
-    }
-
-    /**
      * @fn getOwner
      * @note Extract owner of the character
      * @param int $character
      * @return int|bool
      */
-    public function getOwner($character){
+    public function getOwner($character)
+    {
 
         # Filter passed character id
-        $character= $this->sec->Filter($character,'Int');
+        $character = $this->sec->Filter($character, 'Int');
 
         # Return owner id of the character
-        return $this->db->Select('account','characters',"id='{$character}' LIMIT 1")->Fetch()['account'];
+        return $this->db->Select('account', 'characters', "id='{$character}' LIMIT 1")->Fetch()['account'];
     }
+
+    /**
+     * @fn CharacterStats
+     * @note Extract stats of the selected character
+     * @param int $character
+     * @return mixed
+     */
+    public function CharacterStats($character)
+    {
+
+        #Filter character id
+        $character = $this->sec->Filter($character, 'Int');
+
+        #Return array of character stats
+        return $this->db->Join(
+            'characters_stats',
+            'characters_stats.value,list_stats.*',
+            'list_stats',
+            'list_stats.id = characters_stats.stat',
+            "characters_stats.character='{$character}' ORDER BY list_stats.name"
+        )->FetchArray();
+    }
+
+    /**
+     * @fn PartsList
+     * @note Extract parts list
+     * @return mixed
+     */
+    public function PartsList()
+    {
+        return $this->db->Select('*', 'list_parts', 'active="1" ORDER BY sequence')->FetchArray();
+    }
+
+
+    /**** CONTROLS ****/
+
+    /**
+     * @fn CharacterExistence
+     * @note Control if character exist
+     * @param int $character
+     * @return bool
+     */
+    public function CharacterExistence(int $character): bool
+    {
+        # Count number of account whit that id
+        $data = $this->db->Count('characters', "id='{$character}' LIMIT 1");
+
+        # If exist return true, else return false
+        return ($data === 1);
+    }
+
+    /**** CHANGE CHARACTER ****/
 
     /**
      * @fn CharactersList
@@ -117,71 +159,10 @@ class Character
     public function CharactersList(int $account)
     {
         # Filter entered account id
-        $account = $this->sec->Filter($account,'Int');
+        $account = $this->sec->Filter($account, 'Int');
 
         # Return array of characters list
-        return $this->db->Select('*','characters',"account='{$account}'")->FetchArray();
-    }
-
-    /**
-     * @fn CharacterStats
-     * @note Extract stats of the selected character
-     * @param int $character
-     * @return mixed
-     */
-    public function CharacterStats($character){
-
-        #Filter character id
-        $character= $this->sec->Filter($character,'Int');
-
-        #Return array of character stats
-        return $this->db->Join(
-            'characters_stats',
-            'characters_stats.value,stats_list.*',
-            'stats_list',
-            'stats_list.id = characters_stats.stat',
-            "characters_stats.character='{$character}'"
-        )->FetchArray();
-    }
-
-    /**
-     * @fn UpdateLogout
-     * @note Update logout in session and in db
-     * @param int $account
-     * @result void
-     */
-    public function UpdateLogout(int $account){
-
-        # Set session character var on null
-        $this->session->character = NULL;
-
-        # Filter passed data
-        $account= $this->sec->Filter($account,'num');
-
-        # Set all character of the account not selected in db
-        $this->db->Update('characters','selected=0',"account='{$account}'");
-    }
-
-    /**
-     * @fn UpdateCharacterLogin
-     * @note Set character login in session and in db
-     * @param int $character
-     * @return void
-     */
-    public function UpdateCharacterLogin( int $character){
-
-        # Filter passed data
-        $character= $this->sec->Filter($character,'Int');
-        $account= $this->sec->Filter($this->session->id,'Int');
-
-        # Logout other character
-        $this->UpdateLogout($account);
-
-        # Set session character var whit the character id
-        $this->session->character = $character;
-
-        # Set character selected in db
-        $this->db->Update('characters','selected=1',"id='{$character}'");
+        return $this->db->Select('*', 'characters', "account='{$account}'")->FetchArray();
     }
 
     /**
@@ -189,13 +170,14 @@ class Character
      * @note Leave favorite from all the character of the account
      * @result void
      */
-    public function LeaveFavorite(){
+    public function LeaveFavorite()
+    {
 
         # Filter passed data
-        $account = $this->sec->Filter($this->session->id,'Int');
+        $account = $this->sec->Filter($this->session->id, 'Int');
 
         # Set all character of the account not selected in db
-        $this->db->Update('characters','favorite=0',"account='{$account}'");
+        $this->db->Update('characters', 'favorite=0', "account='{$account}'");
     }
 
     /**
@@ -205,16 +187,17 @@ class Character
      * @param int $character
      * @return void
      */
-    public function UpdateFavorite(int $character){
+    public function UpdateFavorite(int $character)
+    {
 
         # Filter passed data
-        $character= $this->sec->Filter($character,'num');
+        $character = $this->sec->Filter($character, 'num');
 
         # Leave old favorite
         $this->LeaveFavorite();
 
         # Set new favorite
-        $this->db->Update('characters','favorite=1',"id='{$character}'");
+        $this->db->Update('characters', 'favorite=1', "id='{$character}'");
     }
 
     /**
@@ -227,10 +210,55 @@ class Character
     {
 
         # Filter passed data
-        $account= $this->sec->Filter($account,'num');
+        $account = $this->sec->Filter($account, 'num');
 
         # Get id of the favorite character for the account
-        return $this->db->Select("id",'characters',"account='{$account}' AND favorite = '1'")->Fetch()['id'];
+        return $this->db->Select("id", 'characters', "account='{$account}' AND favorite = '1'")->Fetch()['id'];
     }
+
+    /**** LOGIN - LOGOUT ****/
+
+    /**
+     * @fn UpdateLogout
+     * @note Update logout in session and in db
+     * @param int $account
+     * @result void
+     */
+    public function UpdateLogout(int $account)
+    {
+
+        # Set session character var on null
+        $this->session->character = NULL;
+
+        # Filter passed data
+        $account = $this->sec->Filter($account, 'num');
+
+        # Set all character of the account not selected in db
+        $this->db->Update('characters', 'selected=0', "account='{$account}'");
+    }
+
+    /**
+     * @fn UpdateCharacterLogin
+     * @note Set character login in session and in db
+     * @param int $character
+     * @return void
+     */
+    public function UpdateCharacterLogin(int $character)
+    {
+
+        # Filter passed data
+        $character = $this->sec->Filter($character, 'Int');
+        $account = $this->sec->Filter($this->session->id, 'Int');
+
+        # Logout other character
+        $this->UpdateLogout($account);
+
+        # Set session character var whit the character id
+        $this->session->character = $character;
+
+        # Set character selected in db
+        $this->db->Update('characters', 'selected=1', "id='{$character}'");
+    }
+
 
 }

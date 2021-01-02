@@ -32,6 +32,8 @@ class CharacterController
         $session,
         $sec;
 
+    /**** GENERAL ****/
+
     /**
      * @fn __construct
      * @note CharacterController constructor.
@@ -62,81 +64,19 @@ class CharacterController
         return self::$_instance;
     }
 
-    /**
-     * @fn CharacterConnected
-     * @note Control if a character is connected to the session
-     */
-    public function CharacterConnected(){
-
-        # If character is connected and id is setted
-        return ($this->session->character !== false);
-    }
+    /**** GET DATA ****/
 
     /**
-     * @fn CharacterExistence
-     * @note Call model existence control of the character
-     * @param int $character
-     * @return bool
-     */
-    public function CharacterExistence($character):bool
-    {
-        # Filter passed character id
-        $character = $this->sec->Filter($character,'Int');
-
-        # Return response existence
-        return $this->character->CharacterExistence($character);
-    }
-
-    /**
-     * @fn CharacterProperty
-     * @note Control if account is owner of the character
-     * @param int $character
-     * @return bool
-     */
-    public function CharacterProperty($character):bool
-    {
-        # Filter needed vars
-        $character= $this->sec->Filter($character,'Int');
-        $account= $this->sec->Filter($this->session->id,'Int');
-
-        # Get and Filter owner id
-        $owner= $this->sec->Filter($this->character->getOwner($character),'Int');
-
-        # Control if owner and account is the same
-        return $owner === $account;
-    }
-
-    /**
-     * @fn getCharacter
+     * @fn getCharacterData
      * @note Get character data
      * @param int $id
      * @return array|bool
      */
-    public function getCharacter(int $id)
+    public function getCharacterData(int $id)
     {
         #Return character data
         if ($this->character->CharacterExistence($id)) {
             return $this->character->RetrieveData($id);
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * @fn CharacterList
-     * @note Extract an array full of all the data of the characters of the account
-     * @return mixed
-     */
-    public function CharactersList(){
-
-        # Get connected account
-        $account = $this->session->id;
-
-        # If account exist
-        if ($this->account->AccountExist($account)) {
-
-            #Return characters list
-            return $this->character->CharactersList($account);
         } else {
             return false;
         }
@@ -164,30 +104,111 @@ class CharacterController
     }
 
     /**
+     * @fn getParts
+     * @note Get character parts list
+     * @return array|bool
+     **/
+    public function getParts()
+    {
+        #Extract parts list
+        return $this->character->PartsList();
+    }
+
+    /**** CONTROLS ****/
+
+    /**
+     * @fn CharacterConnected
+     * @note Control if a character is connected to the session
+     */
+    public function CharacterConnected()
+    {
+
+        # If character is connected and id is setted
+        return ($this->session->character !== false);
+    }
+
+    /**
+     * @fn CharacterExistence
+     * @note Call model existence control of the character
+     * @param int $character
+     * @return bool
+     */
+    public function CharacterExistence($character): bool
+    {
+        # Filter passed character id
+        $character = $this->sec->Filter($character, 'Int');
+
+        # Return response existence
+        return $this->character->CharacterExistence($character);
+    }
+
+    /**
+     * @fn CharacterProperty
+     * @note Control if account is owner of the character
+     * @param int $character
+     * @return bool
+     */
+    public function CharacterProperty($character): bool
+    {
+        # Filter needed vars
+        $character = $this->sec->Filter($character, 'Int');
+        $account = $this->sec->Filter($this->session->id, 'Int');
+
+        # Get and Filter owner id
+        $owner = $this->sec->Filter($this->character->getOwner($character), 'Int');
+
+        # Control if owner and account is the same
+        return $owner === $account;
+    }
+
+    /**** CHANGE CHARACTER ****/
+
+    /**
+     * @fn CharacterList
+     * @note Extract an array full of all the data of the characters of the account
+     * @return mixed
+     */
+    public function CharactersList()
+    {
+
+        # Get connected account
+        $account = $this->session->id;
+
+        # If account exist
+        if ($this->account->AccountExist($account)) {
+
+            #Return characters list
+            return $this->character->CharactersList($account);
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * @fn ChangeCharacter
      * @note Change active character
      * @param int $character
      * @return string
      */
-    public function ChangeCharacter(int $character):string
+    public function ChangeCharacter(int $character): string
     {
         # Filter character id and get account id
-        $character = $this->sec->Filter($character,'Int');
+        $character = $this->sec->Filter($character, 'Int');
 
         # If mine account and character account is the same
-        if($this->CharacterProperty($character)){
+        if ($this->CharacterProperty($character)) {
 
             # Login in new character
             $this->character->UpdateCharacterLogin($character);
 
             # Set success response
-            $response = ['type'=>'success','text'=>'Personaggio correttamente collegato'];
+            $response = ['type' => 'success', 'text' => 'Personaggio correttamente collegato'];
 
         } # Else accounts don't are the sames
-        else{
+        else {
 
             # Set account error response
-            $response = ['type'=>'error','text'=>"Personaggio non di proprietà dell'account."];
+            $response = ['type' => 'error', 'text' => "Personaggio non di proprietà dell'account."];
         }
 
         # Return json response
@@ -201,32 +222,31 @@ class CharacterController
      * @param int $character
      * @return string
      */
-    public function SetFavorite(int $character):string
+    public function SetFavorite(int $character): string
     {
         # Filter character id and get account id
-        $character = $this->sec->Filter($character,'Int');
+        $character = $this->sec->Filter($character, 'Int');
 
         # If mine account and character account is the same
-        if($this->CharacterProperty($character)){
-            if($this->CharacterExistence($character)) {
+        if ($this->CharacterProperty($character)) {
+            if ($this->CharacterExistence($character)) {
 
                 # Set new Favorite
                 $this->character->UpdateFavorite($character);
 
                 # Set success response
                 $response = ['type' => 'success', 'text' => 'Personaggio impostato come preferito'];
-            }
-            else{
+            } else {
 
                 # Set account error response
-                $response = ['type'=>'error','text'=>"Personaggio non esistente."];
+                $response = ['type' => 'error', 'text' => "Personaggio non esistente."];
             }
 
         } # Else accounts don't are the sames
-        else{
+        else {
 
             # Set account error response
-            $response = ['type'=>'error','text'=>"Personaggio non di proprietà dell'account."];
+            $response = ['type' => 'error', 'text' => "Personaggio non di proprietà dell'account."];
         }
 
         # Return json response
@@ -239,7 +259,8 @@ class CharacterController
      * @note Leave favorites character
      * @return string
      */
-    public function LeaveFavorite(){
+    public function LeaveFavorite()
+    {
 
         # Leave favorite character
         $this->character->LeaveFavorite();
@@ -251,21 +272,23 @@ class CharacterController
         return json_encode($response);
     }
 
+    /**** LOGIN / LOGOUT ****/
+
     /**
      * @fn LeaveFavorite
      * @note Leave favorites character
      * @param int $account
      */
-    public function LoginFavorite(int $account):void
+    public function LoginFavorite(int $account): void
     {
         # Filter passed data
-        $account= $this->sec->Filter($account,'num');
+        $account = $this->sec->Filter($account, 'num');
 
         # Get id of the favorite character
         $favorite = $this->character->getFavorite($account);
 
         # If favorite is set
-        if(!is_null($favorite)) {
+        if (!is_null($favorite)) {
 
             # Control if the character is of the property of the account
             if ($this->CharacterProperty($favorite)) {
@@ -274,10 +297,10 @@ class CharacterController
                 $this->session->character = $favorite;
             }
         } # Else is not set
-        else{
+        else {
 
             # Set character null
-            $this->session->character= NULL;
+            $this->session->character = NULL;
         }
 
     }
@@ -287,16 +310,17 @@ class CharacterController
      * @note Logout character from the session
      * @return false|string
      */
-    public function Logout(){
+    public function Logout()
+    {
 
         # Extract account id
-        $account = $this->sec->Filter($this->session->id,'Int');
+        $account = $this->sec->Filter($this->session->id, 'Int');
 
         # Logout account and save logout in db
         $this->character->UpdateLogout($account);
 
         # Set success response
-        $response = ['type'=>'success','text'=>'Personaggio sloggato correttamente.'];
+        $response = ['type' => 'success', 'text' => 'Personaggio sloggato correttamente.'];
 
         # Return json response
         return json_encode($response);

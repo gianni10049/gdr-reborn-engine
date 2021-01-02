@@ -14,7 +14,7 @@ $cardController = CardController::getInstance();
 $character = $cardController->getCharacterCardId($_GET['character']);
 
 # Get character data
-$data = $characterController->getCharacter($character);
+$data = $characterController->getCharacterData($character);
 
 # Get character statistics
 $stats = $characterController->getCharacterStats($character);
@@ -97,11 +97,11 @@ $cit = $sec->Filter($data['cit'], 'String');
                 <div class="card-info-cit">
                     "<?= $cit; ?>"
                 </div>
-            <?php } elseif ($characterController->CharacterConnected() && !$characterController->CharacterExistence($character)) { ?>
+            <?php } elseif ($cardController->Connected() && !$characterController->CharacterExistence($character)) { ?>
                 <div class="card-info-name">
                     Personaggio inesistente.
                 </div>
-            <?php } elseif (!$characterController->CharacterConnected()) { ?>
+            <?php } elseif (!$cardController->Connected()) { ?>
                 <div class="card-info-name">
                     Nessun personaggio collegato al proprio account.
                 </div>

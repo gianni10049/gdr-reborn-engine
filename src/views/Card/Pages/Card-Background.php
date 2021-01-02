@@ -14,7 +14,7 @@ $cardController = CardController::getInstance();
 $character = $cardController->getCharacterCardId($_GET['character']);
 
 # Get character data
-$data = $characterController->getCharacter($character);
+$data = $characterController->getCharacterData($character);
 ?>
 
 <div class="background-card">
