@@ -13,3 +13,16 @@ function Ajax(path,data,success,type = 'get'){
             }
         });
 }
+
+
+function Load(selector, path, data, JS = false, callback = false) {
+    $(selector).load(path, data, function () {
+        if (JS != false) {
+            $.getScript(JS);
+        }
+
+        if (callback != false) {
+            callback();
+        }
+    });
+}
