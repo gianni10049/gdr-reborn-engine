@@ -387,8 +387,14 @@ class DB
             #Compose query
             $text = "SELECT SUM($cell) as Total FROM {$table} WHERE {$where}";
 
-            #Return sum of rows selected
-            return $this->Query($text, $params)->Fetch()['Total'];
+            #Get result value
+            $result = $this->Query($text, $params)->Fetch();
+
+            # If total is not null, return null, else return 0
+            return (!is_null($result['Total']))
+                ? $this->sec->Filter($result['Total'],'Int')
+                : $this->sec->Filter(0,'Int');
+
         } #Else one of the vars is empty
         else {
             #Get error and stop script
