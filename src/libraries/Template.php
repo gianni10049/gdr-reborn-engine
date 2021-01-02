@@ -121,7 +121,10 @@ class Template
 
         $type= $this->sec->Filter($type,'String');
 
-        return $this->db->Select('*','menu',"active='1' AND box='{$type}' AND father_id='0'")->FetchArray();
+        return $this->db->Select(
+            '*',
+            'menu',
+            "active='1' AND box='{$type}' AND father_id='0' ORDER BY sequence")->FetchArray();
     }
 
     public function SubMenuList($father){
