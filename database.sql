@@ -10,18 +10,6 @@
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
-
---
--- Database: `my_reborngdr`
---
-CREATE DATABASE IF NOT EXISTS `my_reborngdr` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE `my_reborngdr`;
-
 -- --------------------------------------------------------
 
 --
@@ -163,6 +151,20 @@ CREATE TABLE IF NOT EXISTS `list_parts` (
 -- --------------------------------------------------------
 
 --
+-- Struttura della tabella `list_stats`
+--
+
+CREATE TABLE IF NOT EXISTS `list_stats` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `init_min` int(11) NOT NULL,
+  `init_max` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=5 ;
+
+-- --------------------------------------------------------
+
+--
 -- Struttura della tabella `list_parts_status`
 --
 
@@ -205,23 +207,25 @@ CREATE TABLE IF NOT EXISTS `menu` (
   `father_id` int(11) NOT NULL DEFAULT '0',
   `link` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `active` tinyint(1) NOT NULL DEFAULT '1',
+  `sequence` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=10 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=11 ;
 
 --
 -- Dump dei dati per la tabella `menu`
 --
 
-REPLACE INTO `menu` (`id`, `box`, `clickable`, `text`, `icon`, `link_container`, `father_id`, `link`, `active`) VALUES
-(1, 'left', 1, 'Account', 'fas fa-user-alt', 'central', 0, NULL, 1),
-(2, 'left', 1, 'Scheda PG', 'fa fa-id-card', 'central', 1, '/Card-Main', 1),
-(3, 'left', 1, 'Cambia PG', 'fas fa-exchange-alt', 'central', 1, '/ChangeCharacter', 1),
-(4, 'left', 1, 'Logout', 'fas fa-sign-out-alt', 'central', 1, '/Logout\r\n', 1),
-(5, 'card-menu', 1, 'Scheda', NULL, 'card-complete', 0, '/Card-Main', 1),
-(6, 'card-menu', 1, 'Background', NULL, 'card-internal', 0, '/Card-Background', 1),
-(7, 'card-menu', 1, 'Inventario', NULL, 'card-internal', 0, '/Card-Inventory', 1),
-(8, 'card-menu', 1, 'Abilità', NULL, 'card-internal', 0, '/Card-Ability\r\n', 1),
-(9, 'card-menu', 1, 'Modifica', NULL, 'card-internal', 0, '/Card-Edit', 1);
+INSERT INTO `menu` (`id`, `box`, `clickable`, `text`, `icon`, `link_container`, `father_id`, `link`, `active`, `sequence`) VALUES
+(1, 'left', 1, 'Account', 'fas fa-user-alt', 'central', 0, NULL, 1, 0),
+(2, 'left', 1, 'Scheda PG', 'fa fa-id-card', 'central', 1, '/Card-Main', 1, 0),
+(3, 'left', 1, 'Cambia PG', 'fas fa-exchange-alt', 'central', 1, '/ChangeCharacter', 1, 0),
+(4, 'left', 1, 'Logout', 'fas fa-sign-out-alt', 'central', 1, '/Logout\r\n', 1, 0),
+(5, 'card-menu', 1, 'Scheda', NULL, 'card-complete', 0, '/Card-Main', 1, 1),
+(6, 'card-menu', 1, 'Background', NULL, 'card-internal', 0, '/Card-Background', 1, 2),
+(7, 'card-menu', 1, 'Inventario', NULL, 'card-internal', 0, '/Card-Inventory', 1, 3),
+(8, 'card-menu', 1, 'Abilità', NULL, 'card-internal', 0, '/Card-Ability\r\n', 1, 4),
+(9, 'card-menu', 1, 'Modifica', NULL, 'card-internal', 0, '/Card-Edit', 1, 6),
+(10, 'card-menu', 1, 'Parti', NULL, 'card-internal', 0, '/Card-Parts', 1, 5);
 
 -- --------------------------------------------------------
 
@@ -236,13 +240,13 @@ CREATE TABLE IF NOT EXISTS `routes` (
   `alias` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `active` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=21 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=23 ;
 
 --
 -- Dump dei dati per la tabella `routes`
 --
 
-REPLACE INTO `routes` (`id`, `modulo`, `file`, `alias`, `active`) VALUES
+INSERT INTO `routes` (`id`, `modulo`, `file`, `alias`, `active`) VALUES
 (19, 'Lobby', 'Lobby', '/Lobby', 1),
 (2, 'Scheda', 'Card/Card-Container', '/Card-Main', 1),
 (3, 'Scheda', 'Card/Pages/Card-Background', '/Card-Background', 1),
@@ -251,12 +255,10 @@ REPLACE INTO `routes` (`id`, `modulo`, `file`, `alias`, `active`) VALUES
 (7, 'Homepage', 'Homepage/Signin', '/Signin', 1),
 (8, 'Homepage', 'Homepage/PasswordRecovery', '/PasswordRecovery', 1),
 (9, 'Homepage', 'Homepage/UsernameRecovery', '/UsernameRecovery', 1),
+(21, 'Scheda', 'Card/Pages/Card-Parts', '/Card-Parts', 1),
+(22, 'Scheda', 'Card/Pages/Card-Part-Data', '/Card-Part-Data', 1),
 (20, 'Homepage', 'Homepage/Operations\r\n', '/HomepageOperations', 1),
 (14, 'ChangeCharacter', 'ChangeCharacter/Visual', '/ChangeCharacter', 1),
 (16, 'ChangeCharacter', 'ChangeCharacter/Operations', '/ChangeCharacterOperation', 1);
 
 -- --------------------------------------------------------
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
