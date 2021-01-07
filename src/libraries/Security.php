@@ -215,9 +215,9 @@ class Security
      * @fn HtmlFilter
      * @note HTML filter
      * @param string $string
-     * @return string
+     * @return string|void
      */
-    public function HtmlFilter(string $string): string
+    public function HtmlFilter(string $string)
     {
         #Array of not allowed html codes
         $notAllowed = array(
