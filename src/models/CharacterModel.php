@@ -203,9 +203,9 @@ class Character
      * @fn getFavorite
      * @note get favorite character of the account
      * @param int $account
-     * @return int
+     * @return int|null
      */
-    public function getFavorite(int $account):int
+    public function getFavorite(int $account):?int
     {
 
         # Filter passed data
