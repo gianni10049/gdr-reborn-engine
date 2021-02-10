@@ -32,10 +32,10 @@ class Template
     /**
      * @fn __construct
      * @note Template constructor.
-     * @param string $folder
+     * @param string|null $folder
      * @return void
      */
-    public function __construct(string $folder = null)
+    public function __construct(?string $folder = null)
     {
         #Init needed classes
         $this->sec = Security::getInstance();
@@ -78,6 +78,7 @@ class Template
 
     /**
      * @fn FindTemplate
+     * @note Find template file.
      * @param string $path
      * @return string
      */
@@ -91,10 +92,11 @@ class Template
     }
 
     /**
-     * @fn GetVars
+     * @fn RenderTemplate
+     * @note Render template view.
+     * @param string $template
+     * @param array $vars
      * @return string
-     * @var string $template
-     * @var array $vars
      */
     public function RenderTemplate(string $template, array $vars): string
     {
@@ -117,7 +119,13 @@ class Template
         return ob_get_clean();
     }
 
-    public function MenuList($type){
+    /**
+     * @fn MenuList
+     * @note Get menu list for that box.
+     * @param string $type
+     * @return mixed
+     */
+    public function MenuList(string $type){
 
         $type= $this->sec->Filter($type,'String');
 
@@ -127,14 +135,27 @@ class Template
             "active='1' AND box='{$type}' AND father_id='0' ORDER BY sequence")->FetchArray();
     }
 
-    public function SubMenuList($father){
+    /**
+     * @fn SubMenuList
+     * @note Get sub-menu list for that box.
+     * @param string $father
+     * @return mixed
+     */
+    public function SubMenuList(string $father){
 
         $father= $this->sec->Filter($father,'String');
 
         return $this->db->Select('*','menu',"active='1' AND father_id='{$father}'")->FetchArray();
     }
 
-    public function GetContainerForLinks($type){
+    /**
+     * @fn GetContainerForLinks
+     * @note Get container type.
+     * @param string $type
+     * @return string
+     */
+    public function GetContainerForLinks(string $type):string
+    {
 
         $type = $this->sec->Filter($type,'String');
 
@@ -156,6 +177,8 @@ class Template
         return $this->sec->Filter($val,'String');
     }
 
+
+    #TODO TEST CODES
     function SetParam($array)
     {
 

@@ -52,7 +52,7 @@ class DB
      * @param array|null $options
      * @return void
      */
-    private function __construct(string $db = null, array $options = null)
+    private function __construct(?string $db = null, ?array $options = null )
     {
         #Init Security instance
         $this->sec = Security::getInstance();
@@ -84,7 +84,7 @@ class DB
      * @param array|null $options
      * @return DB
      */
-    public static function getInstance(string $db = null, array $options = null): DB
+    public static function getInstance( ?string $db = null, ?array $options = null): DB
     {
         #If self-instance not defined
         if (!(self::$_instance instanceof self)) {
@@ -97,7 +97,7 @@ class DB
 
     /**
      * @fn __destruct
-     * @note DB decostruct
+     * @note DB decostructor.
      * @return void
      */
     public function __destruct()
@@ -121,7 +121,7 @@ class DB
      * @note Connect to db
      * @return void
      */
-    public function Connect()
+    public function Connect():void
     {
         try {
             $this->pdo = new PDO("mysql:host={$this->host};dbname={$this->db}", $this->user, $this->pass, $this->options);
@@ -134,10 +134,10 @@ class DB
      * @fn Query
      * @note Exec passed query
      * @param string $query
-     * @param array $params
+     * @param array|null $params
      * @return mixed
      */
-    public function Query(string $query, array $params = null)
+    public function Query(string $query, ?array $params = null )
     {
         #If db is  not connected
         if (empty($this->pdo)) {
@@ -269,7 +269,7 @@ class DB
      * @param array $params
      * @return void
      */
-    public function Update(string $table, string $set, string $where, array $params = [])
+    public function Update(string $table, string $set, string $where, array $params = []):void
     {
         #Init Security class
         $sec = $this->sec;
@@ -304,7 +304,7 @@ class DB
      * @param array $params
      * @return void
      */
-    public function Insert(string $table, string $rows, string $values, array $params = [])
+    public function Insert(string $table, string $rows, string $values, array $params = []):void
     {
         #Init Security class
         $sec = $this->sec;
@@ -338,7 +338,7 @@ class DB
      * @param array $params
      * @return void
      */
-    public function Delete(string $table, string $where, array $params = [])
+    public function Delete(string $table, string $where, array $params = []):void
     {
         #Init Security class
         $sec = $this->sec;

@@ -73,7 +73,13 @@ class Router
         $this->request = $request;
     }
 
-    public function StartRouting(){
+    /**
+     * @fn StartRouting
+     * @note Start routing operations.
+     * @return void
+     */
+    public function StartRouting():void
+    {
 
         $method = $this->request->getMethod();
         $uri = $this->request->requestUri;
@@ -92,7 +98,7 @@ class Router
      * @param array $args
      * @return void
      */
-    public function __call(string $name, array $args)
+    public function __call(string $name, array $args):void
     {
 
         #Create an array whit methods
@@ -115,7 +121,7 @@ class Router
      * @param string $route
      * @return string
      */
-    private function formatRoute(string $route)
+    private function formatRoute(string $route):string
     {
         #Trim slash from route
         $result = rtrim($route, '/');
@@ -139,7 +145,7 @@ class Router
      * @note Handler for invalid method of request
      * @return void
      */
-    public function invalidMethodHandler()
+    public function invalidMethodHandler():void
     {
         die("{$this->request->serverProtocol} 405 Method Not Allowed");
     }
@@ -149,7 +155,7 @@ class Router
      * @note Handler for not existent route
      * @return void
      */
-    private function defaultRequestHandler()
+    private function defaultRequestHandler():void
     {
         die("{$this->request->serverProtocol} 404 Not Found");
     }
@@ -190,9 +196,10 @@ class Router
     /**
      * @fn addRoutes
      * @note Get all php files whit routes in folder and sub-folders
+     * @param string $routes_folder
      * @return void
      */
-    public function addRoutes($routes_folder)
+    public function addRoutes(string $routes_folder):void
     {
         # Start container array for all routes
         $alldirs = [];

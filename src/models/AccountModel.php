@@ -101,7 +101,7 @@ class Account
      * @note Extract data of the account and save in object $datas
      * @return void
      */
-    public function RetrieveData()
+    public function RetrieveData():void
     {
         #If session exist
         if ($this->session->SessionExist()) {
@@ -141,7 +141,8 @@ class Account
      * @param int $id
      * @return void
      */
-    public function UpdateFingerprint(int $id){
+    public function UpdateFingerprint(int $id):void
+    {
 
         #Get and filter passed id
         $id= $this->sec->Filter($id,'Int');
@@ -163,7 +164,8 @@ class Account
      * @param int $id
      * @return void
      */
-    public function UpdateLastActive(int $id){
+    public function UpdateLastActive(int $id):void
+    {
 
         #Get and filter passed id
         $id= $this->sec->Filter($id,'Int');
@@ -225,7 +227,7 @@ class Account
      * @param string $pass
      * @return void
      */
-    public function NewAccount(string $user,string $email,string $pass)
+    public function NewAccount(string $user,string $email,string $pass):void
     {
         #Convert Username
         $user= $this->sec->Filter($user,'Convert');
@@ -280,7 +282,7 @@ class Account
      * @param string $pass
      * @return void
      */
-    public function SetPassword(string $user, string $pass)
+    public function SetPassword(string $user, string $pass):void
     {
         #Filter username
         $user= $this->sec->Filter($user,'Convert');
@@ -298,7 +300,7 @@ class Account
      * @param string $email
      * @return void
      */
-    public function SetEmail(string $user, string $email)
+    public function SetEmail(string $user, string $email):void
     {
         #Filter username
         $user= $this->sec->Filter($user,'Convert');
@@ -337,10 +339,10 @@ class Account
     /**
      * @fn readByName
      * @note Extract data of the user by his username
-     * @param string $username
+     * @param string|null $username
      * @return mixed
      */
-    public function readByName(string $username = null)
+    public function readByName(?string $username = null)
     {
         #Return account data
         return $this->db->Select(
@@ -351,10 +353,10 @@ class Account
     /**
      * @fn readById
      * @note Extract data of the user by his id
-     * @param int $id
+     * @param int|null $id
      * @return mixed
      */
-    public function readById(int $id = null)
+    public function readById(?int $id = null)
     {
         #Return account data
         return $this->db->Select(
@@ -366,10 +368,10 @@ class Account
     /**
      * @fn readById
      * @note Extract data of the user by his email
-     * @param string $email
+     * @param string|null $email
      * @return mixed
      */
-    public function readByEmail(string $email = null)
+    public function readByEmail(?string $email = null)
     {
 
         $accounts= $this->db->Select('id,username,email','account','1')->FetchArray();

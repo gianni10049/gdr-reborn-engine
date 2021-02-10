@@ -72,7 +72,7 @@ $characters = $charlist;
                     <?php
 
                     #Foreach character extract stats
-                    foreach ($characterController->getCharacterStats($character) as $stat) {
+                    foreach ($characterController->getCharacterStats($id) as $stat) {
 
                         #Filter needed values
                         $name = $sec->Filter($stat['name'], 'String');

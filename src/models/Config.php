@@ -69,7 +69,7 @@ class Config
      * @note Extract global config vars from db
      * @return void
      */
-    private function ExtractGlobalsConfig()
+    private function ExtractGlobalsConfig():void
     {
 
         #Extract globals config vars
@@ -131,7 +131,7 @@ class Config
      * @param string $name
      * @return mixed
      */
-    public function __get($name)
+    public function __get(string $name)
     {
         #Filter passed name of get function
         $name = $this->sec->Filter($name, 'String');

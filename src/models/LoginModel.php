@@ -59,7 +59,7 @@ class Login extends Wrapper
      * @param string $username
      * @return void
      */
-    public function insertError(string $message, string $ip,string $username)
+    public function insertError(string $message, string $ip,string $username):void
     {
         #Insert error in db
         $this->db->Insert(

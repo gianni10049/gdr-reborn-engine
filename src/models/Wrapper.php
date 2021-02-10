@@ -24,7 +24,7 @@ class Wrapper
      * @param array|null $options
      * @return void
      */
-    public function __construct(string $db = null, array $options = null)
+    public function __construct(?string $db = null, ?array $options = null)
     {
         #Get DB instance
         $this->db = DB::getInstance($db,$options);

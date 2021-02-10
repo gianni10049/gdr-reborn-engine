@@ -2,8 +2,8 @@
 
 namespace Controllers;
 
-use Libraries\Mailer;
 use Database\DB;
+use Libraries\Mailer;
 use Libraries\Security;
 use Models\Account;
 use Models\Config;
@@ -65,6 +65,7 @@ class AccountController
     }
 
     #TODO Decidere se integrare nel controllo di AccountConnected anche il controllo di AccountExist;
+
     /**
      * @fn AccountConnected
      * @note Control if account is connected
@@ -76,7 +77,7 @@ class AccountController
         $id = $this->sec->Filter($this->account->id, 'Int');
 
         #If account id exist return true, else return false
-        return ( !empty($id) );
+        return (!empty($id));
     }
 
     /**
@@ -115,7 +116,7 @@ class AccountController
      * @param int|null $id
      * @return bool
      */
-    public function AccountExist(int $id = null): bool
+    public function AccountExist(?int $id = null): bool
     {
         #If account is not passed get account id from model, else get passed id
         $account = (is_null($id)) ? $account = $this->sec->Filter($this->account->id, 'Int') : $account = $this->sec->Filter($id, 'Int');
@@ -140,7 +141,7 @@ class AccountController
      * @param int|null $id
      * @return void
      */
-    public function RegenerateFingerprint(int $id = null)
+    public function RegenerateFingerprint(?int $id = null): void
     {
         #If account exist
         if ($this->AccountExist($id)) {
@@ -159,7 +160,7 @@ class AccountController
      * @param int|null $id
      * @return void
      */
-    public function CreateLastActive(int $id = null)
+    public function CreateLastActive(?int $id = null): void
     {
         #If account exist
         if ($this->AccountExist($id)) {
@@ -250,7 +251,7 @@ class AccountController
      * @param string $email
      * @return string
      */
-    public function PasswordRecovery(string $username, string $email):string
+    public function PasswordRecovery(string $username, string $email): string
     {
         # Filter insert data
         $username = $this->sec->Filter($username, 'String');
@@ -336,7 +337,7 @@ class AccountController
      * @param string $email
      * @return bool
      */
-    private function ConfirmData(string $username,string $email):bool
+    private function ConfirmData(string $username, string $email): bool
     {
 
         # Get account data from username
@@ -349,7 +350,7 @@ class AccountController
         $decrypted = $this->sec->Decrypt($dbEmail);
 
         # If is the same return true, else return false
-        return ( $email == $decrypted );
+        return ($email == $decrypted);
     }
 
     /**
@@ -359,7 +360,7 @@ class AccountController
      * @param string $characters
      * @return string
      */
-    public function RandomPassword(int $length, string $characters):string
+    public function RandomPassword(int $length, string $characters): string
     {
 
         # Set initial vars
@@ -403,7 +404,7 @@ class AccountController
      * @param int $response
      * @return string
      */
-    private function PasswordRecoveryError(int $response):string
+    private function PasswordRecoveryError(int $response): string
     {
 
         #Init empty html var
@@ -444,7 +445,7 @@ class AccountController
                 break;
         }
 
-        $json = ['type'=>$type,'text'=>$text];
+        $json = ['type' => $type, 'text' => $text];
 
         #Return composed html
         return json_encode($json);
@@ -463,20 +464,20 @@ class AccountController
         $email = $this->sec->Filter($email, 'String');
 
         # If this email exist
-        if($this->account->EmailExist($email)) {
+        if ($this->account->EmailExist($email)) {
 
             # Get account data from email
             $data = $this->GetAccountData('Email', $email);
 
             # Filter obtained username
-            $id= $this->sec->Filter($data['id'],'Int');
-            $username = $this->sec->Filter($data['username'],'String');
+            $id = $this->sec->Filter($data['id'], 'Int');
+            $username = $this->sec->Filter($data['username'], 'String');
 
             # If username exist
-            if($this->account->UsernameExist($username) && $this->AccountExist($id)){
+            if ($this->account->UsernameExist($username) && $this->AccountExist($id)) {
 
                 # Compose text
-                $text= "Richiesta di recupero username.
+                $text = "Richiesta di recupero username.
                 
                     L'username collegato a questa email risulta essere: {$username} .
                     
@@ -484,20 +485,20 @@ class AccountController
                 ";
 
                 # Send email whit username
-                $this->mailer->SendEmail([$email],$this->config->domain_email,'Recupero account',$text,[],true);
+                $this->mailer->SendEmail([$email], $this->config->domain_email, 'Recupero account', $text, [], true);
 
                 # Set success response
                 $response = USERNAME_RECOVERY_SUCCESS;
 
             } # Else username don't exist
-            else{
+            else {
 
                 # Set username not existence error
                 $response = USERNAME_RECOVERY_EXISTENCE_ERROR;
             }
 
         } # Else email don't exist
-        else{
+        else {
 
             # Set email not existence error
             $response = USERNAME_RECOVERY_EMAIL_ERROR;
@@ -518,7 +519,7 @@ class AccountController
     {
 
         #Init empty needed vars
-        $text= '';
+        $text = '';
         $type = '';
 
         #Switch passed response
@@ -544,7 +545,7 @@ class AccountController
         }
 
         # Create json data
-        $json = ['type'=>$type,'text'=>$text];
+        $json = ['type' => $type, 'text' => $text];
 
         # Return json data
         return json_encode($json);

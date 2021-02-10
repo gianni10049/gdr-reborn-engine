@@ -111,9 +111,9 @@ class Request
     /**
      * @fn getUserAgent
      * @note Get User Agent Client
-     * @return string|void
+     * @return string|null
      */
-    public function getUserAgent(): string
+    public function getUserAgent(): ?string
     {
         return isset($this->httpUserAgent) ? $this->sec->Filter($this->httpUserAgent, 'String') : '';
     }
@@ -167,7 +167,7 @@ class Request
      * @note Auto generate server infos
      * @return void
      */
-    private function bootstrapSelf()
+    private function bootstrapSelf():void
     {
         $sec = $this->sec;
 
@@ -268,8 +268,8 @@ class Request
     /**
      * @fn getPage
      * @note Get page whit that alias
-     * @param $url string
-     * @return int|mixed|string
+     * @param string $url
+     * @return string
      */
     public function getPage(string $url): string
     {
@@ -279,17 +279,14 @@ class Request
         # Get file for that alias
         $data = $this->db->Select('file', 'routes', "alias='{$url}' AND active='1' LIMIT 1")->Fetch();
 
-        # Filter path of the alias
-        $path = $this->sec->Filter($data['file'], 'String');
-
-        # Return result
-        return $path;
+        # Filter path of the alias and return
+        return $this->sec->Filter($data['file'], 'String');
     }
 
     /**
      * @fn getBody
      * @note Fetch types of request method for get right parameters
-     * @param $route string
+     * @param string $route
      * @return array
      */
     public function getBody(string $route): array

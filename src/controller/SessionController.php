@@ -80,7 +80,7 @@ class SessionController
     /**
      * @fn Check
      * @note Check if session is valid
-     * @return boolean
+     * @return bool
      */
     public function Check(): bool
     {
@@ -174,7 +174,7 @@ class SessionController
      * @param mixed $value
      * @return void
      */
-    public function __set(string $name, $value)
+    public function __set(string $name, $value):void
     {
         #Filter entered value
         $name= $this->sec->Filter($name,'String');

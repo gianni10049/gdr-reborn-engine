@@ -88,7 +88,7 @@ class Session
      * @param mixed $value
      * @return void
      */
-    public function __set(string $name, $value)
+    public function __set(string $name, $value):void
     {
         #Filter entered value
         $name= $this->sec->Filter($name,'String');
@@ -128,7 +128,7 @@ class Session
      * @param mixed $value
      * @return Session
      */
-    public function __call(string $name,$value)
+    public function __call(string $name,$value):Session
     {
         #Add the name of the function like array key
         $this->session_array[] = $name;
@@ -147,9 +147,11 @@ class Session
     /**
      * @fn SaveSession
      * @note Save parameter in indicated session var
-     * @param $par
+     * @param string $par
+     * @return void
      */
-    public function SaveSession($par){
+    public function SaveSession(string $par):void
+    {
 
         #Get all key indicated
         $values= $this->session_array;
@@ -180,7 +182,7 @@ class Session
      * @param array $session
      * @return void
      */
-    public function setSession(array $session)
+    public function setSession(array $session):void
     {
         #Foreach session value passed
         foreach($session as $key => $value)
@@ -201,7 +203,7 @@ class Session
      * @note Regenerate session id
      * @return void
      */
-    public function regenerate()
+    public function regenerate():void
     {
         #Regerate session id
         session_regenerate_id();

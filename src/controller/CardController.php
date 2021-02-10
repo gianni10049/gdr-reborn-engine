@@ -58,15 +58,25 @@ class CardController
         $this->card = Card::getInstance();
     }
 
-    public function Connected()
+    /**
+     * @fn Connected
+     * @note Control if a character is connected to the account.
+     * @return bool
+     */
+    public function Connected(): bool
     {
         return ($this->char->CharacterConnected());
     }
 
-    public function getCharacterCardId($character)
+    /**
+     * @fn getCharacterCardId
+     * @note Get Character id.
+     * @param int|null $character
+     * @return int
+     */
+    public function getCharacterCardId(?int $character = null):int
     {
         $val = (!is_null($character) && ($this->char->CharacterExistence($character))) ? $character : $this->session->character;
-
         return $this->sec->Filter($val, 'Int');
     }
 
@@ -101,10 +111,10 @@ class CardController
     /**
      * @fn PartStatus
      * @note Get part status
-     * @param $lifepoints
+     * @param int $lifepoints
      * @return array
      */
-    public function PartStatus($lifepoints): array
+    public function PartStatus(int $lifepoints): array
     {
 
         #Parse passed data

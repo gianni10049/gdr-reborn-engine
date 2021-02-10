@@ -32,7 +32,7 @@ class Card
         $db,
         $sec,
         $session,
-    $character;
+        $character;
 
     /**
      * @fn __constructor.
@@ -70,20 +70,20 @@ class Card
      * @fn PartTotalLifePoint
      * @note Get total life point of body part
      * @param int $part
-     * @return int|void
+     * @return int|null
      */
-    public function PartTotalLifePoint(int $part)
+    public function PartTotalLifePoint(int $part): ?int
     {
 
         #Parse passed data
         $part = $this->sec->Filter($part, 'Int');
 
         #Get part max life point
-        $result = $this->db->Select('total_hp','list_parts',"id='{$part}' LIMIT 1")->Fetch();
+        $result = $this->db->Select('total_hp', 'list_parts', "id='{$part}' LIMIT 1")->Fetch();
 
         #If result exist return total hp of that part, else die whit error
         return ($result)
-            ? $this->sec->Filter($result['total_hp'],'Int')
+            ? $this->sec->Filter($result['total_hp'], 'Int')
             : die('Una delle parti risulta inesistente');
     }
 
@@ -94,7 +94,7 @@ class Card
      * @param int $part
      * @return int
      */
-    public function CharacterPartDamage(int $character, int $part):int
+    public function CharacterPartDamage(int $character, int $part): int
     {
 
         #Parse passed data
@@ -125,10 +125,10 @@ class Card
      * @note Get damage of character part
      * @return array
      */
-    public function StatusList():array
+    public function StatusList(): array
     {
         #Get status list
-        return $this->db->Select('*','list_parts_status','1 ORDER BY max_hp')->FetchArray();
+        return $this->db->Select('*', 'list_parts_status', '1 ORDER BY max_hp')->FetchArray();
     }
 
     /**
@@ -136,9 +136,9 @@ class Card
      * @note Get list of damages of character single part
      * @param int $character
      * @param int $part
-     * @return array|void
+     * @return array|null
      */
-    public function CharacterPartDamageList(int $character, int $part)
+    public function CharacterPartDamageList(int $character, int $part): ?array
     {
 
         #Parse passed data

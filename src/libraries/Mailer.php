@@ -103,7 +103,7 @@ class Mailer
      * @param bool $html
      * @return void
      */
-    public function SendEmail(array $to, string $from, string $subject, string $message, array $headers = [], bool $html = false)
+    public function SendEmail(array $to, string $from, string $subject, string $message, array $headers = [], bool $html = false):void
     {
         $this->setTo($to)
             ->setFrom($from)
@@ -218,7 +218,7 @@ class Mailer
      * @note send the composed email
      * @return void
      */
-    public function send()
+    public function send():void
     {
         #Foreach recipient
         foreach ($this->to as $email){
@@ -233,7 +233,7 @@ class Mailer
      * @note Send an email to all accounts
      * @return void
      */
-    public function SendAll($array)
+    public function SendAll($array):void
     {
         #Foreach email
         foreach ($array as $email) {

@@ -88,7 +88,7 @@ class Cookie
      * @param mixed $value
      * @return void
      */
-    public function __set(string $name, $value)
+    public function __set(string $name, $value):void
     {
         setcookie($name, $value, time() + $this->expire, $this->path, $this->domain, $this->secure, $this->httponly);
     }
@@ -111,8 +111,9 @@ class Cookie
      * @note Destroy a cookie
      * @example $cookie->destroyCookie($username)
      * @param string $name
+     * @return void
      */
-    public function destroyCookie(string $name)
+    public function destroyCookie(string $name):void
     {
         unset($_COOKIE[$name]);
     }

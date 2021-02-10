@@ -214,10 +214,10 @@ class Security
     /**
      * @fn HtmlFilter
      * @note HTML filter
-     * @param string $string
-     * @return string|void
+     * @param string|null $string $string
+     * @return string|null
      */
-    public function HtmlFilter(string $string)
+    public function HtmlFilter(?string $string): ?string
     {
         #Array of not allowed html codes
         $notAllowed = array(
@@ -305,7 +305,7 @@ class Security
      * @param string|null $email input
      * @return bool
      */
-    public function EmailControl(string $email = null): bool
+    public function EmailControl(?string $email = null): bool
     {
         $config = Config::getInstance();
 
@@ -355,7 +355,7 @@ class Security
      * @param string|null $password input
      * @return bool
      */
-    public function PasswordControl(string $password = null): bool
+    public function PasswordControl(?string $password = null): bool
     {
 
         $config = Config::getInstance();
@@ -406,7 +406,7 @@ class Security
      * @param string|null $confstr input
      * @return bool
      */
-    public function PasswordMatch(string $string = null, string $confstr = null): bool
+    public function PasswordMatch(?string $string = null, ?string $confstr = null): bool
     {
         #Leave spaces from passed data
         $string = preg_replace('/\s+/', '', $string);

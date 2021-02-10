@@ -88,7 +88,7 @@ class CharacterController
      * @param int $character
      * @return array|bool
      **/
-    public function getCharacterStats($character)
+    public function getCharacterStats(int $character)
     {
         # Filter passed character id
         $character = $this->sec->Filter($character, 'Int');
@@ -119,10 +119,10 @@ class CharacterController
     /**
      * @fn CharacterConnected
      * @note Control if a character is connected to the session
+     * @return bool
      */
-    public function CharacterConnected()
+    public function CharacterConnected(): bool
     {
-
         # If character is connected and id is setted
         return ($this->session->character !== false);
     }
@@ -133,7 +133,7 @@ class CharacterController
      * @param int $character
      * @return bool
      */
-    public function CharacterExistence($character): bool
+    public function CharacterExistence(int $character): bool
     {
         # Filter passed character id
         $character = $this->sec->Filter($character, 'Int');
@@ -148,7 +148,7 @@ class CharacterController
      * @param int $character
      * @return bool
      */
-    public function CharacterProperty($character): bool
+    public function CharacterProperty(int $character): bool
     {
         # Filter needed vars
         $character = $this->sec->Filter($character, 'Int');
@@ -278,6 +278,7 @@ class CharacterController
      * @fn LeaveFavorite
      * @note Leave favorites character
      * @param int $account
+     * @return void
      */
     public function LoginFavorite(int $account): void
     {

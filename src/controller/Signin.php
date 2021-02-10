@@ -151,7 +151,7 @@ class Signin
      * @param $response
      * @return string
      */
-    public function ManageError($response)
+    public function ManageError($response):string
     {
         switch ($this->security->Filter($response,'Int')) {
 

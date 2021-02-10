@@ -170,7 +170,7 @@ class Character
      * @note Leave favorite from all the character of the account
      * @result void
      */
-    public function LeaveFavorite()
+    public function LeaveFavorite():void
     {
 
         # Filter passed data
@@ -183,11 +183,10 @@ class Character
     /**
      * @fn UpdateFavorite
      * @note Set favorite character
-     * @param int $account
      * @param int $character
      * @return void
      */
-    public function UpdateFavorite(int $character)
+    public function UpdateFavorite(int $character):void
     {
 
         # Filter passed data
@@ -206,7 +205,7 @@ class Character
      * @param int $account
      * @return int
      */
-    public function getFavorite(int $account)
+    public function getFavorite(int $account):int
     {
 
         # Filter passed data
@@ -224,7 +223,7 @@ class Character
      * @param int $account
      * @result void
      */
-    public function UpdateLogout(int $account)
+    public function UpdateLogout(int $account):void
     {
 
         # Set session character var on null
@@ -243,7 +242,7 @@ class Character
      * @param int $character
      * @return void
      */
-    public function UpdateCharacterLogin(int $character)
+    public function UpdateCharacterLogin(int $character):void
     {
 
         # Filter passed data

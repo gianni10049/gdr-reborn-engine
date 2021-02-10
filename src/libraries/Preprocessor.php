@@ -71,8 +71,9 @@ class Preprocessor
     /**
      * @fn SetInit
      * @note Set initial config for csscrush compile
+     * @return void
      */
-    private function SetInit()
+    private function SetInit():void
     {
         # Set option var name
         $object_name = 'options';
